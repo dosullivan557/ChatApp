@@ -29,6 +29,7 @@ extension UIImageView {
                 }
                 DispatchQueue.main.async(){
                     if let downloadedImage = UIImage(data: data!){
+                        self.image = downloadedImage
                         imageCache.setObject(downloadedImage, forKey: urlString as AnyObject)
                     }
         
