@@ -81,13 +81,13 @@ class LoginController: UIViewController, UITextFieldDelegate {
  
     
     //name TextField
-    let nameTextField : UITextField = {
+    lazy var nameTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Name"
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.autocapitalizationType = UITextAutocapitalizationType.words
         tf.addTarget(self, action: #selector(nameValidation), for: .editingDidEnd)
-
+        tf.delegate = self
         return tf
     }()
     //seperator
@@ -98,13 +98,14 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return view
     }()
     //email TextField
-    let emailTextField : UITextField = {
+    lazy var emailTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.keyboardType = .emailAddress
         tf.autocapitalizationType = UITextAutocapitalizationType.none
         tf.addTarget(self, action: #selector(emailValidation), for: .editingDidEnd)
+        tf.delegate = self
         return tf
     }()
     //seperator
@@ -115,12 +116,13 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return view
     }()
     //password TextField
-    let passwordTextField : UITextField = {
+    lazy var passwordTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Password"
         tf.isSecureTextEntry = true
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.addTarget(self, action: #selector(passwordValidation), for: .editingDidEnd)
+        tf.delegate = self
         return tf
     }()
     @objc func passwordValidation(){
@@ -460,6 +462,12 @@ class LoginController: UIViewController, UITextFieldDelegate {
     @objc func hideKeyboard() {
         view.self.endEditing(true)
     }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleSend()
+        self.view.endEditing(true)
+        return true
+    }
+    
     
 }
 
