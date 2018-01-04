@@ -231,7 +231,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return sc
     }()
     
-    let clearProfilePictureImage: UIButton={
+    let clearProfilePictureImage: UIButton = {
        let button = UIButton()
         button.setTitle("Clear Image", for: .normal)
         button.addTarget(self, action: #selector(handleClearImage), for: .touchUpInside)

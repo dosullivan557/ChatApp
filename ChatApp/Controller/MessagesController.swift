@@ -72,9 +72,13 @@ class MessagesController: UITableViewController, UITextFieldDelegate {
         
 
         //x, y, width. height
+        profileImageView.leftAnchor.constraint(equalTo: titleView.leftAnchor).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.layer.cornerRadius = 20
+        profileImageView.clipsToBounds = true
 
         let nameLabel = UILabel()
         titleView.addSubview(nameLabel)
