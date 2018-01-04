@@ -77,7 +77,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate{
     //Hide keyboard when screen is touched
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         handleSend()
-        
+        self.view.endEditing(true)
         return true
     }
     
