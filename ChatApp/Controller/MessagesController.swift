@@ -52,58 +52,69 @@ class MessagesController: UITableViewController, UITextFieldDelegate {
             }
         }, withCancel: nil)
     }
-    
-    func setupNavBar(user: User){
+    lazy var titleView: UIView = {
         let titleView = UIView()
         titleView.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
         titleView.backgroundColor = UIColor.red
+        titleView.isUserInteractionEnabled = true
+        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
 
-//        let containerView = UIView()
-//        containerView.translatesAutoresizingMaskIntoConstraints = false
-//        titleView.addSubview(containerView)
-//
-//        let profileImageView = UIImageView()
-//        profileImageView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        if let profileImageUrl = user.profileImageUrl{
-//            profileImageView.loadImageUsingCache(urlString: profileImageUrl)
-//
-//        }
-//        containerView.addSubview(profileImageView)
-//        containerView.backgroundColor = UIColor.blue
-//
-//        //x, y, width. height
-//        profileImageView.leftAnchor.constraint(equalTo: titleView.leftAnchor).isActive = true
-//        profileImageView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
-//        profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        profileImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        profileImageView.contentMode = .scaleAspectFill
-//        profileImageView.layer.cornerRadius = 20
-//        profileImageView.clipsToBounds = true
-//        profileImageView.backgroundColor = UIColor.green
-//        profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
-//        let nameLabel = UILabel()
-//        containerView.addSubview(nameLabel)
-//        nameLabel.text = user.name
-//        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-//        containerView.bringSubview(toFront: profileImageView)
-//        nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 10).isActive = true
-//        nameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
-//        nameLabel.rightAnchor.constraint(equalTo: titleView.rightAnchor).isActive = true
-//        nameLabel.heightAnchor.constraint(equalTo: profileImageView.heightAnchor).isActive = true
-//
-//        containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
-//        containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
-//        titleView.bringSubview(toFront: profileImageView)
-//
+        return titleView
+    }()
+    
+    func setupNavBar(user: User){
+        
+
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        titleView.addSubview(containerView)
+
+        let profileImageView = UIImageView()
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        if let profileImageUrl = user.profileImageUrl{
+            profileImageView.loadImageUsingCache(urlString: profileImageUrl)
+
+        }
+        containerView.addSubview(profileImageView)
+        containerView.backgroundColor = UIColor.blue
+
+        //x, y, width. height
+        profileImageView.leftAnchor.constraint(equalTo: titleView.leftAnchor).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.layer.cornerRadius = 20
+        profileImageView.clipsToBounds = true
+        profileImageView.backgroundColor = UIColor.green
+        profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
+        profileImageView.isUserInteractionEnabled = true
+        let nameLabel = UILabel()
+        containerView.addSubview(nameLabel)
+        nameLabel.text = user.name
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        containerView.bringSubview(toFront: profileImageView)
+        nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 10).isActive = true
+        nameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
+        nameLabel.rightAnchor.constraint(equalTo: titleView.rightAnchor).isActive = true
+        nameLabel.heightAnchor.constraint(equalTo: profileImageView.heightAnchor).isActive = true
+        nameLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
+        nameLabel.isUserInteractionEnabled = true
+        
+        containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
+        containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
+        titleView.bringSubview(toFront: profileImageView)
+        containerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
+        containerView.isUserInteractionEnabled = true
+
         self.navigationItem.titleView = titleView
         print("Added gesture")
-        titleView.isUserInteractionEnabled = true
-
-        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
 
     }
     @objc func showChatController(){
+        
+        print("123")
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         navigationController?.pushViewController(chatLogController, animated: true)
     }
