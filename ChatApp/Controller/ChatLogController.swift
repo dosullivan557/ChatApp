@@ -77,11 +77,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate{
         let recieveId = user?.id
         let sendId = Auth.auth().currentUser!.uid
         //time stamp
-        let timestamp = DateFormatter.localizedString(from: NSDate() as Date, dateStyle: .short, timeStyle: .medium)
-        //if make time style long, I get the time zone, which could help globalising
+        let timestamp = NSDate().timeIntervalSince1970
         print(timestamp)
-        
-        let values = ["text" : inputTextField.text!, "RecieveId" : recieveId, "SendId" : sendId, "TimeStamp" : timestamp]
+        let values = ["text" : inputTextField.text!, "RecieveId" : recieveId, "SendId" : sendId, "TimeStamp" : timestamp] as [String : Any]
         
         let childRef = ref.childByAutoId()
         childRef.updateChildValues(values)

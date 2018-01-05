@@ -16,12 +16,9 @@ class UserCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 25
         imageView.layer.masksToBounds = true
-        
-        
         return imageView
     }()
     
-
     var message: Message? {
         didSet {
             if let receieveId = message?.receiveId {
@@ -36,14 +33,22 @@ class UserCell: UITableViewCell {
                 })
             }
             detailTextLabel!.text = message?.message
+            let timestampDate = Date.init(timeIntervalSince1970: (message?.timestamp?.doubleValue)!)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "hh:mm:ss a"
+            timeLabel.text = dateFormatter.string(from: timestampDate)
+            
         }
     }
     let timeLabel : UILabel = {
         let label =  UILabel()
-        label.text = "HH:MM:SS"
+//        label.text = "HH:MM:SS"
+        label.font.withSize(12)
+        label.textColor = UIColor.lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         addSubview((profileImageView))
@@ -56,7 +61,7 @@ class UserCell: UITableViewCell {
         addSubview(timeLabel)
         //x, y, width, height
         timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
-        timeLabel.centerYAnchor.constraint(equalTo: (textLabel?.centerYAnchor)!).isActive = true
+        timeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: (textLabel?.heightAnchor)!).isActive = true
         

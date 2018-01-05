@@ -34,7 +34,9 @@ class MessagesController: UITableViewController, UITextFieldDelegate {
                 message.sendId = dictionary["SendId"] as? String
                 message.receiveId = dictionary["RecieveId"] as? String
                 message.message = dictionary["text"] as? String
-                message.timestamp = dictionary["TimeStamp"] as? String
+                message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                print("TS")
+                print(dictionary["TimeStamp"] as? NSNumber) 
                 self.messages.append(message)
                 DispatchQueue.main.async(){
                     self.tableView.reloadData()
