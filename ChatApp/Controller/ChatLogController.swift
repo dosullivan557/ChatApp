@@ -72,18 +72,32 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate{
         seperatorLine.heightAnchor.constraint(equalToConstant:0.5).isActive = true
         seperatorLine.widthAnchor.constraint(equalTo:containerView.widthAnchor).isActive = true
     }
-    @objc func handleSend(){
+
+    @objc func handleSend() {
         let ref = Database.database().reference().child("messages")
-        let recieveId = user?.id
-        let sendId = Auth.auth().currentUser!.uid
-        //time stamp
-        let timestamp = NSDate().timeIntervalSince1970
-        print(timestamp)
-        let values = ["text" : inputTextField.text!, "RecieveId" : recieveId, "SendId" : sendId, "TimeStamp" : timestamp] as [String : Any]
-        
         let childRef = ref.childByAutoId()
-        childRef.updateChildValues(values)
+        //is it there best thing to include the name inside of the message node
+        let recieveId = user!.id!
+        let sendId = Auth.auth().currentUser!.uid
+        let timestamp = Int(Date().timeIntervalSince1970)
+        let values = ["text": inputTextField.text!, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error ?? "")
+                return
+            }
+            
+            let userMessagesRef = Database.database().reference().child("user-messages").child(sendId)
+            
+            let messageId = childRef.key
+            userMessagesRef.updateChildValues([messageId: 1])
+            
+            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId)
+            recipientUserMessagesRef.updateChildValues([messageId: 1])
+        }
     }
+    
 
     //Hide keyboard when screen is touched
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

@@ -90,7 +90,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             if  err != nil {
                 return
             }
-            self.messagesController?.fetchUser()
+            self.messagesController?.fetchUserAndSetupNavBarTitle()
             self.dismiss(animated: true, completion: nil)
         })
     }

@@ -58,7 +58,7 @@ class NewMessageController: UITableViewController {
         dismiss(animated: true)
         let user = self.users[indexPath.row]
         
-        self.messagesController.showChatController(user: user)
+        self.messagesController.showChatControllerForUser(user)
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 65

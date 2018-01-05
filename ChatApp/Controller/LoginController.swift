@@ -27,8 +27,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
 
     let pictureContainer: UIView = {
         let view = UIView()
-//        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 20
         view.layer.masksToBounds = true
@@ -256,7 +255,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
                 print(error.debugDescription)
                 return
             }
-            self.messagesController?.fetchUser()
+            self.messagesController?.fetchUserAndSetupNavBarTitle()
             self.dismiss(animated: true, completion: nil)
         }
     }
