@@ -16,6 +16,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate{
         setupInputComponents()
     }
     
+    var user: User?{
+        didSet{
+            navigationItem.title = user?.name
+        }
+    }
     lazy var inputTextField: UITextField = {
         let inputTextField = UITextField()
         inputTextField.placeholder = "Type Message..."
@@ -69,7 +74,15 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate{
     }
     @objc func handleSend(){
         let ref = Database.database().reference().child("messages")
-        let values = ["text" : inputTextField.text!]
+        let recieveId = user?.id
+        let sendId = Auth.auth().currentUser!.uid
+        //time stamp
+        let timestamp = DateFormatter.localizedString(from: NSDate() as Date, dateStyle: .short, timeStyle: .medium)
+        //if make time style long, I get the time zone, which could help globalising
+        print(timestamp)
+        
+        let values = ["text" : inputTextField.text!, "RecieveId" : recieveId, "SendId" : sendId, "TimeStamp" : timestamp]
+        
         let childRef = ref.childByAutoId()
         childRef.updateChildValues(values)
     }
