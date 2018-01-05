@@ -33,6 +33,7 @@ class NewMessageController: UITableViewController {
                 user.name = dictionary["name"] as? String
                 user.email = dictionary["email"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                user.id = DataSnapshot.key
                 self.users.append(user)
                 self.tableView.reloadData()
             }
@@ -51,41 +52,19 @@ class NewMessageController: UITableViewController {
         return cell!
         
     }
+    var messagesController = MessagesController()
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: true)
+        let user = self.users[indexPath.row]
+        
+        self.messagesController.showChatController(user: user)
+    }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 65
     }
 }
 
-class UserCell: UITableViewCell {
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        //defaultImage
-        imageView.image = UIImage(named: "defaultPic")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 25
-        imageView.layer.masksToBounds = true
-        
-        
-        return imageView
-    }()
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        addSubview((profileImageView))
-        
-        //x, y, width, height
-        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant:8).isActive = true
-        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        textLabel?.frame = CGRect(x: 66, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
-        detailTextLabel?.frame = CGRect(x: 66, y: detailTextLabel!.frame.origin.y, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
-    }
-}
+
+
+
