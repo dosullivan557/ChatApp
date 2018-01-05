@@ -463,7 +463,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         view.self.endEditing(true)
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        handleSend()
         self.view.endEditing(true)
         return true
     }
