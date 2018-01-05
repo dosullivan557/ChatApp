@@ -21,6 +21,8 @@
 		DE4BDD8E1FF526D500E67C45 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4BDD8D1FF526D500E67C45 /* LoginController.swift */; };
 		DE4BDD901FF5475700E67C45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE4BDD8F1FF5475700E67C45 /* GoogleService-Info.plist */; };
 		DEDD53B01FFE6B7000B10E62 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */; };
+		DEDD53B41FFFC87900B10E62 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B31FFFC87900B10E62 /* Message.swift */; };
+		DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B61FFFD27C00B10E62 /* UserCell.swift */; };
 		DEF0D4B81FF58F250062AF22 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF0D4B71FF58F250062AF22 /* NewMessageController.swift */; };
 		DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFA87AA1FF7EF230025FAA6 /* User.swift */; };
 		DEFA87AD1FF838E90025FAA6 /* LoginController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFA87AC1FF838E90025FAA6 /* LoginController+handlers.swift */; };
@@ -70,6 +72,8 @@
 		DE4BDD8D1FF526D500E67C45 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		DE4BDD8F1FF5475700E67C45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
+		DEDD53B31FFFC87900B10E62 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		DEDD53B61FFFD27C00B10E62 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		DEF0D4B71FF58F250062AF22 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		DEFA87AA1FF7EF230025FAA6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		DEFA87AC1FF838E90025FAA6 /* LoginController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginController+handlers.swift"; sourceTree = "<group>"; };
@@ -160,6 +164,7 @@
 		DE4BDD5D1FF5244E00E67C45 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				DEDD53B51FFFD25B00B10E62 /* View */,
 				DE47D18F1FF96A85000B6C08 /* Helpers */,
 				DEFA87A91FF7EEEE0025FAA6 /* Model */,
 				DE4BDD8C1FF526B300E67C45 /* Controller */,
@@ -202,10 +207,19 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		DEDD53B51FFFD25B00B10E62 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				DEDD53B61FFFD27C00B10E62 /* UserCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		DEFA87A91FF7EEEE0025FAA6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				DEFA87AA1FF7EF230025FAA6 /* User.swift */,
+				DEDD53B31FFFC87900B10E62 /* Message.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -513,10 +527,12 @@
 				DEDD53B01FFE6B7000B10E62 /* ChatLogController.swift in Sources */,
 				DEF0D4B81FF58F250062AF22 /* NewMessageController.swift in Sources */,
 				DE4BDD611FF5244E00E67C45 /* MessagesController.swift in Sources */,
+				DEDD53B41FFFC87900B10E62 /* Message.swift in Sources */,
 				DEFA87AD1FF838E90025FAA6 /* LoginController+handlers.swift in Sources */,
 				DE47D1911FF96A9C000B6C08 /* Extensions.swift in Sources */,
 				DE4BDD8E1FF526D500E67C45 /* LoginController.swift in Sources */,
 				DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */,
+				DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */,
 				DE4BDD5F1FF5244E00E67C45 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
