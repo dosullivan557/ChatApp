@@ -101,10 +101,10 @@ class MessagesController: UITableViewController {
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message()
-                message.message = dictionary["text"] as! String
-                message.timestamp = dictionary["TimeStamp"] as! NSNumber
-                message.receiveId = dictionary["RecieveId"] as! String
-                message.sendId = dictionary["SendId"] as! String
+                message.message = dictionary["text"] as? String
+                message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                message.receiveId = dictionary["RecieveId"] as? String
+                message.sendId = dictionary["SendId"] as? String
                 
 
                 if let toId = message.receiveId {
