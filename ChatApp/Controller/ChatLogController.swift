@@ -15,6 +15,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.alwaysBounceVertical = true
+        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 50, right: 0)
         setupInputComponents()
     }
@@ -115,6 +116,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         return CGSize(width: view.frame.width, height: height)
     }
     func estimatedBubble(text: String) -> CGRect {
+
+        return NSString(string: text).boundingRect(with: CGSize(width: 200, height: 1000), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     @objc func handleSend() {
         let ref = Database.database().reference().child("messages")
