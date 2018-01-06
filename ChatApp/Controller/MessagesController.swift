@@ -215,7 +215,7 @@ class MessagesController: UITableViewController {
         let nameLabel = UILabel()
         
         containerView.addSubview(nameLabel)
-        nameLabel.text = user.name
+        nameLabel.text = user.name?.components(separatedBy: " ").first!
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         //need x,y,width,height anchors
         nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8).isActive = true
