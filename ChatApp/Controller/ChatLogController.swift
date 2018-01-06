@@ -15,6 +15,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.alwaysBounceVertical = true
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
         setupInputComponents()
     }
     var messages = [Message]()
@@ -106,7 +107,18 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         seperatorLine.widthAnchor.constraint(equalTo:containerView.widthAnchor).isActive = true
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 80)
+        var height: CGFloat = 80
+        if let text = messages[indexPath.item].message{
+            height = estimatedFrameForText(text: text).height + 10
+        }
+        
+        return CGSize(width: view.frame.width, height: height)
+    }
+    func estimatedFrameForText(text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     @objc func handleSend() {
         let ref = Database.database().reference().child("messages")
@@ -142,6 +154,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         let message = messages[indexPath.item]
         cell.textView.text = message.message
+        cell.bubbleWidth?.constant = estimatedFrameForText(text: message.message!).width + 32
         return cell
     }
     
