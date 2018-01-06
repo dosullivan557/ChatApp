@@ -23,7 +23,7 @@ class ChatMessageCell: UICollectionViewCell {
         let view = UIView()
         view.backgroundColor = UIColor.purple
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         return view
     }()
