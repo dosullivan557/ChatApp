@@ -42,7 +42,7 @@ class NewMessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? UserCell
         let user = users[indexPath.row]
-        
+        cell?.profileImageView.image = UIImage(named: "defaultPic")
         cell?.textLabel?.text = user.name
         cell?.detailTextLabel?.text = user.email
         if let profileImageUrl = user.profileImageUrl {
@@ -63,6 +63,7 @@ class NewMessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 65
     }
+
 }
 
 

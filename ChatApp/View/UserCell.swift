@@ -21,7 +21,7 @@ class UserCell: UITableViewCell {
                 let timestampDate = Date(timeIntervalSince1970: seconds)
                 
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm:ss a"
+                dateFormatter.dateFormat = "h:mm a"
                 timeLabel.text = dateFormatter.string(from: timestampDate)
             }
             
@@ -40,6 +40,7 @@ class UserCell: UITableViewCell {
         
         if let id = chatPartnerId {
             let ref = Database.database().reference().child("users").child(id)
+            profileImageView.image = nil
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {

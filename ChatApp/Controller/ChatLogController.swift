@@ -80,6 +80,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate{
         let recieveId = user!.id!
         let sendId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
+
+
         let values = ["text": inputTextField.text!, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in

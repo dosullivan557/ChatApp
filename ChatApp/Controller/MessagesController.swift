@@ -84,7 +84,6 @@ class MessagesController: UITableViewController {
                         })
                     }
                     
-                    //this will crash because of background thread, so lets call this on dispatch_async main thread
                     DispatchQueue.main.async(execute: {
                         self.tableView.reloadData()
                     })
@@ -188,7 +187,6 @@ class MessagesController: UITableViewController {
         
         let titleView = UIView()
         titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
-        //        titleView.backgroundColor = UIColor.redColor()
         
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -205,8 +203,7 @@ class MessagesController: UITableViewController {
         
         containerView.addSubview(profileImageView)
         
-        //ios 9 constraint anchors
-        //need x,y,width,height anchors
+        //x,y,width,height anchors
         profileImageView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
@@ -217,7 +214,7 @@ class MessagesController: UITableViewController {
         containerView.addSubview(nameLabel)
         nameLabel.text = user.name?.components(separatedBy: " ").first!
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        //need x,y,width,height anchors
+        //x,y,width,height anchors
         nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8).isActive = true
         nameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
         nameLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
@@ -228,7 +225,6 @@ class MessagesController: UITableViewController {
         
         self.navigationItem.titleView = titleView
         
-        //        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
     }
     
     func showChatControllerForUser(_ user: User) {
