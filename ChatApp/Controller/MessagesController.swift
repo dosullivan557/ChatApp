@@ -106,8 +106,8 @@ class MessagesController: UITableViewController {
                 message.sendId = dictionary["SendId"] as? String
                 
 
-                if let toId = message.receiveId {
-                    self.messagesDictionary[toId] = message
+                if let chatId = message.chatWithId() {
+                    self.messagesDictionary[chatId] = message
                     
                     self.messages = Array(self.messagesDictionary.values)
                     self.messages.sort(by: { (message1, message2) -> Bool in
