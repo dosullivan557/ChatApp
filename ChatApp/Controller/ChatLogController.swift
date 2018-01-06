@@ -41,11 +41,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 message.sendId = dictionary["SendId"] as? String
                 message.receiveId = dictionary["RecieveId"] as? String
                 message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                
+                if message.chatWithId() == self.user?.id{
                 self.messages.append(message)
                 
                 DispatchQueue.main.async(execute: {
                     self.collectionView?.reloadData()
                 })
+                }
             }, withCancel: nil)
         })
     }
