@@ -15,7 +15,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.alwaysBounceVertical = true
-        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 50, right: 0)
         setupInputComponents()
     }
     var messages = [Message]()
@@ -145,6 +145,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId)
             recipientUserMessagesRef.updateChildValues([messageId: 1])
         }
+        self.inputTextField.text = ""
     }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
@@ -154,7 +155,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         let message = messages[indexPath.item]
         cell.textView.text = message.message
-        cell.bubbleWidth?.constant = estimatedFrameForText(text: message.message!).width + 32
+        cell.bubbleWidth?.constant = estimatedBubble(text: message.message!).width + 25
         return cell
     }
     
