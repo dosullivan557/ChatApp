@@ -156,6 +156,25 @@ class MessagesController: UITableViewController {
             fetchUserAndSetupNavBarTitle()
         }
     }
+   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+    guard let chatId = message.chatWithId() else {
+        return
+    }
+        let ref = Database.database().reference().child("users").child(chatId)
+        ref.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+            guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
+                return
+            }
+            let user = User()
+            user.email = dictionary["email"] as? String
+            user.name = dictionary["name"] as? String
+            user.id = chatId
+            user.profileImageUrl = dictionary["profileImageUrl"] as? String
+            self.showChatControllerForUser(user)
+
+    }, withCancel: nil)
+    }
     
     func fetchUserAndSetupNavBarTitle() {
         guard let uid = Auth.auth().currentUser?.uid else {

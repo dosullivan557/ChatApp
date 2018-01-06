@@ -30,15 +30,7 @@ class UserCell: UITableViewCell {
     }
     
     fileprivate func setupNameAndProfileImage() {
-        let chatPartnerId: String?
-        
-        if message?.sendId == Auth.auth().currentUser?.uid {
-            chatPartnerId = message?.receiveId
-        } else {
-            chatPartnerId = message?.sendId
-        }
-        
-        if let id = chatPartnerId {
+        if let id = message?.chatWithId() {
             let ref = Database.database().reference().child("users").child(id)
             profileImageView.image = nil
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
