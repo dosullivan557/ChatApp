@@ -117,7 +117,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     func estimatedBubble(text: String) -> CGRect {
 
-        return NSString(string: text).boundingRect(with: CGSize(width: 200, height: 1000), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
+        return NSString(string: text).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     @objc func handleSend() {
         let ref = Database.database().reference().child("messages")
@@ -150,11 +150,38 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         return messages.count
     }
     let cellId = "cellId"
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         let message = messages[indexPath.item]
         cell.textView.text = message.message
         cell.bubbleWidth?.constant = estimatedBubble(text: message.message!).width + 25
+
+        if message.sendId == Auth.auth().currentUser?.uid {
+            //outgoing
+            cell.bubbleView.backgroundColor = UIColor.purple
+            cell.textView.textColor = UIColor.white
+            cell.bubbleViewLA?.isActive = false
+            cell.bubbleViewRA?.isActive = true
+            //load current users image
+            Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    
+                    cell.profileImage.loadImageUsingCache(urlString: dictionary["profileImageUrl"] as? String)
+                }
+            })
+        }
+        else {
+            //Incoming
+            cell.bubbleViewRA?.isActive = false
+            cell.bubbleViewLA?.isActive = true
+            cell.bubbleView.backgroundColor = UIColor.lightGray
+            cell.textView.textColor = UIColor.black
+            //load other person's image
+            if let profileImageUrl = self.user?.profileImageUrl {
+                cell.profileImage.loadImageUsingCache(urlString: profileImageUrl)
+            }
+        }
         return cell
     }
     
