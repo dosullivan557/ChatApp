@@ -11,11 +11,11 @@ import Firebase
 
 
 class LoginController: UIViewController, UITextFieldDelegate {
-
+    
     var messagesController: MessagesController?
     var counter = [false, false, false]
-
-
+    
+    
     let inputsContainerView : UIView={
         let view = UIView()
         view.backgroundColor = UIColor.white
@@ -24,7 +24,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         view.layer.masksToBounds = true
         return view
     }()
-
+    
     let pictureContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
@@ -33,9 +33,9 @@ class LoginController: UIViewController, UITextFieldDelegate {
         view.layer.masksToBounds = true
         return view
     }()
-
+    
     let scrollView: UIScrollView = {
-       let scrollView = UIScrollView()
+        let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         scrollView.isScrollEnabled = true
@@ -157,7 +157,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     
     var pictureContainerHeightAnchor: NSLayoutConstraint?
     var hideKeyboardHeightAnchor: NSLayoutConstraint?
-
+    
     var inputsContainerViewHeightAnchor: NSLayoutConstraint?
     var nameTextFieldHeightAnchor: NSLayoutConstraint?
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
@@ -189,7 +189,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
             self.handleRegister()
         }
     }
-
+    
     
     @objc func emailValidation(){
         if (emailTextField.text) != nil{
@@ -233,7 +233,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
             if(counter[1] && counter[2]){
                 loginRegisterButton.alpha = 1
                 loginRegisterButton.isEnabled = true
-                }
+            }
             else{
                 loginRegisterButton.alpha = 0.5
                 loginRegisterButton.isEnabled = false
@@ -272,7 +272,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     @objc func handleClearImage(){
         profileImageUpload.image = UIImage(named: "defaultPic")
         clearProfilePictureImage.isHidden = true
-
+        
     }
     func setupClearImage(){
         clearProfilePictureImage.topAnchor.constraint(equalTo: profileImageUpload.bottomAnchor, constant: 10).isActive = true
@@ -321,7 +321,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         counter[1] = false
         counter[2] = false
         handleClearImage()
-       
+        
     }
     
     override func viewDidLoad() {
@@ -348,7 +348,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         setupClearImage()
         setupPictureContainer()
     }
- 
+    
     func setupPictureContainer(){
         pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 20).isActive = true
         pictureContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -364,7 +364,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         loginRegisterSegmentedControl.topAnchor.constraint(equalTo:scrollView.topAnchor, constant:25).isActive = true
         loginRegisterSegmentedControl.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: 1).isActive = true
         loginRegisterSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
-
+        
     }
     func setupProfilePic(){
         //x, y, width, height
@@ -383,7 +383,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         hideKeyboardHeightAnchor?.isActive = true
     }
     
-
+    
     func setupInputsContainerView() {
         //x,y, width, height constraints
         inputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
@@ -429,11 +429,11 @@ class LoginController: UIViewController, UITextFieldDelegate {
         passwordTextFieldHeightAnchor?.isActive = true
     }
     func setupLoginRegisterButton() {
-    //x,y, width, height constraints
+        //x,y, width, height constraints
         loginRegisterButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-    loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 12).isActive = true
-    loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
-    loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 12).isActive = true
+        loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     
@@ -445,7 +445,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         logo.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
     
-
+    
     func setupScrollView(){
         scrollView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -454,7 +454,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view
     }
     
-  
+    
     
     
     func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -474,7 +474,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
 
 extension UIColor {
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat){
-    self.init(red:r/255, green: g/255, blue: b/255, alpha:1)
+        self.init(red:r/255, green: g/255, blue: b/255, alpha:1)
     }
 }
-

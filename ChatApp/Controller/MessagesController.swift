@@ -54,7 +54,7 @@ class MessagesController: UITableViewController {
         
     }
     
-
+    
     func observeUserMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -120,7 +120,7 @@ class MessagesController: UITableViewController {
     
     @objc func handleNewMessage() {
         let newMessageController = NewMessageController()
-        newMessageController.messagesController = self
+        newMessageController.messagesController = self 
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
@@ -133,7 +133,7 @@ class MessagesController: UITableViewController {
         }
     }
     
-   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
         guard let chatId = message.chatWithId() else {
             return
@@ -149,7 +149,7 @@ class MessagesController: UITableViewController {
             user.id = chatId
             user.profileImageUrl = dictionary["profileImageUrl"] as? String
             self.showChatControllerForUser(user)
-            }
+        }
             ,withCancel: nil)
     }
     
@@ -243,4 +243,3 @@ class MessagesController: UITableViewController {
     }
     
 }
-

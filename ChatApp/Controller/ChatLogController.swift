@@ -37,7 +37,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         setupInputComponents()
         
     }
-
+    
     func observeMessages(){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -58,16 +58,16 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 message.timestamp = dictionary["TimeStamp"] as? NSNumber
                 
                 if message.chatWithId() == self.user?.id{
-                self.messages.append(message)
-                
-                DispatchQueue.main.async(execute: {
-                    self.collectionView?.reloadData()
-                })
+                    self.messages.append(message)
+                    
+                    DispatchQueue.main.async(execute: {
+                        self.collectionView?.reloadData()
+                    })
                 }
             }, withCancel: nil)
         })
     }
-
+    
     func setupInputComponents(){
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -99,12 +99,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         inputTextField.leftAnchor.constraint(equalTo:containerView.leftAnchor, constant: 10).isActive = true
         inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
-
+        
         //seperator
         let seperatorLine = UIView()
         seperatorLine.backgroundColor = UIColor(r: 220, g: 220, b: 220)
         seperatorLine.translatesAutoresizingMaskIntoConstraints = false
-
+        
         containerView.addSubview(seperatorLine)
         
         //x,y,height, width
@@ -122,7 +122,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         return CGSize(width: view.frame.width, height: height)
     }
     func estimatedBubble(text: String) -> CGRect {
-
+        
         return NSString(string: text).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     @objc func handleSend() {
@@ -132,8 +132,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let recieveId = user!.id!
         let sendId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
-
-
+        
+        
         let values = ["text": inputTextField.text!, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
@@ -161,7 +161,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let message = messages[indexPath.item]
         cell.textView.text = message.message
         cell.bubbleWidth?.constant = estimatedBubble(text: message.message!).width + 25
-
+        
         if message.sendId == Auth.auth().currentUser?.uid {
             //outgoing
             cell.bubbleView.backgroundColor = UIColor.purple
@@ -185,7 +185,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         return cell
     }
     
-
+    
     //Hide keyboard when screen is touched
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         handleSend()

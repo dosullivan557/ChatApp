@@ -5,15 +5,14 @@
 //  Created by Danny on 28/12/2017.
 //  Copyright © 2017 Danny. All rights reserved.
 //
-
 import UIKit
 import Firebase
 class NewMessageController: UITableViewController {
     let cellId = "cellId"
     var users = [User]()
     var timer: Timer?
-
-
+    var messagesController = MessagesController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
@@ -66,8 +65,7 @@ class NewMessageController: UITableViewController {
         return cell!
         
     }
-   
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: true)
         let user = self.users[indexPath.row]
@@ -77,9 +75,8 @@ class NewMessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 65
     }
-
+    
 }
-
 
 
 
