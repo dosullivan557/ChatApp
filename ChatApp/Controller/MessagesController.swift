@@ -36,6 +36,9 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 class MessagesController: UITableViewController {
     
     let cellId = "cellId"
+    var timer: Timer?
+    var messages = [Message]()
+    var messagesDictionary = [String: Message]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,9 +54,7 @@ class MessagesController: UITableViewController {
         
     }
     
-    var messages = [Message]()
-    var messagesDictionary = [String: Message]()
-    
+
     func observeUserMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -92,7 +93,7 @@ class MessagesController: UITableViewController {
             
         }, withCancel: nil)
     }
-    var timer: Timer?
+    
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
@@ -131,14 +132,15 @@ class MessagesController: UITableViewController {
             fetchUserAndSetupNavBarTitle()
         }
     }
+    
    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
-    guard let chatId = message.chatWithId() else {
-        return
-    }
+        guard let chatId = message.chatWithId() else {
+            return
+        }
         let ref = Database.database().reference().child("users").child(chatId)
         ref.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-            guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
+            guard let dictionary = DataSnapshot.value as? [String: AnyObject] else {
                 return
             }
             let user = User()
@@ -147,8 +149,8 @@ class MessagesController: UITableViewController {
             user.id = chatId
             user.profileImageUrl = dictionary["profileImageUrl"] as? String
             self.showChatControllerForUser(user)
-
-    }, withCancel: nil)
+            }
+            ,withCancel: nil)
     }
     
     func fetchUserAndSetupNavBarTitle() {

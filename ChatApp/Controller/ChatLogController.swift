@@ -10,6 +10,23 @@ import UIKit
 import Firebase
 
 class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout{
+    
+    var messages = [Message]()
+    var user: User?{
+        didSet{
+            navigationItem.title = user?.name
+            observeMessages()
+        }
+    }
+    lazy var inputTextField: UITextField = {
+        let inputTextField = UITextField()
+        inputTextField.placeholder = "Type Message..."
+        inputTextField.translatesAutoresizingMaskIntoConstraints = false
+        inputTextField.delegate = self
+        return inputTextField
+    }()
+    let cellId = "cellId"
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.white
@@ -20,13 +37,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         setupInputComponents()
         
     }
-    var messages = [Message]()
-    var user: User?{
-        didSet{
-            navigationItem.title = user?.name
-            observeMessages()
-        }
-    }
+
     func observeMessages(){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -56,13 +67,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             }, withCancel: nil)
         })
     }
-    lazy var inputTextField: UITextField = {
-        let inputTextField = UITextField()
-        inputTextField.placeholder = "Type Message..."
-        inputTextField.translatesAutoresizingMaskIntoConstraints = false
-        inputTextField.delegate = self
-        return inputTextField
-    }()
+
     func setupInputComponents(){
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -150,7 +155,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
     }
-    let cellId = "cellId"
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell

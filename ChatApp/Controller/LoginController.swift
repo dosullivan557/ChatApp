@@ -67,17 +67,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return button
         
     }()
-
-    @objc func handleLoginRegister(){
-        if(loginRegisterSegmentedControl.selectedSegmentIndex == 0 ){
-            handleLogin()
-        }
-        else{
-            self.handleRegister()
-        }
-    }
-
- 
     
     //name TextField
     lazy var nameTextField : UITextField = {
@@ -124,6 +113,56 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.delegate = self
         return tf
     }()
+    
+    //Register page logo image
+    let logo: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "Icon-App-29x29")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    //upload profileImage
+    lazy var profileImageUpload: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "defaultPic")
+        imageView.contentMode = .scaleAspectFit
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true
+        imageView.layer.cornerRadius = 50
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    //segmented display
+    let loginRegisterSegmentedControl: UISegmentedControl = {
+        let sc = UISegmentedControl(items: ["Login", "Register"])
+        sc.translatesAutoresizingMaskIntoConstraints = false
+        sc.tintColor = UIColor.white
+        sc.selectedSegmentIndex = 1
+        sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
+        return sc
+    }()
+    
+    let clearProfilePictureImage: UIButton = {
+        let button = UIButton()
+        button.setTitle("Clear Image", for: .normal)
+        button.addTarget(self, action: #selector(handleClearImage), for: .touchUpInside)
+        button.setTitleColor(UIColor.purple, for: .normal)
+        button.layer.cornerRadius = 5
+        button.layer.masksToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    var pictureContainerHeightAnchor: NSLayoutConstraint?
+    var hideKeyboardHeightAnchor: NSLayoutConstraint?
+
+    var inputsContainerViewHeightAnchor: NSLayoutConstraint?
+    var nameTextFieldHeightAnchor: NSLayoutConstraint?
+    var emailTextFieldHeightAnchor: NSLayoutConstraint?
+    var passwordTextFieldHeightAnchor: NSLayoutConstraint?
+    
     @objc func passwordValidation(){
         if (passwordTextField.text) != nil{
             let password = passwordTextField.text?.count
@@ -141,6 +180,16 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
         check()
     }
+    
+    @objc func handleLoginRegister(){
+        if(loginRegisterSegmentedControl.selectedSegmentIndex == 0 ){
+            handleLogin()
+        }
+        else{
+            self.handleRegister()
+        }
+    }
+
     
     @objc func emailValidation(){
         if (emailTextField.text) != nil{
@@ -202,46 +251,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    //Register page logo image
-    let logo: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "Icon-App-29x29")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
-    //upload profileImage
-    lazy var profileImageUpload: UIImageView = {
-       let imageView = UIImageView()
-        imageView.image = UIImage(named: "defaultPic")
-        imageView.contentMode = .scaleAspectFit
-        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.isUserInteractionEnabled = true
-        imageView.layer.cornerRadius = 50
-        imageView.layer.masksToBounds = true
-        return imageView
-    }()
-    //segmented display
-    let loginRegisterSegmentedControl: UISegmentedControl = {
-        let sc = UISegmentedControl(items: ["Login", "Register"])
-        sc.translatesAutoresizingMaskIntoConstraints = false
-        sc.tintColor = UIColor.white
-        sc.selectedSegmentIndex = 1
-        sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
-        return sc
-    }()
-    
-    let clearProfilePictureImage: UIButton = {
-       let button = UIButton()
-        button.setTitle("Clear Image", for: .normal)
-        button.addTarget(self, action: #selector(handleClearImage), for: .touchUpInside)
-        button.setTitleColor(UIColor.purple, for: .normal)
-        button.layer.cornerRadius = 5
-        button.layer.masksToBounds = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     
     @objc func handleLogin(){
         print("handle login func")
@@ -339,9 +348,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         setupClearImage()
         setupPictureContainer()
     }
-    var pictureContainerHeightAnchor: NSLayoutConstraint?
-    var hideKeyboardHeightAnchor: NSLayoutConstraint?
-
+ 
     func setupPictureContainer(){
         pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 20).isActive = true
         pictureContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -376,11 +383,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         hideKeyboardHeightAnchor?.isActive = true
     }
     
-    var inputsContainerViewHeightAnchor: NSLayoutConstraint?
-    var nameTextFieldHeightAnchor: NSLayoutConstraint?
-    var emailTextFieldHeightAnchor: NSLayoutConstraint?
-    var passwordTextFieldHeightAnchor: NSLayoutConstraint?
-    
+
     func setupInputsContainerView() {
         //x,y, width, height constraints
         inputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true

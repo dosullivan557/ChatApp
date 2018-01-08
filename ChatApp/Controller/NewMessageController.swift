@@ -11,6 +11,7 @@ import Firebase
 class NewMessageController: UITableViewController {
     let cellId = "cellId"
     var users = [User]()
+    var timer: Timer?
 
 
     override func viewDidLoad() {
@@ -46,7 +47,6 @@ class NewMessageController: UITableViewController {
         
     }
     
-    var timer: Timer?
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
@@ -66,7 +66,7 @@ class NewMessageController: UITableViewController {
         return cell!
         
     }
-    var messagesController = MessagesController()
+   
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: true)

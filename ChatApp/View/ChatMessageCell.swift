@@ -38,6 +38,8 @@ class ChatMessageCell: UICollectionViewCell {
     var bubbleWidth: NSLayoutConstraint?
     var bubbleViewRA : NSLayoutConstraint?
     var bubbleViewLA : NSLayoutConstraint?
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(bubbleView)
