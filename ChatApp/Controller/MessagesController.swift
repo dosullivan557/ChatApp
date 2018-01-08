@@ -74,8 +74,8 @@ class MessagesController: UITableViewController {
                     message.receiveId = dictionary["RecieveId"] as? String
                     message.sendId = dictionary["SendId"] as? String
                     
-                    if let toId = message.receiveId {
-                        self.messagesDictionary[toId] = message
+                    if let chatId = message.chatWithId() {
+                        self.messagesDictionary[chatId] = message
                         
                         self.messages = Array(self.messagesDictionary.values)
                         self.messages.sort(by: { (message1, message2) -> Bool in
@@ -94,36 +94,6 @@ class MessagesController: UITableViewController {
         }, withCancel: nil)
     }
     
-    func observeMessages() {
-        let ref = Database.database().reference().child("messages")
-        ref.observe(.childAdded, with: { (snapshot) in
-            
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let message = Message()
-                message.message = dictionary["text"] as? String
-                message.timestamp = dictionary["TimeStamp"] as? NSNumber
-                message.receiveId = dictionary["RecieveId"] as? String
-                message.sendId = dictionary["SendId"] as? String
-                
-
-                if let chatId = message.chatWithId() {
-                    self.messagesDictionary[chatId] = message
-                    
-                    self.messages = Array(self.messagesDictionary.values)
-                    self.messages.sort(by: { (message1, message2) -> Bool in
-                        
-                        return message1.timestamp?.int32Value > message2.timestamp?.int32Value
-                    })
-                }
-                
-                //this will crash because of background thread, so lets call this on dispatch_async main thread
-                DispatchQueue.main.async(execute: {
-                    self.tableView.reloadData()
-                })
-            }
-            
-        }, withCancel: nil)
-    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
