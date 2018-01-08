@@ -11,7 +11,7 @@ import Firebase
 
 
 class LoginController: UIViewController, UITextFieldDelegate {
-    
+    //Variables
     var messagesController: MessagesController?
     var counter = [false, false, false]
     
@@ -163,6 +163,8 @@ class LoginController: UIViewController, UITextFieldDelegate {
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     
+    
+    //Password validation.
     @objc func passwordValidation(){
         if (passwordTextField.text) != nil{
             let password = passwordTextField.text?.count
@@ -180,7 +182,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
         check()
     }
-    
+    //Checks whether the segmented display is equal to login or register
     @objc func handleLoginRegister(){
         if(loginRegisterSegmentedControl.selectedSegmentIndex == 0 ){
             handleLogin()
@@ -190,7 +192,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    
+    //email validation
     @objc func emailValidation(){
         if (emailTextField.text) != nil{
             let email = emailTextField.text?.count
@@ -208,7 +210,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
         check()
     }
-    
+    //name validation
     @objc func nameValidation(){
         if (nameTextField.text) != nil{
             let name = nameTextField.text?.count
@@ -226,7 +228,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
         check()
     }
-    
+    //checks whether all inputs are valid
     func check(){
         
         if loginRegisterSegmentedControl.selectedSegmentIndex==0 {
@@ -251,7 +253,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    
+    //Handles a users login
     @objc func handleLogin(){
         print("handle login func")
         
@@ -268,18 +270,19 @@ class LoginController: UIViewController, UITextFieldDelegate {
             self.dismiss(animated: true, completion: nil)
         }
     }
-    
+    //Clear image button
     @objc func handleClearImage(){
         profileImageUpload.image = UIImage(named: "defaultPic")
         clearProfilePictureImage.isHidden = true
         
     }
+    //setup the clear image
     func setupClearImage(){
         clearProfilePictureImage.topAnchor.constraint(equalTo: profileImageUpload.bottomAnchor, constant: 10).isActive = true
         clearProfilePictureImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         clearProfilePictureImage.isHidden = true
     }
-    
+    //called when the segmented display is changed
     @objc func handleLoginRegisterChange(){
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         loginRegisterButton.setTitle(title, for: .normal)
@@ -348,7 +351,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         setupClearImage()
         setupPictureContainer()
     }
-    
+    //Setup the picture container, which contains the image uploader and the clear image button
     func setupPictureContainer(){
         pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 20).isActive = true
         pictureContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -358,6 +361,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         pictureContainerHeightAnchor?.isActive = true
     }
     
+    //Setup the login register segmented display
     func setupLoginRegisterSegmentedControl(){
         //x,y, width, height constraints
         loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
@@ -366,6 +370,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         loginRegisterSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
     }
+    //setup profile picture
     func setupProfilePic(){
         //x, y, width, height
         profileImageUpload.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
@@ -374,7 +379,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         profileImageUpload.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
     }
-    
+    //setup the hide keyboard button
     func setupKeyboardButton() {
         hideKeyboardButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         hideKeyboardButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -383,7 +388,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         hideKeyboardHeightAnchor?.isActive = true
     }
     
-    
+    //setup the container for the name, email and password
     func setupInputsContainerView() {
         //x,y, width, height constraints
         inputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
@@ -428,6 +433,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         passwordTextFieldHeightAnchor?.isActive = true
     }
+    //setup the login and register button
     func setupLoginRegisterButton() {
         //x,y, width, height constraints
         loginRegisterButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
@@ -436,7 +442,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
-    
+    //setup the profile upload
     func setupProfileImageView(){
         //x,y, width, height constraints
         logo.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
@@ -445,7 +451,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         logo.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
     
-    
+    //setup the scrollablility of the page
     func setupScrollView(){
         scrollView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -464,6 +470,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     @objc func hideKeyboard() {
         view.self.endEditing(true)
     }
+    //Hides the keyboard when the return key is pressed.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return true
@@ -471,7 +478,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     
     
 }
-
+//Ease of use for setting a colour
 extension UIColor {
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat){
         self.init(red:r/255, green: g/255, blue: b/255, alpha:1)

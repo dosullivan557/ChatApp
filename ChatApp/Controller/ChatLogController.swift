@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout{
-    
+    //Variables.
     var messages = [Message]()
     var user: User?{
         didSet{
@@ -37,7 +37,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         setupInputComponents()
         
     }
-    
+    //Function which observes the database for new messages being sent.
     func observeMessages(){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -67,7 +67,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             }, withCancel: nil)
         })
     }
-    
+    //Defines the textfield and submit button.
     func setupInputComponents(){
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,6 +113,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         seperatorLine.heightAnchor.constraint(equalToConstant:0.5).isActive = true
         seperatorLine.widthAnchor.constraint(equalTo:containerView.widthAnchor).isActive = true
     }
+    //Defines the ssize of each section.
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var height: CGFloat = 80
         if let text = messages[indexPath.item].message{
@@ -121,10 +122,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         return CGSize(width: view.frame.width, height: height)
     }
+    //Estimates the size of the bubble which will be needed for the message.
     func estimatedBubble(text: String) -> CGRect {
         
         return NSString(string: text).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
+    //This method is called when the send button is pressed.
     @objc func handleSend() {
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
@@ -152,10 +155,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
         self.inputTextField.text = ""
     }
+    //Defines how many sections that should be in the collection view.
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
     }
-    
+    //Setup each section in the collection view.
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         let message = messages[indexPath.item]

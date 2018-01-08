@@ -8,8 +8,8 @@
 
 import UIKit
 import Firebase
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
+//issue where the comparators weren't working, and these two functions were the fix to it
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -21,8 +21,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -34,8 +33,10 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 class MessagesController: UITableViewController {
-    
+    //constant variables.
     let cellId = "cellId"
+    
+    //editable variables.
     var timer: Timer?
     var messages = [Message]()
     var messagesDictionary = [String: Message]()
@@ -54,7 +55,7 @@ class MessagesController: UITableViewController {
         
     }
     
-    
+    //checks the database for the messages for the current user.
     func observeUserMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -93,18 +94,18 @@ class MessagesController: UITableViewController {
             
         }, withCancel: nil)
     }
-    
+    //Reloads the table view
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
         })
     }
     
-    
+    //Gives the number of rows in the table view.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
-    
+    //Specifies each element in the table view.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
@@ -113,18 +114,18 @@ class MessagesController: UITableViewController {
         
         return cell
     }
-    
+    //Defines the height of each table cell.
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
     }
-    
+    //defines how to open a new message controller when given an input.
     @objc func handleNewMessage() {
         let newMessageController = NewMessageController()
-        newMessageController.messagesController = self 
+        newMessageController.messagesController = self
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
-    
+    //checks whether the user is logged in; if so, then fill in the information of the view, otherwise logout. This function is called when the app is first loaded.
     func checkIfUserIsLoggedIn() {
         if Auth.auth().currentUser?.uid == nil {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
@@ -132,7 +133,7 @@ class MessagesController: UITableViewController {
             fetchUserAndSetupNavBarTitle()
         }
     }
-    
+    //called when a tablecell is selected.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
         guard let chatId = message.chatWithId() else {
@@ -153,6 +154,7 @@ class MessagesController: UITableViewController {
             ,withCancel: nil)
     }
     
+    //Defines the current user of the system, and passes it to another method to setup the navigation bar.
     func fetchUserAndSetupNavBarTitle() {
         guard let uid = Auth.auth().currentUser?.uid else {
             //for some reason uid = nil
@@ -174,6 +176,7 @@ class MessagesController: UITableViewController {
         }, withCancel: nil)
     }
     
+    //gets passed the current user of the system, and then sets up the navigation bar with that users information.
     func setupNavBarWithUser(_ user: User) {
         messages.removeAll()
         messagesDictionary.removeAll()
@@ -222,13 +225,13 @@ class MessagesController: UITableViewController {
         self.navigationItem.titleView = titleView
         
     }
-    
+    //Opens a chat log with a user which is passed in.
     func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
         navigationController?.pushViewController(chatLogController, animated: true)
     }
-    
+    //This method is called when logging out.
     @objc func handleLogout() {
         
         do {

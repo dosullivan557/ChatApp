@@ -8,7 +8,9 @@
 import UIKit
 import Firebase
 class NewMessageController: UITableViewController {
+    //Constants.
     let cellId = "cellId"
+    //Variables
     var users = [User]()
     var timer: Timer?
     var messagesController = MessagesController()
@@ -19,13 +21,15 @@ class NewMessageController: UITableViewController {
         fetchUser()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Cancel", style: .plain, target: self, action: #selector(handleCancel))
     }
+    
     @objc func handleCancel(){
         dismiss(animated: true, completion: nil)
     }
-    
+    //Defines the number of cells in the tableview.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
     }
+    //Fetches each user from the database, and populates the tableview with each user.
     func fetchUser(){
         Database.database().reference().child("users").observe(.childAdded, with: { (DataSnapshot) in
             if let dictionary = DataSnapshot.value as? [String: AnyObject]{
@@ -45,13 +49,13 @@ class NewMessageController: UITableViewController {
         }, withCancel: nil)
         
     }
-    
+    //Reloads the tableview.
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
         })
     }
-    
+    //Each cell for the tableview.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? UserCell
         let user = users[indexPath.row]
@@ -65,13 +69,14 @@ class NewMessageController: UITableViewController {
         return cell!
         
     }
-    
+    //Defines what happens when a cell is pressed.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: true)
         let user = self.users[indexPath.row]
         
         self.messagesController.showChatControllerForUser(user)
     }
+    //Defines the height of each cell.
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 65
     }

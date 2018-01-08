@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+//CollectionViewCell's implementation so can edit the layout of each cell.
 class ChatMessageCell: UICollectionViewCell {
     let textView: UITextView = {
         let tv = UITextView()

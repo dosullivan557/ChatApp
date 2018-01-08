@@ -10,6 +10,8 @@ import UIKit
 
 let imageCache = NSCache<AnyObject, AnyObject>()
 extension UIImageView {
+    
+    //loads the user's image from cache, and if it cannot find it there, it will download it from the database.
     func loadImageUsingCache(urlString: String?){
         self.image = nil
         //check cache for image first

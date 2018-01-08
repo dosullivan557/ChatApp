@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    //Image picker.
     @objc func handleSelectProfileImageView(){
         let picker = UIImagePickerController()
         
@@ -19,7 +20,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         present(picker, animated: true, completion: nil)
 
     }
-
+    //Choose image from image picker.
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var selectedImageFP: UIImage?
         if let editedImage = info["UIImagePickerControllerEditedImage"]{
@@ -37,7 +38,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     }
 
     
-   
+   //Cancel button for the image picker.
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         print("cancelled")
         dismiss(animated: true, completion: nil)
@@ -82,6 +83,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         )
         
     }
+    
+    //Registers the user into the database upon registering.
     private func registerUserIntoDatabaseWithUID(uid: String, values: [String: AnyObject]){
         //save info
         let ref = Database.database().reference()

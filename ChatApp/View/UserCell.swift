@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-
+//Table cell implementation so can edit the layout of each cell.
 class UserCell: UITableViewCell {
     
     var message: Message? {
