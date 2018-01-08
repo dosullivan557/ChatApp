@@ -35,10 +35,24 @@ class NewMessageController: UITableViewController {
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 user.id = DataSnapshot.key
                 self.users.append(user)
-                self.tableView.reloadData()
+                
+                self.users.sort(by: { (u1, u2) -> Bool in
+                    return u1.name! < u2.name!
+                })
+                self.timer?.invalidate()
+                self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
             }
         }, withCancel: nil)
+        
     }
+    
+    var timer: Timer?
+    @objc func handleReload() {
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
+        })
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? UserCell
         let user = users[indexPath.row]
