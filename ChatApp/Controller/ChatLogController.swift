@@ -18,6 +18,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
         setupInputComponents()
+        
     }
     var messages = [Message]()
     var user: User?{

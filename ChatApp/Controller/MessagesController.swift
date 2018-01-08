@@ -83,15 +83,20 @@ class MessagesController: UITableViewController {
                             return message1.timestamp?.int32Value > message2.timestamp?.int32Value
                         })
                     }
-                    
-                    DispatchQueue.main.async(execute: {
-                        self.tableView.reloadData()
-                    })
+                    //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
+                    self.timer?.invalidate()
+                    self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
                 }
                 
             }, withCancel: nil)
             
         }, withCancel: nil)
+    }
+    var timer: Timer?
+    @objc func handleReload() {
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
+        })
     }
     
     
