@@ -163,13 +163,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.textView.textColor = UIColor.white
             cell.bubbleViewLA?.isActive = false
             cell.bubbleViewRA?.isActive = true
-            //load current users image
-            Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value, with: { (snapshot) in
-                if let dictionary = snapshot.value as? [String: AnyObject] {
-                    
-                    cell.profileImage.loadImageUsingCache(urlString: dictionary["profileImageUrl"] as? String)
-                }
-            })
+            cell.profileImage.isHidden = true
         }
         else {
             //Incoming
@@ -177,6 +171,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.bubbleViewLA?.isActive = true
             cell.bubbleView.backgroundColor = UIColor.lightGray
             cell.textView.textColor = UIColor.black
+            cell.profileImage.isHidden = false
             //load other person's image
             if let profileImageUrl = self.user?.profileImageUrl {
                 cell.profileImage.loadImageUsingCache(urlString: profileImageUrl)
