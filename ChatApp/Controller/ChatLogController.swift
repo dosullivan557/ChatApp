@@ -18,7 +18,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             navigationItem.title = user?.name
 //            navigationItem.rightBarButtonItem = UIImageView().image(named: "CalendarIcon")
 //            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"CalendarIcon"), style: .plain, target: self, action: #selector(showCalendar))
-            
+
             observeMessages()
         }
     }

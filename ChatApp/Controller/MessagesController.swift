@@ -225,6 +225,12 @@ class MessagesController: UITableViewController {
         containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         containerView.widthAnchor.constraint(equalTo:titleView.widthAnchor, constant: 50).isActive = true
         
+      
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showProfile))
+        containerView.backgroundColor = UIColor.blue
+        titleView.backgroundColor = UIColor.green
+        containerView.addGestureRecognizer(tap)
+        containerView.isUserInteractionEnabled = true
         self.navigationItem.titleView = titleView
         
     }
