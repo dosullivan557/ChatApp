@@ -219,6 +219,7 @@ class MessagesController: UITableViewController {
         
         containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
         containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
+        containerView.widthAnchor.constraint(equalTo:titleView.widthAnchor, constant: 50).isActive = true
         
         self.navigationItem.titleView = titleView
         
