@@ -329,6 +329,8 @@ class LoginController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+
         //add the inputs, button, and image into the view
         scrollView.addSubview(inputsContainerView)
         scrollView.addSubview(loginRegisterButton)
