@@ -34,6 +34,8 @@ class ProfileController : UIViewController {
         view.addSubview(profileImage)
         view.addSubview(nameLabel)
         setupFields()
+        getUser()
+    }
     func setupFields(){
         profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImage.heightAnchor.constraint(equalToConstant: 150).isActive = true
@@ -58,4 +60,11 @@ class ProfileController : UIViewController {
             }
         }, withCancel: nil)
     }
+    func setupWithUser(user: User){
+        if let profileImageUrl = user.profileImageUrl {
+            profileImage.loadImageUsingCache(urlString: profileImageUrl)
+            nameLabel.text = user.name
+        }
     }
+    
+}
