@@ -14,7 +14,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var messages = [Message]()
     var user: User?{
         didSet{
+            
             navigationItem.title = user?.name
+//            navigationItem.rightBarButtonItem = UIImageView().image(named: "CalendarIcon")
+//            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"CalendarIcon"), style: .plain, target: self, action: #selector(showCalendar))
+            
             observeMessages()
         }
     }
@@ -25,6 +29,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         inputTextField.delegate = self
         return inputTextField
     }()
+    
+    lazy var calenderButton: UIImageView = {
+        let imageView = UIImageView()
+        
+        return imageView
+    }()
+    
     let cellId = "cellId"
     
     override func viewDidLoad(){
@@ -34,8 +45,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.alwaysBounceVertical = true
         collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
+
+
         setupInputComponents()
         
+    }
+    
+    @objc func showCalendar(){
+        print("calendar")
     }
     //Function which observes the database for new messages being sent.
     func observeMessages(){

@@ -91,9 +91,10 @@ class UserCell: UITableViewCell {
         //time label centered
         //        timeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         //time label top
-        //        timeLabel.topAnchor.constraint(equalTo:self.topAnchor).isActive = true
+        timeLabel.topAnchor.constraint(equalTo:self.topAnchor, constant: 18).isActive = true
+        
         //time label bottom
-        timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+//        timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         
         timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: textLabel!.heightAnchor).isActive = true
