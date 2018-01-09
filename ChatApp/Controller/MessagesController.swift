@@ -174,6 +174,9 @@ class MessagesController: UITableViewController {
         }, withCancel: nil)
     }
     
+    @objc func showProfile(){
+        print("123")
+    }
     //gets passed the current user of the system, and then sets up the navigation bar with that users information.
     func setupNavBarWithUser(_ user: User) {
         messages.removeAll()
@@ -189,6 +192,8 @@ class MessagesController: UITableViewController {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         titleView.addSubview(containerView)
         
+
+
         let profileImageView = UIImageView()
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         profileImageView.contentMode = .scaleAspectFill
