@@ -45,4 +45,17 @@ class ProfileController : UIViewController {
         nameLabel.widthAnchor.constraint(equalTo: profileImage.widthAnchor).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
+    func getUser(){
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
+                let user = User()
+                user.name = dictionary["name"] as? String
+                user.email = dictionary["email"] as? String
+                user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                user.id = DataSnapshot.key
+                self.setupWithUser(user: user)
+                print(user)
+            }
+        }, withCancel: nil)
+    }
     }
