@@ -41,7 +41,13 @@ class MessagesController: UITableViewController {
     var messages = [Message]()
     var messagesDictionary = [String: Message]()
     
-
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            self.messages.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
