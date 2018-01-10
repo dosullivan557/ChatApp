@@ -21,39 +21,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     var messages = [Message]()
     
-    func observeMessages() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
-        
-        let userMessagesRef = Database.database().reference().child("user-messages").child(uid)
-        userMessagesRef.observe(.childAdded, with: { (snapshot) in
-            
-            let messageId = snapshot.key
-            let messagesRef = Database.database().reference().child("messages").child(messageId)
-            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                guard let dictionary = snapshot.value as? [String: AnyObject] else {
-                    return
-                }
-                
-                let message = Message()
-                message.message = dictionary["text"] as? String
-                message.receiveId = dictionary["RecieveId"] as? String
-                message.sendId = dictionary["SendId"] as? String
-                message.timestamp = dictionary["TimeStamp"] as? NSNumber
-                if message.chatWithId() == self.user?.id {
-                    self.messages.append(message)
-                    DispatchQueue.main.async(execute: {
-                        self.collectionView?.reloadData()
-                    })
-                }
-                
-            }, withCancel: nil)
-            
-        }, withCancel: nil)
-    }
-    
     lazy var inputTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Enter message..."
@@ -63,22 +30,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }()
     
     let cellId = "cellId"
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
-        //        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
-        collectionView?.alwaysBounceVertical = true
-        collectionView?.backgroundColor = UIColor.white
-        collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
-        
-        collectionView?.keyboardDismissMode = .interactive
-        
-        //        setupInputComponents()
-        //
-        //        setupKeyboardObservers()
-    }
     
     lazy var inputContainerView: UIView = {
         let containerView = UIView()
@@ -124,6 +75,53 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     override var canBecomeFirstResponder : Bool {
         return true
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        //        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        collectionView?.alwaysBounceVertical = true
+        collectionView?.backgroundColor = UIColor.white
+        collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.keyboardDismissMode = .interactive
+        
+        //        setupInputComponents()
+        //        setupKeyboardObservers()
+    }
+    
+    func observeMessages() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let userMessagesRef = Database.database().reference().child("user-messages").child(uid)
+        userMessagesRef.observe(.childAdded, with: { (snapshot) in
+            
+            let messageId = snapshot.key
+            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                
+                let message = Message()
+                message.message = dictionary["text"] as? String
+                message.receiveId = dictionary["RecieveId"] as? String
+                message.sendId = dictionary["SendId"] as? String
+                message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                if message.chatWithId() == self.user?.id {
+                    self.messages.append(message)
+                    DispatchQueue.main.async(execute: {
+                        self.collectionView?.reloadData()
+                    })
+                }
+                
+            }, withCancel: nil)
+            
+        }, withCancel: nil)
     }
     
     func setupKeyboardObservers() {
@@ -273,6 +271,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     @objc func handleSend() {
+        if inputTextField.text?.trimmingCharacters(in: .whitespaces) == "" {
+            inputTextField.text = ""
+            return
+        }
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
         //is it there best thing to include the name inside of the message node
