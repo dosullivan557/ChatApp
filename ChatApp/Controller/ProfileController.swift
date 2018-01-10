@@ -16,6 +16,7 @@ class ProfileController : UIViewController {
         image.layer.cornerRadius = 75
         image.layer.masksToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
+        
         return image
     }()
     let nameLabel : UITextView = {
