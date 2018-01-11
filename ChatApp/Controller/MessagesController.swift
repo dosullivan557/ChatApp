@@ -45,7 +45,6 @@ class MessagesController: UITableViewController {
         if editingStyle == .delete {
             self.messages.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-            
         }
     }
     
