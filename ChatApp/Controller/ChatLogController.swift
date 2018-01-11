@@ -61,9 +61,17 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     @objc func handleKeyboardWillShow(notification: Notification){
         let keyboardFrame = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? CGRect
         containerViewBA?.constant = -((keyboardFrame?.height)!)
+        let keyboardDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+        UIView.animate(withDuration: keyboardDuration!) {
+            self.view.layoutIfNeeded()
+        }
     }
     @objc func handleKeyboardWillHide(notification: Notification){
         containerViewBA?.constant = 0
+        let keyboardDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+        UIView.animate(withDuration: keyboardDuration!) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     
