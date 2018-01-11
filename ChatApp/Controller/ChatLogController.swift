@@ -19,6 +19,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 //            navigationItem.rightBarButtonItem = UIImageView().image(named: "CalendarIcon")
 //            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"CalendarIcon"), style: .plain, target: self, action: #selector(showCalendar))
             
+            self.hidesBottomBarWhenPushed = true
+            
             observeMessages()
         }
     }
@@ -54,6 +56,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     @objc func showCalendar(){
         print("calendar")
     }
+    
     //Function which observes the database for new messages being sent.
     func observeMessages(){
         guard let uid = Auth.auth().currentUser?.uid else {
