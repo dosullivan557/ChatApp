@@ -50,8 +50,22 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 
 
         setupInputComponents()
-        
+        setupKeyboard()
     }
+    
+    func setupKeyboard(){
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc func handleKeyboardWillShow(notification: Notification){
+        let keyboardFrame = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? CGRect
+        containerViewBA?.constant = -((keyboardFrame?.height)!)
+    }
+    @objc func handleKeyboardWillHide(notification: Notification){
+        containerViewBA?.constant = 0
+    }
+    
     
     @objc func showCalendar(){
         print("calendar")
@@ -87,6 +101,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             }, withCancel: nil)
         })
     }
+    
+    var containerViewBA: NSLayoutConstraint?
+    
     //Defines the textfield and submit button.
     func setupInputComponents(){
         let containerView = UIView()
@@ -96,7 +113,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         //x, y, width, height
         containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        containerViewBA = containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        containerViewBA?.isActive = true
         containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
