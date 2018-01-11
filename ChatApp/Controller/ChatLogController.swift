@@ -180,6 +180,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     //This method is called when the send button is pressed.
     @objc func handleSend() {
+        
+        if inputTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            print("Cannot send empty messages")
+            return
+        }
+        
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
         //is it there best thing to include the name inside of the message node
