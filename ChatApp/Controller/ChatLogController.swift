@@ -182,6 +182,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     @objc func handleSend() {
         
         if inputTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            inputTextField.text = ""
             print("Cannot send empty messages")
             return
         }
