@@ -90,7 +90,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             return
         }
         
-        let ref = Database.database().reference().child("user-messages").child(uid)
+        let ref = Database.database().reference().child("user-messages").child(uid).child((self.user?.id)!)
         ref.observe(.childAdded, with: { (DataSnapshot) in
             let messageId = DataSnapshot.key
             let messagesRef = Database.database().reference().child("messages").child(messageId)
