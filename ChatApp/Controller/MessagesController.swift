@@ -70,7 +70,6 @@ class MessagesController: UITableViewController {
         
         let ref = Database.database().reference().child("user-messages").child(uid)
         ref.observe(.childAdded, with: { (snapshot) in
-            
             let messageId = snapshot.key
             let messagesReference = Database.database().reference().child("messages").child(messageId)
             
