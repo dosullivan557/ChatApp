@@ -57,7 +57,7 @@ class MessagesController: UITableViewController {
                 ref.removeValue()
             }
         }
-    }
+    } 
     
     override func viewDidLoad() {
         super.viewDidLoad()
