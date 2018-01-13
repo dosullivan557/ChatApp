@@ -14,13 +14,17 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var messages = [Message]()
     var user: User?{
         didSet{
-            
-            navigationItem.title = user?.name
-//            navigationItem.rightBarButtonItem = UIImageView().image(named: "CalendarIcon")
-//            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"CalendarIcon"), style: .plain, target: self, action: #selector(showCalendar))
-            
-            self.hidesBottomBarWhenPushed = true
-            
+            let titleView = UITextView()
+            titleView.text = user?.name
+            titleView.isEditable = false
+            titleView.isUserInteractionEnabled = false
+
+            let calendarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showCalendar))
+            calendarButton.image = UIImage(named: "CalendarIcon")
+            calendarButton.title = ""
+            navigationItem.rightBarButtonItem = calendarButton
+            navigationItem.titleView = titleView
+
             observeMessages()
         }
     }
@@ -31,6 +35,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         inputTextField.delegate = self
         return inputTextField
     }()
+    @objc func handleNameClick() {
+        print("Name Tap")
+    }
     
     lazy var calenderButton: UIImageView = {
         let imageView = UIImageView()
@@ -41,6 +48,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     let cellId = "cellId"
     
     override func viewDidLoad(){
+        self.hidesBottomBarWhenPushed = true
+        reload()
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
@@ -76,12 +85,16 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
+        reload()
         NotificationCenter.default.removeObserver(self)
     }
-    
+    //show calendar
     @objc func showCalendar(){
         print("calendar")
+        let calendarView = CalendarController()
+        calendarView.user = user
+        self.show(calendarView, sender: self)
+        
     }
     
     //Function which observes the database for new messages being sent.
@@ -116,6 +129,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     var containerViewBA: NSLayoutConstraint?
+    
+    func reload(){
+        DispatchQueue.main.async(execute: {
+            self.hidesBottomBarWhenPushed = true
+            self.collectionView?.reloadData()
+        })
+    }
     
     //Defines the textfield and submit button.
     func setupInputComponents(){

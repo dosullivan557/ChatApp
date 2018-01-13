@@ -55,13 +55,60 @@ class MessagesController: UITableViewController {
                     print(chatId)
                 let ref = Database.database().reference().child("user-messages").child(currentUid).child(chatId)
                 ref.removeValue()
+//                messages.removeAll()
+//                updateOnDelete(id: chatId)
             }
         }
     } 
     
+    func updateOnDelete(id: String){
+        messages.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let ref = Database.database().reference().child("user-messages").child(uid)
+        ref.observe(.childAdded, with: { (DataSnapshot) in
+            let newRef = ref.child(DataSnapshot.key)
+            newRef.observe(.childAdded, with: { (snapshot) in
+                let messageId = snapshot.key
+                let messagesReference = Database.database().reference().child("messages").child(messageId)
+                
+                messagesReference.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+                    print(DataSnapshot)
+                    if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                        let message = Message()
+                        message.message = dictionary["text"] as? String
+                        message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                        message.receiveId = dictionary["RecieveId"] as? String
+                        message.sendId = dictionary["SendId"] as? String
+                        
+                        if let chatId = message.chatWithId() {
+                            if id == chatId {
+                                return
+                            }
+                            self.messagesDictionary[chatId] = message
+                            
+                            self.messages = Array(self.messagesDictionary.values)
+                            self.messages.sort(by: { (message1, message2) -> Bool in
+                                
+                                return message1.timestamp?.int32Value > message2.timestamp?.int32Value
+                            })
+                        }
+                        //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
+                        self.timer?.invalidate()
+                        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+                    }
+                    
+                }, withCancel: nil)
+            })
+            
+        }, withCancel: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.hidesBottomBarWhenPushed = false
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
         let image = UIImage(named: "newMessage")
@@ -249,6 +296,7 @@ class MessagesController: UITableViewController {
     func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
+        chatLogController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     //This method is called when logging out.
