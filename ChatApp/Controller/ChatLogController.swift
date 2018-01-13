@@ -203,12 +203,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 return
             }
             
-            let userMessagesRef = Database.database().reference().child("user-messages").child(sendId)
+            let userMessagesRef = Database.database().reference().child("user-messages").child(sendId).child(recieveId)
             
             let messageId = childRef.key
             userMessagesRef.updateChildValues([messageId: 1])
             
-            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId)
+            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId).child(sendId)
             recipientUserMessagesRef.updateChildValues([messageId: 1])
         }
         self.inputTextField.text = ""
