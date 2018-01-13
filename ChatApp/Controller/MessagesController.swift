@@ -42,9 +42,20 @@ class MessagesController: UITableViewController {
     var messagesDictionary = [String: Message]()
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+
         if editingStyle == .delete {
             self.messages.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            guard let chatId = message.chatWithId() else {
+                return
+            }
+            print(chatId)
+                if let currentUid = Auth.auth().currentUser?.uid {
+                    print(chatId)
+                let ref = Database.database().reference().child("user-messages").child(currentUid).child(chatId)
+                ref.removeValue()
+            }
         }
     }
     
