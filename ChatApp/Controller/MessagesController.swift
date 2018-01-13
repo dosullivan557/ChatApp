@@ -69,13 +69,15 @@ class MessagesController: UITableViewController {
         }
         
         let ref = Database.database().reference().child("user-messages").child(uid)
-        ref.observe(.childAdded, with: { (snapshot) in
+        ref.observe(.childAdded, with: { (DataSnapshot) in
+            let newRef = ref.child(DataSnapshot.key)
+            newRef.observe(.childAdded, with: { (snapshot) in
             let messageId = snapshot.key
             let messagesReference = Database.database().reference().child("messages").child(messageId)
             
-            messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                if let dictionary = snapshot.value as? [String: AnyObject] {
+            messagesReference.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+                print(DataSnapshot)
+                if let dictionary = DataSnapshot.value as? [String: AnyObject] {
                     let message = Message()
                     message.message = dictionary["text"] as? String
                     message.timestamp = dictionary["TimeStamp"] as? NSNumber
@@ -97,6 +99,7 @@ class MessagesController: UITableViewController {
                 }
                 
             }, withCancel: nil)
+            })
             
         }, withCancel: nil)
     }
