@@ -145,7 +145,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         let event = Event()
         event.title = titleField.text
         event.desc = descriptionField.text
-        event.time = dateToSecs()
+        event.time = datePicker.date.timeIntervalSince1970 as NSNumber
         event.host = uid
         event.invitee = user?.id
         
@@ -168,8 +168,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             recipientUserEventRef.updateChildValues([messageId: 1])
             
         }
-        self.dismiss(animated: true, completion: nil)
-
+        
     }
     func dateToSecs() -> Int{
         return Int(datePicker.date.timeIntervalSince1970)
