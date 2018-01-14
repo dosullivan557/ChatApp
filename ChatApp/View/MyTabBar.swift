@@ -12,18 +12,17 @@ class MyTabBar: UITabBarController {
     override func viewDidLoad() {
         
         createElements(view: MessagesController(), title: "Messages", imageName: "Messages")
+        createElements(view: EventsController(), title: "Events", imageName: "event")
         createElements(view: ProfileController(), title: "Profile", imageName: "profile")
-        
-        
+
         viewControllers = tabList
     }
-    func createElements(view: UIViewController,title: String, imageName: String) -> UINavigationController {
+    func createElements(view: UIViewController,title: String, imageName: String) {
         let view = view
         let navController = UINavigationController(rootViewController: view)
         navController.tabBarItem.title = title
         navController.tabBarItem.image = UIImage(named: imageName)?.withRenderingMode(.automatic)
         tabList.append(navController)
-        return navController
     }
     
 }
