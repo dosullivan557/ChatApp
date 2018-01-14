@@ -15,7 +15,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var user: User?{
         didSet{
             let titleView = UITextView()
-            titleView.text = user?.name
+            titleView.text = user?.name!.components(separatedBy: " ")[0]
             titleView.isEditable = false
             titleView.isUserInteractionEnabled = false
 
