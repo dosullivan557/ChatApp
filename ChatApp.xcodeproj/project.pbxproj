@@ -15,6 +15,7 @@
 		DE2D67CB200A6F5D0084078A /* CalendarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67CA200A6F5D0084078A /* CalendarController.swift */; };
 		DE2D67CD200BE8610084078A /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67CC200BE8610084078A /* Event.swift */; };
 		DE2D67CF200BF8740084078A /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67CE200BF8740084078A /* EventsController.swift */; };
+		DE2D67D1200BFD830084078A /* EventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67D0200BFD830084078A /* EventCell.swift */; };
 		DE47D1911FF96A9C000B6C08 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47D1901FF96A9C000B6C08 /* Extensions.swift */; };
 		DE4BDD5F1FF5244E00E67C45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4BDD5E1FF5244E00E67C45 /* AppDelegate.swift */; };
 		DE4BDD611FF5244E00E67C45 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4BDD601FF5244E00E67C45 /* MessagesController.swift */; };
@@ -66,6 +67,7 @@
 		DE2D67CA200A6F5D0084078A /* CalendarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarController.swift; sourceTree = "<group>"; };
 		DE2D67CC200BE8610084078A /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		DE2D67CE200BF8740084078A /* EventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsController.swift; sourceTree = "<group>"; };
+		DE2D67D0200BFD830084078A /* EventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCell.swift; sourceTree = "<group>"; };
 		DE47D1901FF96A9C000B6C08 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DE4BDD5B1FF5244E00E67C45 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE4BDD5E1FF5244E00E67C45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				DEDD53B61FFFD27C00B10E62 /* UserCell.swift */,
 				DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */,
 				DE2D67C62006E35F0084078A /* MyTabBar.swift */,
+				DE2D67D0200BFD830084078A /* EventCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -547,6 +550,7 @@
 				DEF0D4B81FF58F250062AF22 /* NewMessageController.swift in Sources */,
 				DE2D67C72006E35F0084078A /* MyTabBar.swift in Sources */,
 				DE2D67CD200BE8610084078A /* Event.swift in Sources */,
+				DE2D67D1200BFD830084078A /* EventCell.swift in Sources */,
 				DE4BDD611FF5244E00E67C45 /* MessagesController.swift in Sources */,
 				DEDD53B41FFFC87900B10E62 /* Message.swift in Sources */,
 				DEFA87AD1FF838E90025FAA6 /* LoginController+handlers.swift in Sources */,

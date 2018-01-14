@@ -28,6 +28,7 @@ class UserCell: UITableViewCell {
             
         }
     }
+
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
