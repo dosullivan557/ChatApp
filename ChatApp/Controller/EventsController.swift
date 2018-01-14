@@ -104,7 +104,7 @@ class EventsController: UITableViewController {
                         event.title = dictionary["Title"] as? String
                         event.host = dictionary["Host"] as? String
                         event.invitee = dictionary["Invitee"] as? String
-                        event.time = dictionary["Time"] as? Int
+                        event.time = dictionary["Time"] as? NSNumber
                         print(dictionary)
                         self.events.append(event)
                         //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
