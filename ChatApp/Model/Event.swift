@@ -11,7 +11,7 @@ import UIKit
 class Event: NSObject {
     var title: String?
     var desc: String?
-    var time: Int?
+    var time: NSNumber?
     var host: String?
     var invitee: String?
 }
