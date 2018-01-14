@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 
-
 class LoginController: UIViewController, UITextFieldDelegate {
     //Variables
     var messagesController: MessagesController?
