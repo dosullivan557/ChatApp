@@ -14,6 +14,13 @@ class EventCell: UITableViewCell {
     var event: Event? {
         didSet {
             detailTextLabel?.text = event?.desc
+            
+            let timestampDate = Date(timeIntervalSince1970: event?.time as! TimeInterval)
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/yy hh:mm a"
+            timeLabel.text = dateFormatter.string(from: timestampDate)
+            
             setupNameAndProfileImage()
         }
     }
@@ -84,12 +91,13 @@ class EventCell: UITableViewCell {
         //time label centered
         //        timeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         //time label top
-        timeLabel.topAnchor.constraint(equalTo:self.topAnchor, constant: 18).isActive = true
+//        timeLabel.topAnchor.constraint(equalTo:self.topAnchor, constant: 18).isActive = true
         
         //time label bottom
-        //        timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+                timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         
         timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: textLabel!.heightAnchor).isActive = true
     }
     
