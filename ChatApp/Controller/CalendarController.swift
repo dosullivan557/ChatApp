@@ -150,7 +150,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         event.invitee = user?.id
         
         
-        let values = ["Title": event.title, "Description": event.desc, "Time": event.time, "Host": event.host, "Invitee": event.invitee] as [String : Any]
+        let values = ["Title": event.title!, "Description": event.desc!, "Time": event.time!, "Host": event.host!, "Invitee": event.invitee!] as [String : Any]
         
         myRef.updateChildValues(values) { (error, ref) in
             if error != nil {
@@ -166,6 +166,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             
             let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
             recipientUserEventRef.updateChildValues([messageId: 1])
+            
+            self.dismiss(animated: true, completion: nil)
         }
         
     }
