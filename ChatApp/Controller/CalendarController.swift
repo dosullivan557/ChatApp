@@ -167,9 +167,9 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
             recipientUserEventRef.updateChildValues([messageId: 1])
             
-            self.dismiss(animated: true, completion: nil)
         }
-        
+        self.dismiss(animated: true, completion: nil)
+
     }
     func dateToSecs() -> Int{
         return Int(datePicker.date.timeIntervalSince1970)
