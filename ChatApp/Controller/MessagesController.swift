@@ -109,7 +109,7 @@ class MessagesController: UITableViewController {
         super.viewDidLoad()
         self.hidesBottomBarWhenPushed = false
 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
         
         let image = UIImage(named: "newMessage")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
@@ -118,6 +118,19 @@ class MessagesController: UITableViewController {
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
+    }
+    @objc func checkLogout() {
+        let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+            self.handleLogout()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
     }
     
     //checks the database for the messages for the current user.
