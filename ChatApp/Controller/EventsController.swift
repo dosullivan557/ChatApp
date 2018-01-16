@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import EventKit
 
 class EventsController: UITableViewController {
     let cellEId = "cellEId"
@@ -26,7 +27,6 @@ class EventsController: UITableViewController {
     //Defines the current user of the system, and passes it to another method to setup the navigation bar.
     func fetchUserAndSetupNavBarTitle() {
         guard let uid = Auth.auth().currentUser?.uid else {
-            //for some reason uid = nil
             return
         }
         
@@ -35,28 +35,49 @@ class EventsController: UITableViewController {
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 //                self.navigationItem.title = dictionary["name"] as? String
                 
-                let user = User()
-                user.email = dictionary["email"] as? String
-                user.name = dictionary["name"] as? String
-                user.profileImageUrl = dictionary["profileImageUrl"] as? String
-                self.setupNavBarWithUser(user)
+                self.currentUser.email = dictionary["email"] as? String
+                self.currentUser.name = dictionary["name"] as? String
+                self.currentUser.id = snapshot.key
+                self.currentUser.profileImageUrl = dictionary["profileImageUrl"] as? String
+                self.setupNavBarWithUser(self.currentUser)
             }
             
         }, withCancel: nil)
     }
     
+    override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
+        let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
+            print("Edit button tapped")
+        }
+        edit.backgroundColor = UIColor.purple
+        
+        let decline = UITableViewRowAction(style: .normal, title: "Decline") { action, index in
+            print("decline button tapped")
+        }
+        decline.backgroundColor = UIColor(r: 206, g: 27, b: 0)
+        
+        let accept = UITableViewRowAction(style: .normal, title: "Accept") { action, index in
+//            self.addToCalander() 
+            print("share button tapped")
+        }
+        accept.backgroundColor = UIColor(r: 0, g: 168, b: 48)
+        
+        return [accept, decline, edit]
+    }
+    
+    func declineFunc(){
+        
+    }
+    func acceptFunc(){
+        
+    }
     //gets passed the current user of the system, and then sets up the navigation bar with that users information.
     func setupNavBarWithUser(_ user: User) {
 
         tableView.reloadData()
         
-  
-        
-     
-        
         //x,y,width,height anchors
 
-        
         self.navigationItem.title = (user.name! + "'s Events")
         
     }
@@ -69,7 +90,23 @@ class EventsController: UITableViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        handleReload()
+        if let id = currentUser.id {
+        if id == Auth.auth().currentUser?.uid {
+            print("Same user")
+        }
+        else {
+            print("Different")
+
+            events.removeAll()
+            fetchUserAndSetupNavBarTitle()
+            observeUserEvents()
+            handleReload()
+            }
+        }
+        else {
+            print("error")
+        }
+        
     }
 
     @objc func handleReload(){
@@ -84,6 +121,38 @@ class EventsController: UITableViewController {
         return cell
     }
     
+//    func addToCalander(){
+//        let eventStore : EKEventStore = EKEventStore()
+//
+//        // 'EKEntityTypeReminder' or 'EKEntityTypeEvent'
+//
+//        eventStore.requestAccess(to: .event) { (granted, error) in
+//
+//            if (granted) && (error == nil) {
+//                print("granted \(granted)")
+//                print("error \(error)")
+//
+//                let event:EKEvent = EKEvent(eventStore: eventStore)
+//
+//                event.title = "Test Title"
+//                event.startDate = Date()
+//                event.endDate = Date()
+//                event.notes = "This is a note"
+//                event.calendar = eventStore.defaultCalendarForNewEvents
+//                do {
+//                    try eventStore.save(event, span: .thisEvent)
+//                } catch let error as NSError {
+//                    print("failed to save event with error : \(error)")
+//                }
+//                print("Saved Event")
+//            }
+//            else{
+//
+//                print("failed to save event with error : \(error) or access not granted")
+//            }
+//        }
+//    }
+    
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -97,7 +166,6 @@ class EventsController: UITableViewController {
                 let eventRef = Database.database().reference().child("events").child(eventId)
                 
                 eventRef.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-                    print(DataSnapshot)
                     if let dictionary = DataSnapshot.value as? [String: AnyObject] {
                         let event = Event()
                         event.desc = dictionary["Description"] as? String
@@ -105,18 +173,13 @@ class EventsController: UITableViewController {
                         event.host = dictionary["Host"] as? String
                         event.invitee = dictionary["Invitee"] as? String
                         event.time = dictionary["Time"] as? NSNumber
-                        print(dictionary)
                         self.events.append(event)
                         //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
                         self.timer?.invalidate()
                         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
                     }
-                    
                 }, withCancel: nil)
             })
-            
         }, withCancel: nil)
     }
-    
-    
 }
