@@ -33,7 +33,6 @@ class ProfileController : UIViewController {
         view.backgroundColor = UIColor.white
         view.addSubview(profileImage)
         view.addSubview(nameLabel)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(MessagesController.handleLogout))
         setupFields()
         getUser()
     }
@@ -67,5 +66,4 @@ class ProfileController : UIViewController {
             nameLabel.text = user.name
         }
     }
-    
 }
