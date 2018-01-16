@@ -56,14 +56,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    let hideKeyboardButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Hide Keyboard", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(hideKeyboard), for: .touchUpInside)
-        return button
-        
-    }()
     
     //name TextField
     lazy var nameTextField : UITextField = {
@@ -269,10 +261,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         pictureContainerHeightAnchor?.isActive = false
         pictureContainerHeightAnchor = pictureContainer.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 1)
         
-        hideKeyboardHeightAnchor?.isActive = false
-        hideKeyboardHeightAnchor = hideKeyboardButton.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 195)
-        
-        hideKeyboardHeightAnchor?.isActive = true
+    
         pictureContainerHeightAnchor?.isActive = true
         
         nameTextField.text = ""
@@ -292,7 +281,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         scrollView.addSubview(logo)
         scrollView.addSubview(loginRegisterSegmentedControl)
         scrollView.addSubview(profileImageUpload)
-        scrollView.addSubview(hideKeyboardButton)
         scrollView.addSubview(clearProfilePictureImage)
         pictureContainer.addSubview(clearProfilePictureImage)
         pictureContainer.addSubview(profileImageUpload)
@@ -304,7 +292,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         setupLoginRegisterSegmentedControl()
         setupProfilePic()
         setupScrollView()
-        setupKeyboardButton()
         setupClearImage()
         setupPictureContainer()
     }
@@ -336,21 +323,14 @@ class LoginController: UIViewController, UITextFieldDelegate {
         profileImageUpload.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
     }
-    //setup the hide keyboard button
-    func setupKeyboardButton() {
-        hideKeyboardButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        hideKeyboardButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        hideKeyboardButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        hideKeyboardHeightAnchor = hideKeyboardButton.topAnchor.constraint(equalTo:clearProfilePictureImage.bottomAnchor, constant: 5)
-        hideKeyboardHeightAnchor?.isActive = true
-    }
+
     
     //setup the container for the name, email and password
     func setupInputsContainerView() {
         //x,y, width, height constraints
         inputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         inputsContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -24).isActive = true
-        inputsContainerView.topAnchor.constraint(equalTo: hideKeyboardButton.bottomAnchor, constant: 10).isActive = true
+        inputsContainerView.topAnchor.constraint(equalTo: pictureContainer.bottomAnchor, constant: 10).isActive = true
         inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 150)
         inputsContainerViewHeightAnchor?.isActive = true
         
