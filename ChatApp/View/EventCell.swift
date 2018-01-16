@@ -51,8 +51,6 @@ class EventCell: UITableViewCell {
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
-                    print("User??")
-                    print(dictionary)
                     var name = dictionary["name"] as? String
                     name = name?.components(separatedBy: " ")[0]
                     self.textLabel?.text = ((self.event?.title)! + " with " + name!)
