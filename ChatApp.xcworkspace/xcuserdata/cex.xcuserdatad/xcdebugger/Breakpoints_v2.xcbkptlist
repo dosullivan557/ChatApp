@@ -9,108 +9,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ChatApp/View/EventCell.swift"
-            timestampString = "537666816.756264"
+            filePath = "ChatApp/Model/Event.swift"
+            timestampString = "537838375.553257"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "15"
-            endingLineNumber = "15"
-            landmarkName = "event"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatApp/View/EventCell.swift"
-            timestampString = "537666816.771542"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
-            landmarkName = "event"
-            landmarkType = "24">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; __ObjC.UIImageView in variable initialization expression of ChatApp.EventCell.profileImageView : __ObjC.UIImageView"
-                  moduleName = "ChatApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/cex/Desktop/ChatApp/ChatApp/View/EventCell.swift"
-                  timestampString = "537665049.033161"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "23"
-                  endingLineNumber = "23"
-                  offsetFromSymbolStart = "16">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ChatApp.EventCell.profileImageView.getter : __ObjC.UIImageView"
-                  moduleName = "ChatApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/cex/Desktop/ChatApp/ChatApp/View/EventCell.swift"
-                  timestampString = "537665049.038118"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "22"
-                  endingLineNumber = "22"
-                  offsetFromSymbolStart = "104">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ChatApp.EventCell.init(style: __C.UITableViewCellStyle, reuseIdentifier: Swift.Optional&lt;Swift.String&gt;) -&gt; ChatApp.EventCell"
-                  moduleName = "ChatApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/cex/Desktop/ChatApp/ChatApp/View/EventCell.swift"
-                  timestampString = "537665049.04388"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "22"
-                  endingLineNumber = "22"
-                  offsetFromSymbolStart = "180">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ChatApp.EventCell.init(coder: __ObjC.NSCoder) -&gt; Swift.Optional&lt;ChatApp.EventCell&gt;"
-                  moduleName = "ChatApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/cex/Desktop/ChatApp/ChatApp/View/EventCell.swift"
-                  timestampString = "537665049.049847"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "22"
-                  endingLineNumber = "22"
-                  offsetFromSymbolStart = "132">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatApp/View/EventCell.swift"
-            timestampString = "537666816.77206"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "setupNameAndProfileImage()"
-            landmarkType = "7">
+            startingLineNumber = "19"
+            endingLineNumber = "19">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
