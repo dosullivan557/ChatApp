@@ -169,20 +169,66 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
     }
     
+   
+    
+
     
     //Handles a users login
     @objc func handleLogin(){
         print("handle login func")
         
         guard let email = emailTextField.text,  let password = passwordTextField.text else {
+            showAlert(title: "Invalid data", message: "Invalid email or Password")
             return
         }
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             if error != nil {
+                self.firebaseAuth(error: error!)
                 return
             }
             self.messagesController?.fetchUserAndSetupNavBarTitle()
             self.dismiss(animated: true, completion: nil)
+        }
+    }
+    func firebaseAuth(error: Error){
+        if let errCode = AuthErrorCode(rawValue: error._code) {
+            if loginRegisterSegmentedControl.selectedSegmentIndex == 1 {
+                if nameTextField.text?.count == 0 {
+                    self.showAlert(title: "Invalid Name", message: "Please enter your name and try again!")
+                    return
+                }
+            }
+            if emailTextField.text?.count == 0{
+                self.showAlert(title: "Invalid Email", message: "Please enter a valid email address and try again!")
+                return
+            }
+            if passwordTextField.text?.count == 0 {
+                self.showAlert(title: "Empty Password Field", message: "Please enter a valid password and try again.")
+                return
+            }
+        switch errCode {
+        case AuthErrorCode.invalidEmail:
+            self.showAlert(title: "Invalid Email", message: "Please insert a valid email address, and try again!")
+            return
+        case AuthErrorCode.emailAlreadyInUse:
+            self.showAlert(title: "Email Already In Use", message: "Email address is already in use, please insert a different one, or login!.")
+            return
+            
+        case AuthErrorCode.weakPassword:
+            self.showAlert(title: "Weak Password", message: "Please insert a more secure password and try again.")
+            return
+            
+        case AuthErrorCode.userNotFound:
+            self.showAlert(title: "User Does Not Exist", message: "The user with the email \"\(emailTextField.text!)\" does not exist, Please register for an account!")
+            return
+            
+        case AuthErrorCode.wrongPassword:
+            self.showAlert(title: "Wrong Password", message: "Please check the password and try again.")
+            return
+        default:
+            self.showAlert(title: "Oops", message: "There was an error, please try again later!")
+            return
+            }
         }
     }
     //Clear image button
