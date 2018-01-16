@@ -12,7 +12,6 @@ import Firebase
 class LoginController: UIViewController, UITextFieldDelegate {
     //Variables
     var messagesController: MessagesController?
-    var counter = [false, false, false]
     
     
     let inputsContainerView : UIView={
@@ -53,8 +52,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         button.layer.masksToBounds = true
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
-        button.isEnabled = false
-        button.alpha = 0.5
+
         return button
     }()
     
@@ -73,7 +71,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.placeholder = "Name"
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.autocapitalizationType = UITextAutocapitalizationType.words
-        tf.addTarget(self, action: #selector(nameValidation), for: .editingDidEnd)
         tf.delegate = self
         return tf
     }()
@@ -91,7 +88,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.keyboardType = .emailAddress
         tf.autocapitalizationType = UITextAutocapitalizationType.none
-        tf.addTarget(self, action: #selector(emailValidation), for: .editingDidEnd)
         tf.delegate = self
         return tf
     }()
@@ -108,7 +104,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.placeholder = "Password"
         tf.isSecureTextEntry = true
         tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.addTarget(self, action: #selector(passwordValidation), for: .editingDidEnd)
         tf.delegate = self
         return tf
     }()
@@ -163,24 +158,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     
     
-    //Password validation.
-    @objc func passwordValidation(){
-        if (passwordTextField.text) != nil{
-            let password = passwordTextField.text?.count
-            if(password! >= 7){
-                if !counter[2] {
-                    counter[2] = true
-                }
-            }
-            else{
-                counter[2] = false
-            }
-        }
-        else {
-            counter[2] = false
-        }
-        check()
-    }
+   
     //Checks whether the segmented display is equal to login or register
     @objc func handleLoginRegister(){
         if(loginRegisterSegmentedControl.selectedSegmentIndex == 0 ){
@@ -191,78 +169,16 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    //email validation
-    @objc func emailValidation(){
-        if (emailTextField.text) != nil{
-            let email = emailTextField.text?.count
-            if(email! >= 7){
-                if !counter[1] {
-                    counter[1] = true
-                }
-            }
-            else{
-                counter[1] = false
-            }
-        }
-        else {
-            counter[1] = false
-        }
-        check()
-    }
-    //name validation
-    @objc func nameValidation(){
-        if (nameTextField.text) != nil{
-            let name = nameTextField.text?.count
-            if(name! >= 7){
-                if !counter[0] {
-                    counter[0] = true
-                }
-            }
-            else{
-                counter[0] = false
-            }
-        }
-        else {
-            counter[0] = false
-        }
-        check()
-    }
-    //checks whether all inputs are valid
-    func check(){
-        
-        if loginRegisterSegmentedControl.selectedSegmentIndex==0 {
-            if(counter[1] && counter[2]){
-                loginRegisterButton.alpha = 1
-                loginRegisterButton.isEnabled = true
-            }
-            else{
-                loginRegisterButton.alpha = 0.5
-                loginRegisterButton.isEnabled = false
-            }
-        }
-        else {
-            if(counter[1] && counter[2] && counter[0]){
-                loginRegisterButton.alpha = 1
-                loginRegisterButton.isEnabled = true
-            }
-            else{
-                loginRegisterButton.alpha = 0.5
-                loginRegisterButton.isEnabled = false
-            }
-        }
-    }
     
     //Handles a users login
     @objc func handleLogin(){
         print("handle login func")
         
         guard let email = emailTextField.text,  let password = passwordTextField.text else {
-            print("Invalid data")
             return
         }
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             if error != nil {
-                print(error.debugDescription)
                 return
             }
             self.messagesController?.fetchUserAndSetupNavBarTitle()
@@ -317,11 +233,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         emailTextField.text = ""
         passwordTextField.text = ""
         profileImageUpload.image = UIImage(named: "defaultPic")
-        loginRegisterButton.alpha = 0.5
-        loginRegisterButton.isEnabled = false
-        counter[0] = false
-        counter[1] = false
-        counter[2] = false
+
         handleClearImage()
         
     }
