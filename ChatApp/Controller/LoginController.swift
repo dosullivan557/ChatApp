@@ -31,15 +31,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         view.layer.masksToBounds = true
         return view
     }()
-    
-    let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.backgroundColor = UIColor(r: 233, g: 175,b: 50)
-        scrollView.isScrollEnabled = true
-        scrollView.contentSize = CGSize(width: 100, height: 680)
-        return scrollView
-    }()
+
     
     //register Button
     lazy var loginRegisterButton: UIButton = {
@@ -275,29 +267,28 @@ class LoginController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         //add the inputs, button, and image into the view
-        scrollView.addSubview(inputsContainerView)
-        scrollView.addSubview(loginRegisterButton)
-        scrollView.addSubview(logo)
-        scrollView.addSubview(loginRegisterSegmentedControl)
-        scrollView.addSubview(profileImageUpload)
-        scrollView.addSubview(clearProfilePictureImage)
+        view.addSubview(inputsContainerView)
+        view.addSubview(loginRegisterButton)
+        view.addSubview(logo)
+        view.addSubview(loginRegisterSegmentedControl)
+        view.addSubview(profileImageUpload)
+        view.addSubview(clearProfilePictureImage)
         pictureContainer.addSubview(clearProfilePictureImage)
         pictureContainer.addSubview(profileImageUpload)
-        scrollView.addSubview(pictureContainer)
-        view.addSubview(scrollView)
+        view.addSubview(pictureContainer)
         setupInputsContainerView()
         setupLoginRegisterButton()
-        setupProfileImageView()
+        setupLogo()
         setupLoginRegisterSegmentedControl()
         setupProfilePic()
-        setupScrollView()
         setupClearImage()
         setupPictureContainer()
     }
     //Setup the picture container, which contains the image uploader and the clear image button
     func setupPictureContainer(){
-        pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 20).isActive = true
+        pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 10).isActive = true
         pictureContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         pictureContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
         pictureContainer.heightAnchor.constraint(equalToConstant: 140).isActive = true
@@ -308,8 +299,8 @@ class LoginController: UIViewController, UITextFieldDelegate {
     //Setup the login register segmented display
     func setupLoginRegisterSegmentedControl(){
         //x,y, width, height constraints
-        loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        loginRegisterSegmentedControl.topAnchor.constraint(equalTo:scrollView.topAnchor, constant:25).isActive = true
+        loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginRegisterSegmentedControl.topAnchor.constraint(equalTo:view.topAnchor, constant: 30).isActive = true
         loginRegisterSegmentedControl.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: 1).isActive = true
         loginRegisterSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
@@ -317,7 +308,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     //setup profile picture
     func setupProfilePic(){
         //x, y, width, height
-        profileImageUpload.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        profileImageUpload.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImageUpload.topAnchor.constraint(equalTo: pictureContainer.topAnchor).isActive = true
         profileImageUpload.widthAnchor.constraint(equalToConstant: 100).isActive = true
         profileImageUpload.heightAnchor.constraint(equalToConstant: 100).isActive = true
@@ -328,8 +319,8 @@ class LoginController: UIViewController, UITextFieldDelegate {
     //setup the container for the name, email and password
     func setupInputsContainerView() {
         //x,y, width, height constraints
-        inputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        inputsContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -24).isActive = true
+        inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
         inputsContainerView.topAnchor.constraint(equalTo: pictureContainer.bottomAnchor, constant: 10).isActive = true
         inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 150)
         inputsContainerViewHeightAnchor?.isActive = true
@@ -373,32 +364,24 @@ class LoginController: UIViewController, UITextFieldDelegate {
     //setup the login and register button
     func setupLoginRegisterButton() {
         //x,y, width, height constraints
-        loginRegisterButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 12).isActive = true
+        loginRegisterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 10).isActive = true
+//        loginRegisterButton.bottomAnchor.constraint(equalTo: logo.topAnchor).isActive = true
         loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     //setup the profile upload
-    func setupProfileImageView(){
+    func setupLogo(){
         //x,y, width, height constraints
-        logo.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        logo.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 10).isActive = true
+        logo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        logo.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor).isActive = true
+        logo.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         logo.widthAnchor.constraint(equalToConstant: 150).isActive = true
         logo.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
     
     //setup the scrollablility of the page
-    func setupScrollView(){
-        scrollView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        scrollView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        // Do any additional setup after loading the view
-    }
-    
-    
-    
     
     func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .lightContent
