@@ -17,7 +17,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             let titleView = UITextView()
             titleView.text = user?.name!.components(separatedBy: " ")[0]
             titleView.isEditable = false
-            titleView.isUserInteractionEnabled = false
+            titleView.isUserInteractionEnabled = true
+            titleView.backgroundColor? = UIColor.clear
+            let tap = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
+
+            titleView.addGestureRecognizer(tap)
 
             let calendarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showCalendar))
             calendarButton.image = UIImage(named: "CalendarIcon")
@@ -27,6 +31,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 
             observeMessages()
         }
+    }
+    @objc func showUserProfile(){
+        let profileController = ProfileController()
+        profileController.user = user
+        self.show(profileController, sender: self)
+        print("tapped")
     }
     lazy var inputTextField: UITextField = {
         let inputTextField = UITextField()
@@ -61,6 +71,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         setupInputComponents()
         setupKeyboard()
     }
+
     
     func setupKeyboard(){
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -209,7 +220,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
-        //is it there best thing to include the name inside of the message node
         let recieveId = user!.id!
         let sendId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)

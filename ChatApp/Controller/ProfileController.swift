@@ -18,6 +18,12 @@ class ProfileController : UIViewController {
         
         return image
     }()
+    var user : User?{
+        didSet{
+            nameLabel.text = user?.name
+            setupWithUser(user: user!)
+        }
+    }
     let nameLabel : UITextView = {
         let name = UITextView()
         name.allowsEditingTextAttributes = false
@@ -60,10 +66,21 @@ class ProfileController : UIViewController {
             }
         }, withCancel: nil)
     }
+    
+
     func setupWithUser(user: User){
         if let profileImageUrl = user.profileImageUrl {
             profileImage.loadImageUsingCache(urlString: profileImageUrl)
             nameLabel.text = user.name
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if user?.id == nil {
+            viewDidLoad()
+        }
+        else {
+            self.setupWithUser(user: user!)
         }
     }
 }
