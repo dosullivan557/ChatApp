@@ -13,39 +13,13 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if timesField.isEditing{
-            timesField.text = times[row]
-        }
-        else if zoneField.isEditing {
-            zoneField.text = zones[row]
-        }
-            
-        else {
-            timeAreaField.text = timesArea[row]
-        }
-    }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView.isEqual(timePicker){
-            return times.count
-        }
-        if pickerView.isEqual(zonePicker){
-            return zones.count
-        }
-        return timesArea.count
-        
+        return 1
     }
     
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if pickerView.isEqual(timePicker){
-            return times[row]
-        }
-        if pickerView.isEqual(zonePicker) {
-            return zones[row]
-        }
-        return timesArea[row]
-    }
+
+   
     
     var user: User? {
         didSet{
@@ -82,6 +56,25 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         dp.addTarget(self, action: #selector(selectedDate), for: .valueChanged)
         return dp
     }()
+    
+    let labelStart :UITextView = {
+        let label = UITextView()
+        label.text = "Start Date"
+        label.isEditable = false
+        label.textColor = UIColor.black
+        label.isUserInteractionEnabled = false
+        label.backgroundColor = UIColor.red
+        return label
+    }()
+    
+    let labelFinish :UITextView = {
+        let label = UITextView()
+        label.text = "End Date"
+        label.isEditable = false
+        label.isUserInteractionEnabled = false
+        return label
+    }()
+    
     @objc func selectedDate(){
         let timeFormatter = DateFormatter()
         timeFormatter.timeStyle = DateFormatter.Style.short
@@ -91,6 +84,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         
        dateField.text = strDate
     }
+    
     
     let dateField : UITextField = {
         let field = UITextField()
@@ -102,30 +96,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return field
     }()
     
-    let times = ["0", "1", "2", "3", "4", "5", "6", "7"]
-    let timesArea = ["Minutes", "Hours", "Days"]
-    let zones = ["Before", "After"]
-
-    let zonePicker : UIPickerView = {
-        let picker = UIPickerView()
-        
-        return picker
-    }()
-    let zoneField : UITextField = {
-        let tf = UITextField()
-        tf.text = "Zone"
-        tf.allowsEditingTextAttributes = false
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.layer.borderColor = UIColor.black.cgColor
-        tf.layer.borderWidth = 1
-        return tf
-    }()
-    
-    let timePicker : UIPickerView = {
-        let picker = UIPickerView()
-
-        return picker
-    }()
     
     let submitButton : UIButton = {
         let button = UIButton()
@@ -174,10 +144,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return Int(datePicker.date.timeIntervalSince1970)
 
     }
-    let timeAreaPicker : UIPickerView = {
-        let picker = UIPickerView()
-        return picker
-    }()
+
     
     let tb : UIToolbar = {
         let toolBar = UIToolbar()
@@ -188,7 +155,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         
         let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
-//        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
+
         
         toolBar.setItems([spaceButton, doneButton], animated: false)
         toolBar.isUserInteractionEnabled = true
@@ -196,39 +163,13 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     }()
     
     @objc func donePicker(){
-        if timeAreaField.isEditing {
-            timeAreaField.endEditing(true)
-        }
+
         if dateField.isEditing {
             dateField.endEditing(true)
         }
-        else if zoneField.isEditing {
-            zoneField.endEditing(true)
-        }
-        else {
-            timesField.endEditing(true)
-        }
     }
     
-    let timesField : UITextField = {
-        let tf = UITextField()
-        tf.text = "Time"
-        tf.allowsEditingTextAttributes = false
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.layer.borderColor = UIColor.black.cgColor
-        tf.layer.borderWidth = 1
-        return tf
-    }()
     
-    let timeAreaField : UITextField = {
-       let tf = UITextField()
-        tf.text = "Time area"
-        tf.allowsEditingTextAttributes = false
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.layer.borderColor = UIColor.black.cgColor
-        tf.layer.borderWidth = 1
-        return tf
-    }()
     
     override func viewDidLoad() {
         view.backgroundColor = UIColor.white
@@ -237,29 +178,14 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         dateField.inputView = datePicker
         dateField.inputAccessoryView = tb
         
-        //time numbers
-        timeAreaField.inputAccessoryView = tb
-        timeAreaField.inputView = timeAreaPicker
-
-        //time name
-        timesField.inputAccessoryView = tb
-        timesField.inputView = timePicker
-        
-        //time zone
-        zoneField.inputAccessoryView = tb
-        zoneField.inputView = zonePicker
-        
-        zonePicker.delegate = self
-        timePicker.delegate = self
-        timeAreaPicker.delegate = self
+    
         
         view.addSubview(titleField)
         view.addSubview(descriptionField)
+        view.addSubview(labelStart)
         view.addSubview(dateField)
-        view.addSubview(containerView)
+        view.addSubview(labelFinish)
         view.addSubview(submitButton)
-
-        setupContainerView()
         setupFields()
     }
     let containerView: UIView = {
@@ -271,32 +197,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return view
     
     }()
-    func setupContainerView(){
-        containerView.addSubview(timesField)
-        containerView.addSubview(timeAreaField)
-        containerView.addSubview(zoneField)
 
-        containerView.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 25).isActive = true
-        containerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        containerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-
-        timesField.leftAnchor.constraint(equalTo:containerView.leftAnchor).isActive = true
-        timesField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        timesField.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.33).isActive = true
-        timesField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        
-        timeAreaField.leftAnchor.constraint(equalTo:timesField.rightAnchor).isActive = true
-        timeAreaField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        timeAreaField.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.34).isActive = true
-        timeAreaField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        
-        zoneField.leftAnchor.constraint(equalTo:timeAreaField.rightAnchor).isActive = true
-        zoneField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        zoneField.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.33).isActive = true
-        zoneField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-    }
     
     func setupFields(){
         //main title
@@ -313,16 +214,24 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         descriptionField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         descriptionField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        dateField.topAnchor.constraint(equalTo: descriptionField.bottomAnchor, constant: 25).isActive = true
+        labelStart.topAnchor.constraint(equalTo:descriptionField.bottomAnchor,constant: 25).isActive = true
+        labelStart.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        labelStart.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
+        labelStart.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+
+        dateField.topAnchor.constraint(equalTo: labelStart.bottomAnchor, constant: 25).isActive = true
         dateField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         dateField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         submitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        submitButton.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
+        submitButton.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        submitButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 25).isActive = true
+        submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25).isActive = true
+        
+    
     }
     
    
