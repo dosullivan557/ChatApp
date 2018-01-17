@@ -484,6 +484,14 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         self.present(alert, animated: true, completion: nil)
         
     }
+    
+    func isValidPassword(testStr: String) -> Bool{
+        let length = testStr.count
+        
+        return length >= 7
+        
+    }
+    
     //tests email locally
     func isValidEmail(testStr:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
@@ -500,7 +508,6 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         }
         guard let password = passwordTextField.text else{
             showAlert(title: "Invalid Password", message: "Please enter a valid password")
-            
             return
         }
         guard let name = nameTextField.text else {
@@ -508,9 +515,17 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             return
         }
         
+        if (!isValidEmail(testStr: email)){
+            showAlert(title: "Invalid Email", message: "Please enter a valid email address")
+            return
+        }
+        if(!isValidPassword(testStr: password)){
+            showAlert(title: "Invalid Password", message: "Please enter a valid password")
+            return
+        }
+        
         if self.profileImageUpload.image == UIImage(named: "defaultPic") {
             self.showImageUploadAlert()
-            return
         }
         Auth.auth().createUser(withEmail: email, password: password, completion: ({
             (user: Firebase.User?, error) in
