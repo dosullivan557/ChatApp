@@ -9,11 +9,12 @@
 import UIKit
 import Firebase
 
-class LoginController: UIViewController, UITextFieldDelegate {
+class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate {
     //Variables
     var messagesController: MessagesController?
     
-    
+    //constants
+    //container for text fields
     let inputsContainerView : UIView={
         let view = UIView()
         view.backgroundColor = UIColor.white
@@ -22,7 +23,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         view.layer.masksToBounds = true
         return view
     }()
-    
+    //picture container
     let pictureContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
@@ -121,7 +122,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
         return sc
     }()
-    
+    //clear image button
     let clearProfilePictureImage: UIButton = {
         let button = UIButton()
         button.setTitle("Clear Image", for: .normal)
@@ -132,15 +133,149 @@ class LoginController: UIViewController, UITextFieldDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+    //height anchor for picture container
     var pictureContainerHeightAnchor: NSLayoutConstraint?
-    var hideKeyboardHeightAnchor: NSLayoutConstraint?
-    
+    //height anchor for input container
     var inputsContainerViewHeightAnchor: NSLayoutConstraint?
+    //height anchor for name textfield
     var nameTextFieldHeightAnchor: NSLayoutConstraint?
+    //height anchor for email textfield
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
+    //height anchor for password textfield
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
+        //add the inputs, button, and image into the view
+        view.addSubview(inputsContainerView)
+        view.addSubview(loginRegisterButton)
+        view.addSubview(logo)
+        view.addSubview(loginRegisterSegmentedControl)
+        view.addSubview(profileImageUpload)
+        view.addSubview(clearProfilePictureImage)
+        pictureContainer.addSubview(clearProfilePictureImage)
+        pictureContainer.addSubview(profileImageUpload)
+        view.addSubview(pictureContainer)
+        setupInputsContainerView()
+        setupLoginRegisterButton()
+        setupLogo()
+        setupLoginRegisterSegmentedControl()
+        setupProfilePic()
+        setupClearImage()
+        setupPictureContainer()
+    }
+    //Setup the picture container, which contains the image uploader and the clear image button
+    func setupPictureContainer(){
+        pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 10).isActive = true
+        pictureContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        pictureContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
+        pictureContainer.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        pictureContainerHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        pictureContainerHeightAnchor?.isActive = true
+    }
+    
+    //Setup the login register segmented display
+    func setupLoginRegisterSegmentedControl(){
+        //x,y, width, height constraints
+        loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginRegisterSegmentedControl.topAnchor.constraint(equalTo:view.topAnchor, constant: 30).isActive = true
+        loginRegisterSegmentedControl.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: 1).isActive = true
+        loginRegisterSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+    }
+    //setup profile picture
+    func setupProfilePic(){
+        //x, y, width, height
+        profileImageUpload.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        profileImageUpload.topAnchor.constraint(equalTo: pictureContainer.topAnchor).isActive = true
+        profileImageUpload.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        profileImageUpload.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+    }
+    
+    
+    //setup the container for the name, email and password
+    func setupInputsContainerView() {
+        //x,y, width, height constraints
+        inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
+        inputsContainerView.topAnchor.constraint(equalTo: pictureContainer.bottomAnchor, constant: 10).isActive = true
+        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 150)
+        inputsContainerViewHeightAnchor?.isActive = true
+        
+        inputsContainerView.addSubview(nameTextField)
+        inputsContainerView.addSubview(nameSeperatorView)
+        inputsContainerView.addSubview(emailTextField)
+        inputsContainerView.addSubview(emailSeperatorView)
+        inputsContainerView.addSubview(passwordTextField)
+        //x,y, width, height constraints
+        nameTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
+        nameTextField.topAnchor.constraint(equalTo:inputsContainerView.topAnchor).isActive = true
+        nameTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        nameTextFieldHeightAnchor?.isActive = true
+        //x,y, width, height constraints
+        nameSeperatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
+        nameSeperatorView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive = true
+        nameSeperatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        nameSeperatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        //x,y, width, height constraints
+        emailTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
+        emailTextField.topAnchor.constraint(equalTo:nameTextField.bottomAnchor).isActive = true
+        emailTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        emailTextFieldHeightAnchor?.isActive = true
+        //x,y, width, height constraints
+        emailSeperatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
+        emailSeperatorView.topAnchor.constraint(equalTo: emailTextField.bottomAnchor).isActive = true
+        emailSeperatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        emailSeperatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        //x,y, width, height constraints
+        passwordTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
+        passwordTextField.topAnchor.constraint(equalTo:emailTextField.bottomAnchor).isActive = true
+        passwordTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        passwordTextFieldHeightAnchor?.isActive = true
+    }
+    //setup the login and register button
+    func setupLoginRegisterButton() {
+        //x,y, width, height constraints
+        loginRegisterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 10).isActive = true
+        //        loginRegisterButton.bottomAnchor.constraint(equalTo: logo.topAnchor).isActive = true
+        loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    //setup the profile upload
+    func setupLogo(){
+        //x,y, width, height constraints
+        logo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        //        logo.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor).isActive = true
+        logo.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        logo.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        logo.heightAnchor.constraint(equalToConstant: 150).isActive = true
+    }
+    
+    //setup the scrollablility of the page
+    
+    func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .lightContent
+    }
+    //Hide keyboard when screen is touched
+    @objc func hideKeyboard() {
+        view.self.endEditing(true)
+    }
+    //Hides the keyboard when the return key is pressed.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
     
    
     //Checks whether the segmented display is equal to login or register
@@ -152,10 +287,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
             self.handleRegister()
         }
     }
-    
-   
-    
-
     
     //Handles a users login
     @objc func handleLogin(){
@@ -174,6 +305,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
             self.dismiss(animated: true, completion: nil)
         }
     }
+    //authenticate with firebase
     func firebaseAuth(error: Error){
         if let errCode = AuthErrorCode(rawValue: error._code) {
             if loginRegisterSegmentedControl.selectedSegmentIndex == 1 {
@@ -265,161 +397,26 @@ class LoginController: UIViewController, UITextFieldDelegate {
         
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
-        //add the inputs, button, and image into the view
-        view.addSubview(inputsContainerView)
-        view.addSubview(loginRegisterButton)
-        view.addSubview(logo)
-        view.addSubview(loginRegisterSegmentedControl)
-        view.addSubview(profileImageUpload)
-        view.addSubview(clearProfilePictureImage)
-        pictureContainer.addSubview(clearProfilePictureImage)
-        pictureContainer.addSubview(profileImageUpload)
-        view.addSubview(pictureContainer)
-        setupInputsContainerView()
-        setupLoginRegisterButton()
-        setupLogo()
-        setupLoginRegisterSegmentedControl()
-        setupProfilePic()
-        setupClearImage()
-        setupPictureContainer()
-    }
-    //Setup the picture container, which contains the image uploader and the clear image button
-    func setupPictureContainer(){
-        pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 10).isActive = true
-        pictureContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        pictureContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
-        pictureContainer.heightAnchor.constraint(equalToConstant: 140).isActive = true
-        pictureContainerHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
-        pictureContainerHeightAnchor?.isActive = true
-    }
     
-    //Setup the login register segmented display
-    func setupLoginRegisterSegmentedControl(){
-        //x,y, width, height constraints
-        loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginRegisterSegmentedControl.topAnchor.constraint(equalTo:view.topAnchor, constant: 30).isActive = true
-        loginRegisterSegmentedControl.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: 1).isActive = true
-        loginRegisterSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-    }
-    //setup profile picture
-    func setupProfilePic(){
-        //x, y, width, height
-        profileImageUpload.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageUpload.topAnchor.constraint(equalTo: pictureContainer.topAnchor).isActive = true
-        profileImageUpload.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        profileImageUpload.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        
-    }
-
-    
-    //setup the container for the name, email and password
-    func setupInputsContainerView() {
-        //x,y, width, height constraints
-        inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
-        inputsContainerView.topAnchor.constraint(equalTo: pictureContainer.bottomAnchor, constant: 10).isActive = true
-        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 150)
-        inputsContainerViewHeightAnchor?.isActive = true
-        
-        inputsContainerView.addSubview(nameTextField)
-        inputsContainerView.addSubview(nameSeperatorView)
-        inputsContainerView.addSubview(emailTextField)
-        inputsContainerView.addSubview(emailSeperatorView)
-        inputsContainerView.addSubview(passwordTextField)
-        //x,y, width, height constraints
-        nameTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
-        nameTextField.topAnchor.constraint(equalTo:inputsContainerView.topAnchor).isActive = true
-        nameTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
-        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
-        nameTextFieldHeightAnchor?.isActive = true
-        //x,y, width, height constraints
-        nameSeperatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
-        nameSeperatorView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive = true
-        nameSeperatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
-        nameSeperatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-        //x,y, width, height constraints
-        emailTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
-        emailTextField.topAnchor.constraint(equalTo:nameTextField.bottomAnchor).isActive = true
-        emailTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
-        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
-        emailTextFieldHeightAnchor?.isActive = true
-        //x,y, width, height constraints
-        emailSeperatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
-        emailSeperatorView.topAnchor.constraint(equalTo: emailTextField.bottomAnchor).isActive = true
-        emailSeperatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
-        emailSeperatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-        //x,y, width, height constraints
-        passwordTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
-        passwordTextField.topAnchor.constraint(equalTo:emailTextField.bottomAnchor).isActive = true
-        passwordTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
-        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
-        passwordTextFieldHeightAnchor?.isActive = true
-    }
-    //setup the login and register button
-    func setupLoginRegisterButton() {
-        //x,y, width, height constraints
-        loginRegisterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 10).isActive = true
-//        loginRegisterButton.bottomAnchor.constraint(equalTo: logo.topAnchor).isActive = true
-        loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
-        loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    }
-    
-    //setup the profile upload
-    func setupLogo(){
-        //x,y, width, height constraints
-        logo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-//        logo.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor).isActive = true
-        logo.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        logo.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        logo.heightAnchor.constraint(equalToConstant: 150).isActive = true
-    }
-    
-    //setup the scrollablility of the page
-    
-    func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .lightContent
-    }
-    //Hide keyboard when screen is touched
-    @objc func hideKeyboard() {
-        view.self.endEditing(true)
-    }
-    //Hides the keyboard when the return key is pressed.
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return true
-    }
     //Image picker.
     @objc func handleSelectProfileImageView(){
         let picker = UIImagePickerController()
         print("picker")
-        picker.delegate = self
+        picker.delegate = self as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
         picker.allowsEditing = true
         
         present(picker, animated: true, completion: nil)
         
     }
-    func pickImage(){
-        print("Picker 2")
-        let picker = UIImagePickerController()
-        print("picker")
-        picker.delegate = self
-        picker.allowsEditing = true
-        present(picker, animated: true, completion: nil)
-    }
-    
+
+    //shows alerts
     func showAlert(title: String, message: String) {
         var alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert = createAlertButton(title: title, alert: alert)
         
         self.present(alert, animated: true, completion: nil)
     }
+    //adds buttons to the alert boxes
     func createAlertButton(title: String, alert: UIAlertController) -> UIAlertController {
         if title.contains("Invalid") {
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
@@ -470,7 +467,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         print("cancelled")
         dismiss(animated: true, completion: nil)
     }
-    
+    //shows alert if you haven't got an upload image
     func showImageUploadAlert() {
         
         let alert = UIAlertController(title: "No profile image", message: "Would you like to upload a profile image, or not?", preferredStyle: UIAlertControllerStyle.alert)
@@ -480,14 +477,14 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }))
         alert.addAction(UIAlertAction(title: "Yes, Let me!", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
-            self.pickImage()
+            self.handleSelectProfileImageView()
             return
         }
         ))
         self.present(alert, animated: true, completion: nil)
         
     }
-    
+    //tests email locally
     func isValidEmail(testStr:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         
