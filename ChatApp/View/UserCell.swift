@@ -14,9 +14,15 @@ class UserCell: UITableViewCell {
     var message: Message? {
         didSet {
             setupNameAndProfileImage()
-            
-            detailTextLabel?.text = message?.message
-            
+            if ((message?.message?.count)!) > 40 {
+                
+                detailTextLabel?.text = String(describing: (message?.message?.prefix(40))!)
+                detailTextLabel?.text?.append("...")
+            }
+                
+            else{
+                detailTextLabel?.text = message?.message
+            }
             if let seconds = message?.timestamp?.doubleValue {
                 let timestampDate = Date(timeIntervalSince1970: seconds)
                 
