@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate {
+class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     //Variables
     var messagesController: MessagesController?
     
@@ -110,6 +110,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
         imageView.layer.cornerRadius = 50
+        imageView.contentMode = .scaleAspectFit
         imageView.layer.masksToBounds = true
         return imageView
     }()
@@ -489,21 +490,22 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         dismiss(animated: true, completion: nil)
     }
     //shows alert if you haven't got an upload image
-    func showImageUploadAlert() {
-        
+    func showImageUploadAlert() -> Bool{
+        var bool = true
         let alert = UIAlertController(title: "No profile image", message: "Would you like to upload a profile image, or not?", preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
+            bool = false
         }))
         alert.addAction(UIAlertAction(title: "Yes, Let me!", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
             self.handleSelectProfileImageView()
-            return
+            bool = true
         }
         ))
         self.present(alert, animated: true, completion: nil)
-        
+        return bool
     }
     
     func isValidPassword(testStr: String) -> Bool{
@@ -546,7 +548,11 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         }
         
         if self.profileImageUpload.image == UIImage(named: "defaultPic") {
-            self.showImageUploadAlert()
+             let bool = self.showImageUploadAlert()
+            print(bool)
+            if bool==true {
+                return
+            }
         }
         Auth.auth().createUser(withEmail: email, password: password, completion: ({
             (user: Firebase.User?, error) in
