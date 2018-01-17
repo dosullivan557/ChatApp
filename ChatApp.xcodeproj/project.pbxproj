@@ -31,6 +31,8 @@
 		DEDD53B41FFFC87900B10E62 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B31FFFC87900B10E62 /* Message.swift */; };
 		DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B61FFFD27C00B10E62 /* UserCell.swift */; };
 		DEF0D4B81FF58F250062AF22 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF0D4B71FF58F250062AF22 /* NewMessageController.swift */; };
+		DEF4618F200FD79600FD4327 /* PasswordResetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4618E200FD79600FD4327 /* PasswordResetController.swift */; };
+		DEF46191200FE0D800FD4327 /* background.JPG in Resources */ = {isa = PBXBuildFile; fileRef = DEF46190200FE0D800FD4327 /* background.JPG */; };
 		DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFA87AA1FF7EF230025FAA6 /* User.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +90,8 @@
 		DEDD53B31FFFC87900B10E62 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		DEDD53B61FFFD27C00B10E62 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		DEF0D4B71FF58F250062AF22 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
+		DEF4618E200FD79600FD4327 /* PasswordResetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetController.swift; sourceTree = "<group>"; };
+		DEF46190200FE0D800FD4327 /* background.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.JPG; sourceTree = "<group>"; };
 		DEFA87AA1FF7EF230025FAA6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -217,6 +221,8 @@
 				DE2D67C42006E2D20084078A /* ProfileController.swift */,
 				DE2D67CA200A6F5D0084078A /* CalendarController.swift */,
 				DE2D67CE200BF8740084078A /* EventsController.swift */,
+				DEF4618E200FD79600FD4327 /* PasswordResetController.swift */,
+				DEF46190200FE0D800FD4327 /* background.JPG */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -359,6 +365,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE4BDD691FF5244E00E67C45 /* LaunchScreen.storyboard in Resources */,
+				DEF46191200FE0D800FD4327 /* background.JPG in Resources */,
 				DE4BDD901FF5475700E67C45 /* GoogleService-Info.plist in Resources */,
 				DE4BDD661FF5244E00E67C45 /* Assets.xcassets in Resources */,
 				DE4BDD641FF5244E00E67C45 /* Main.storyboard in Resources */,
@@ -554,6 +561,7 @@
 				DE4BDD8E1FF526D500E67C45 /* LoginController.swift in Sources */,
 				DE2D67CF200BF8740084078A /* EventsController.swift in Sources */,
 				DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */,
+				DEF4618F200FD79600FD4327 /* PasswordResetController.swift in Sources */,
 				DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */,
 				DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */,
 				DE4BDD5F1FF5244E00E67C45 /* AppDelegate.swift in Sources */,

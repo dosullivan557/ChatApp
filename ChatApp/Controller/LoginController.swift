@@ -144,7 +144,16 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     //height anchor for password textfield
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     
-    
+    let resetButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Forgotten Password?", for: .normal)
+        button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
+        button.setTitleColor(UIColor.purple, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.alpha = 0
+        
+        return button
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,6 +165,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         view.addSubview(loginRegisterSegmentedControl)
         view.addSubview(profileImageUpload)
         view.addSubview(clearProfilePictureImage)
+        view.addSubview(resetButton)
         pictureContainer.addSubview(clearProfilePictureImage)
         pictureContainer.addSubview(profileImageUpload)
         view.addSubview(pictureContainer)
@@ -166,6 +176,15 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         setupProfilePic()
         setupClearImage()
         setupPictureContainer()
+        setupResetPasswordButton()
+    }
+    func setupResetPasswordButton(){
+        resetButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        resetButton.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 35).isActive = true
+    }
+    @objc func handlePasswordReset(){
+        let vc = PasswordResetController()
+        show(vc, sender: self)
     }
     //Setup the picture container, which contains the image uploader and the clear image button
     func setupPictureContainer(){
@@ -393,6 +412,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         passwordTextField.text = ""
         profileImageUpload.image = UIImage(named: "defaultPic")
 
+        resetButton.alpha = (loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1 : 0)
+        
         handleClearImage()
         
     }
