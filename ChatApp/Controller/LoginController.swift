@@ -321,6 +321,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
                 self.firebaseAuth(error: error!)
                 return
             }
+            
             self.messagesController?.fetchUserAndSetupNavBarTitle()
             self.dismiss(animated: true, completion: nil)
         }
@@ -424,7 +425,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     @objc func handleSelectProfileImageView(){
         let picker = UIImagePickerController()
         print("picker")
-        picker.delegate = self as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
+        picker.delegate = self as? UIImagePickerControllerDelegate as! UIImagePickerControllerDelegate & UINavigationControllerDelegate 
         picker.allowsEditing = true
         
         present(picker, animated: true, completion: nil)
