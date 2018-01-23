@@ -17,17 +17,15 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return 1
     }
-    
-
-   
-    
     var user: User? {
         didSet{
 
             navigationItem.title = "Event with " + ((user?.name)!.components(separatedBy: " "))[0]
         }
     }
-
+    var sDate : Date?
+    var fDate : Date?
+    
     let titleField : UITextField = {
         let title = UITextField()
         title.placeholder = "Enter Title"
@@ -61,9 +59,11 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         let label = UITextView()
         label.text = "Start Date"
         label.isEditable = false
-        label.textColor = UIColor.black
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         label.isUserInteractionEnabled = false
-        label.backgroundColor = UIColor.red
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
     
@@ -71,7 +71,11 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         let label = UITextView()
         label.text = "End Date"
         label.isEditable = false
+        label.textColor = UIColor.white
         label.isUserInteractionEnabled = false
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = UIColor(r: 233, g: 175,b: 50)
+        label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
     
@@ -81,16 +85,35 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         timeFormatter.dateStyle = DateFormatter.Style.long
         let strDate = timeFormatter.string(from: datePicker.date)
         // do what you want to do with the string.
-        
-       dateField.text = strDate
+        if dateFieldS.isEditing {
+            dateFieldS.text = strDate
+            sDate = datePicker.date
+        }
+        if dateFieldF.isEditing {
+            dateFieldF.text = strDate
+            fDate = datePicker.date
+
+        }
     }
     
     
-    let dateField : UITextField = {
+    let dateFieldS : UITextField = {
         let field = UITextField()
         field.allowsEditingTextAttributes = false
         field.placeholder = "Please select a date..."
         field.layer.borderColor = UIColor.black.cgColor
+        field.layer.borderWidth = 1
+        field.backgroundColor = UIColor.white
+        field.translatesAutoresizingMaskIntoConstraints = false
+        return field
+    }()
+    
+    let dateFieldF : UITextField = {
+        let field = UITextField()
+        field.allowsEditingTextAttributes = false
+        field.placeholder = "Please select a date..."
+        field.layer.borderColor = UIColor.black.cgColor
+        field.backgroundColor = UIColor.white
         field.layer.borderWidth = 1
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
@@ -102,12 +125,43 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         button.setTitle("Submit", for: .normal)
         button.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.green
+        button.backgroundColor = UIColor.purple
+        button.setTitleColor(UIColor.white, for: .normal)
         
         return button
     }()
     
+    func validate() -> Bool {
+        if (titleField.text?.count)! < 5 {
+            showAlert(title: "Invalid Title", message: "Please enter a valid title. (Minimum of 5 characters).")
+            return false
+        }
+        if ((descriptionField.text?.count)! < 5) {
+            showAlert(title: "Invalid description", message: "Please enter a valid description. (Minimum of 5 characters).")
+            return false
+        }
+        if (dateFieldS.text?.isEmpty)! {
+            return false
+        }
+        if (dateFieldF.text?.isEmpty)! {
+            return false
+        }
+        
+        
+        return true
+    }
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     @objc func handleSubmit(){
+        if !validate() {
+            return
+        }
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
@@ -115,12 +169,12 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         let event = Event()
         event.title = titleField.text
         event.desc = descriptionField.text
-        event.time = datePicker.date.timeIntervalSince1970 as NSNumber
+        event.startTime = sDate?.timeIntervalSince1970 as NSNumber?
+        event.finishTime = fDate?.timeIntervalSince1970 as NSNumber?
         event.host = uid
         event.invitee = user?.id
         
-        
-        let values = ["Title": event.title!, "Description": event.desc!, "Time": event.time!, "Host": event.host!, "Invitee": event.invitee!] as [String : Any]
+        let values = ["Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!] as [String : Any]
         
         myRef.updateChildValues(values) { (error, ref) in
             if error != nil {
@@ -140,9 +194,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }
         
     }
-    func dateToSecs() -> Int{
+    func dateToSecs() -> Int {
         return Int(datePicker.date.timeIntervalSince1970)
-
     }
 
     
@@ -164,33 +217,38 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     @objc func donePicker(){
 
-        if dateField.isEditing {
-            dateField.endEditing(true)
+        if dateFieldS.isEditing {
+            dateFieldS.endEditing(true)
+        }
+        else if dateFieldF.isEditing {
+            dateFieldF.endEditing(true)
         }
     }
     
     
     
     override func viewDidLoad() {
-        view.backgroundColor = UIColor.white
-        
+        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
+//        navigationController?.navigationBar.barTintColor = UIColor(r: 233, g: 175,b: 50)
+
         //date picker
-        dateField.inputView = datePicker
-        dateField.inputAccessoryView = tb
-        
+        dateFieldS.inputView = datePicker
+        dateFieldS.inputAccessoryView = tb
+        dateFieldF.inputView = datePicker
+        dateFieldF.inputAccessoryView = tb
     
         
         view.addSubview(titleField)
         view.addSubview(descriptionField)
         view.addSubview(labelStart)
-        view.addSubview(dateField)
+        view.addSubview(dateFieldS)
+        view.addSubview(dateFieldF)
         view.addSubview(labelFinish)
         view.addSubview(submitButton)
         setupFields()
     }
     let containerView: UIView = {
         let view = UIView()
-//        view.backgroundColor = UIColor.green
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.borderColor = UIColor.black.cgColor
         view.layer.borderWidth = 1
@@ -202,7 +260,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     func setupFields(){
         //main title
         
-        titleField.topAnchor.constraint(equalTo: view.topAnchor, constant: 65).isActive = true
+        titleField.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
         titleField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         titleField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         titleField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
@@ -217,22 +275,28 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         labelStart.topAnchor.constraint(equalTo:descriptionField.bottomAnchor,constant: 25).isActive = true
         labelStart.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         labelStart.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
-        labelStart.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        labelStart.heightAnchor.constraint(equalToConstant: 40).isActive = true
 
-
-        dateField.topAnchor.constraint(equalTo: labelStart.bottomAnchor, constant: 25).isActive = true
-        dateField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        dateField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        dateField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        dateField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        dateFieldS.topAnchor.constraint(equalTo: labelStart.bottomAnchor).isActive = true
+        dateFieldS.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        dateFieldS.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        dateFieldS.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        dateFieldS.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        submitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        submitButton.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        labelFinish.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: 25).isActive = true
+        labelFinish.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
+        labelFinish.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
+        labelFinish.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        dateFieldF.topAnchor.constraint(equalTo: labelFinish.bottomAnchor).isActive = true
+        dateFieldF.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        dateFieldF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        dateFieldF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        dateFieldF.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        submitButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        submitButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
         submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25).isActive = true
-        
-    
     }
-    
-   
 }
