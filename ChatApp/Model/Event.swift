@@ -9,6 +9,7 @@
 import UIKit
 //Event object
 class Event: NSObject {
+    var id: String?
     var title: String?
     var desc: String?
     var host: String?
