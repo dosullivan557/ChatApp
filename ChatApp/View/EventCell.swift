@@ -15,7 +15,7 @@ class EventCell: UITableViewCell {
         didSet {
             detailTextLabel?.text = event?.desc
             
-            let timestampDate = Date(timeIntervalSince1970: event?.time as! TimeInterval)
+            let timestampDate = Date(timeIntervalSince1970: event?.startTime as! TimeInterval)
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd/MM/yy hh:mm a"
