@@ -40,7 +40,7 @@ class MessagesController: UITableViewController {
     var timer: Timer?
     var messages = [Message]()
     var messagesDictionary = [String: Message]()
-    
+    var user = User()
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
 
@@ -50,61 +50,22 @@ class MessagesController: UITableViewController {
             guard let chatId = message.chatWithId() else {
                 return
             }
-            print(chatId)
-                if let currentUid = Auth.auth().currentUser?.uid {
-                    print(chatId)
+
+            if let currentUid = Auth.auth().currentUser?.uid {
                 let ref = Database.database().reference().child("user-messages").child(currentUid).child(chatId)
                 ref.removeValue()
-//                messages.removeAll()
-//                updateOnDelete(id: chatId)
+                messagesDictionary.removeValue(forKey: chatId)
             }
         }
     } 
-    
-    func updateOnDelete(id: String){
-        messages.removeAll()
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
+    override func viewDidAppear(_ animated: Bool) {
+        let ad = UIApplication.shared.delegate as! AppDelegate
+        if (ad.currentUser.profileImageUrl != user.profileImageUrl){
+            user = ad.currentUser
+            setupNavBarWithUser(user)
         }
-        
-        let ref = Database.database().reference().child("user-messages").child(uid)
-        ref.observe(.childAdded, with: { (DataSnapshot) in
-            let newRef = ref.child(DataSnapshot.key)
-            newRef.observe(.childAdded, with: { (snapshot) in
-                let messageId = snapshot.key
-                let messagesReference = Database.database().reference().child("messages").child(messageId)
-                
-                messagesReference.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-                    print(DataSnapshot)
-                    if let dictionary = DataSnapshot.value as? [String: AnyObject] {
-                        let message = Message()
-                        message.message = dictionary["text"] as? String
-                        message.timestamp = dictionary["TimeStamp"] as? NSNumber
-                        message.receiveId = dictionary["RecieveId"] as? String
-                        message.sendId = dictionary["SendId"] as? String
-                        
-                        if let chatId = message.chatWithId() {
-                            if id == chatId {
-                                return
-                            }
-                            self.messagesDictionary[chatId] = message
-                            
-                            self.messages = Array(self.messagesDictionary.values)
-                            self.messages.sort(by: { (message1, message2) -> Bool in
-                                
-                                return message1.timestamp?.int32Value > message2.timestamp?.int32Value
-                            })
-                        }
-                        //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
-                        self.timer?.invalidate()
-                        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
-                    }
-                    
-                }, withCancel: nil)
-            })
-            
-        }, withCancel: nil)
     }
+  
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hidesBottomBarWhenPushed = false
@@ -147,7 +108,6 @@ class MessagesController: UITableViewController {
             let messagesReference = Database.database().reference().child("messages").child(messageId)
             
             messagesReference.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-                print(DataSnapshot)
                 if let dictionary = DataSnapshot.value as? [String: AnyObject] {
                     let message = Message()
                     message.message = dictionary["text"] as? String
@@ -224,12 +184,11 @@ class MessagesController: UITableViewController {
             guard let dictionary = DataSnapshot.value as? [String: AnyObject] else {
                 return
             }
-            let user = User()
-            user.email = dictionary["email"] as? String
-            user.name = dictionary["name"] as? String
-            user.id = chatId
-            user.profileImageUrl = dictionary["profileImageUrl"] as? String
-            self.showChatControllerForUser(user)
+            self.user.email = dictionary["email"] as? String
+            self.user.name = dictionary["name"] as? String
+            self.user.id = chatId
+            self.user.profileImageUrl = dictionary["profileImageUrl"] as? String
+            self.showChatControllerForUser(self.user)
         }
             ,withCancel: nil)
     }
@@ -251,6 +210,7 @@ class MessagesController: UITableViewController {
                 user.name = dictionary["name"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 self.setupNavBarWithUser(user)
+                
             }
             
         }, withCancel: nil)
@@ -279,7 +239,8 @@ class MessagesController: UITableViewController {
         if let profileImageUrl = user.profileImageUrl {
             profileImageView.loadImageUsingCache(urlString: profileImageUrl)
         }
-        
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        delegate?.currentUser = user
         containerView.addSubview(profileImageView)
         
         //x,y,width,height anchors
@@ -317,7 +278,7 @@ class MessagesController: UITableViewController {
         
         do {
             try Auth.auth().signOut()
-        } catch let logoutError {
+        } catch let logoutError{
             print(logoutError)
         }
         
