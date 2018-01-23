@@ -80,8 +80,28 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    
+    let myEventsButton : UIButton = {
+        let button = UIButton()
+        button.setTitle("My Events", for: .normal)
+        button.setTitleColor(UIColor.blue, for: .normal)
+        button.addTarget(self, action: #selector(handleMyEvents), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    @objc func handleMyEvents(){
+        let myEventController = MyEventsController()
+        myEventController.currentUser = user!
+        self.navigationController?.isNavigationBarHidden = false
+        show(myEventController, sender: self)
+    }
+    
     @objc func handleHelp() {
-        print("Help me")
+        let helpController = HelpController()
+        
+        show(helpController, sender: self)
     }
     override func viewDidLoad() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -92,6 +112,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         view.addSubview(overlay)
         view.addSubview(emailLabel)
         view.addSubview(helpButton)
+        view.addSubview(myEventsButton)
         self.navigationController?.isNavigationBarHidden = true
         setupFields()
         setupOverlay()
@@ -128,7 +149,12 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         emailLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         emailLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        helpButton.topAnchor.constraint(equalTo: emailLabel.bottomAnchor).isActive = true
+        myEventsButton.topAnchor.constraint(equalTo: emailLabel.bottomAnchor).isActive = true
+        myEventsButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        myEventsButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        myEventsButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        helpButton.topAnchor.constraint(equalTo: myEventsButton.bottomAnchor).isActive = true
         helpButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         helpButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         helpButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -231,24 +257,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         print("cancelled")
         dismiss(animated: true, completion: nil)
     }
-    //shows alert if you haven't got an upload image
-    func showImageUploadAlert() -> Bool{
-        var bool = true
-        let alert = UIAlertController(title: "No profile image", message: "Would you like to upload a profile image, or not?", preferredStyle: UIAlertControllerStyle.alert)
-        
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-            bool = false
-        }))
-        alert.addAction(UIAlertAction(title: "Yes, Let me!", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-            self.handleSelectProfileImageView()
-            bool = true
-        }
-        ))
-        self.present(alert, animated: true, completion: nil)
-        return bool
-    }
+
     
     
     func setupWithUser(user: User){
@@ -259,12 +268,15 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         }
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
 //        if user?.id == nil {
 //            viewDidLoad()
 //        }
 //        else {
 //            self.setupWithUser(user: user!)
 //        }
-//    }
+
+        self.navigationController?.isNavigationBarHidden = true
+
+    }
 }
