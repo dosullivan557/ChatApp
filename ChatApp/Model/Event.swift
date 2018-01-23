@@ -11,8 +11,13 @@ import UIKit
 class Event: NSObject {
     var title: String?
     var desc: String?
-    var time: NSNumber?
     var host: String?
     var invitee: String?
+    var startTime: NSNumber?
+    var finishTime: NSNumber?
+    
+    func toString() -> String {
+        return ("title:\(title!), desc:\(desc!), host:\(host!), invitee:\(invitee!), startTime:\(startTime!), finishTime:\(finishTime!)")
+    }
+    
 }
-
