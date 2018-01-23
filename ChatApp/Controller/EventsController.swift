@@ -15,34 +15,43 @@ class EventsController: UITableViewController {
 
     var events = [Event]()
     var timer: Timer?
-    let currentUser = User()
+    var currentUser = User() {
+        didSet {
+            setupNavBarWithUser(currentUser)
+            observeUserEvents()
+            handleReload()
+            events.removeAll()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(EventCell.self, forCellReuseIdentifier: cellEId)
-        observeUserEvents()
+//        observeUserEvents()
         fetchUserAndSetupNavBarTitle()
-
+//        self.hidesBottomBarWhenPushed = true
     }
     //Defines the current user of the system, and passes it to another method to setup the navigation bar.
     func fetchUserAndSetupNavBarTitle() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
-        
-        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                //                self.navigationItem.title = dictionary["name"] as? String
-                
-                self.currentUser.email = dictionary["email"] as? String
-                self.currentUser.name = dictionary["name"] as? String
-                self.currentUser.id = snapshot.key
-                self.currentUser.profileImageUrl = dictionary["profileImageUrl"] as? String
-                self.setupNavBarWithUser(self.currentUser)
-            }
-            
-        }, withCancel: nil)
+//        guard let uid = Auth.auth().currentUser?.uid else {
+//            return
+//        }
+//
+//        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+//
+//            if let dictionary = snapshot.value as? [String: AnyObject] {
+//                //                self.navigationItem.title = dictionary["name"] as? String
+//
+//                self.currentUser.email = dictionary["email"] as? String
+//                self.currentUser.name = dictionary["name"] as? String
+//                self.currentUser.id = snapshot.key
+//                self.currentUser.profileImageUrl = dictionary["profileImageUrl"] as? String
+//                self.setupNavBarWithUser(self.currentUser)
+//            }
+//
+//        }, withCancel: nil)
+
+        setupNavBarWithUser(currentUser)
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
@@ -66,19 +75,16 @@ class EventsController: UITableViewController {
     }
     
     func declineFunc(){
-        
+        print("Decline")
     }
     func acceptFunc(){
-        
+        print("Accept")
     }
     //gets passed the current user of the system, and then sets up the navigation bar with that users information.
-    func setupNavBarWithUser(_ user: User) {
-
+    func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
         
-        //x,y,width,height anchors
-
-        self.navigationItem.title = (user.name! + "'s Events")
+        self.navigationItem.title = (currentUser.name! + "'s Events")
         
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -153,6 +159,15 @@ class EventsController: UITableViewController {
 //        }
 //    }
     
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let event = events[indexPath.row]
+        //pass event through
+        let eventController = EventController()
+        eventController.event = event
+        show(eventController, sender: self)
+    }
+    
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -172,7 +187,8 @@ class EventsController: UITableViewController {
                         event.title = dictionary["Title"] as? String
                         event.host = dictionary["Host"] as? String
                         event.invitee = dictionary["Invitee"] as? String
-                        event.time = dictionary["Time"] as? NSNumber
+                        event.startTime = dictionary["StartTime"] as? NSNumber
+                        event.finishTime = dictionary["FinishTime"] as? NSNumber
                         self.events.append(event)
                         //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
                         self.timer?.invalidate()
