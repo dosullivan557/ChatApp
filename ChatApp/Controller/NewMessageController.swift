@@ -18,8 +18,14 @@ class NewMessageController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group", style: .plain,target: self, action: #selector(handleGroup))
         fetchUser()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        
+    }
+    
+    @objc func handleGroup () {
+        
     }
     
     @objc func handleCancel(){
@@ -27,6 +33,7 @@ class NewMessageController: UITableViewController {
     }
     //Defines the number of cells in the tableview.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
         return users.count
     }
     //Fetches each user from the database, and populates the tableview with each user.
@@ -48,9 +55,14 @@ class NewMessageController: UITableViewController {
             }
         }, withCancel: nil)
         
+        
     }
     //Reloads the tableview.
     @objc func handleReload() {
+        let user = User()
+        user.name = "Group"
+        user.email = "New Group Message"
+        users.append(user)
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
         })
@@ -66,11 +78,13 @@ class NewMessageController: UITableViewController {
             cell?.profileImageView.loadImageUsingCache(urlString: profileImageUrl)
             
         }
+        
         return cell!
         
     }
     //Defines what happens when a cell is pressed.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
         dismiss(animated: true)
         let user = self.users[indexPath.row]
         
