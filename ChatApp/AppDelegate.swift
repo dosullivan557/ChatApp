@@ -12,8 +12,21 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    
-    
+    var currentUser = User()
+    func updateUser() {
+        if let id = Auth.auth().currentUser?.uid {
+            Database.database().reference().child("users").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    self.currentUser.id = snapshot.key
+                    self.currentUser.email = dictionary["email"] as? String
+                    self.currentUser.name = dictionary["name"] as? String
+                    self.currentUser.profileImageUrl = dictionary["profileImageUrl"] as? String                    
+                }
+                
+            }, withCancel: nil)
+        }
+    }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
