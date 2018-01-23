@@ -15,13 +15,17 @@ class ProfileController : UIViewController {
         image.layer.cornerRadius = 75
         image.layer.masksToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
-        
+        image.image = UIImage(named: "defaultPic")
         return image
     }()
     var user : User?{
         didSet{
-            nameLabel.text = user?.name
-            setupWithUser(user: user!)
+            if let cu = user {
+                print("huhuhuh")
+                print(cu.name!)
+                nameLabel.text = cu.name!
+//                setupWithUser(user: cu)
+            }
         }
     }
     let nameLabel : UITextView = {
@@ -32,15 +36,29 @@ class ProfileController : UIViewController {
         name.translatesAutoresizingMaskIntoConstraints = false
         name.textAlignment = .center
         name.font = UIFont(name: "arial", size: 20)
+        name.textColor = UIColor.black
         return name
     }()
-    
+    let reportButton : UIButton = {
+        let button = UIButton()
+        button.setTitle("Report User", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(UIColor.red, for: .normal)
+        button.addTarget(self, action: #selector(handleReport), for: .touchUpInside)
+        return button
+    }()
+    @objc func handleReport(){
+        let reportController = ReportController()
+        reportController.user = user
+        show(reportController, sender: self)
+    }
     override func viewDidLoad() {
         view.backgroundColor = UIColor.white
         view.addSubview(profileImage)
         view.addSubview(nameLabel)
+        view.addSubview(reportButton)
+        setupWithUser(user: user!)
         setupFields()
-        getUser()
     }
     func setupFields(){
         profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -51,36 +69,22 @@ class ProfileController : UIViewController {
         nameLabel.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 20).isActive = true
         nameLabel.centerXAnchor.constraint(equalTo:profileImage.centerXAnchor).isActive = true
         nameLabel.widthAnchor.constraint(equalTo: profileImage.widthAnchor).isActive = true
-        nameLabel.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        reportButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20).isActive = true
+        reportButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        reportButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        reportButton.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
     }
-    func getUser(){
-        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
-            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
-                let user = User()
-                user.name = dictionary["name"] as? String
-                user.email = dictionary["email"] as? String
-                user.profileImageUrl = dictionary["profileImageUrl"] as? String
-                user.id = DataSnapshot.key
-                self.setupWithUser(user: user)
-                print(user)
-            }
-        }, withCancel: nil)
-    }
+
     
 
     func setupWithUser(user: User){
         if let profileImageUrl = user.profileImageUrl {
             profileImage.loadImageUsingCache(urlString: profileImageUrl)
-            nameLabel.text = user.name
+            print(user.name!)
+            nameLabel.text = user.name!
         }
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if user?.id == nil {
-            viewDidLoad()
-        }
-        else {
-            self.setupWithUser(user: user!)
-        }
-    }
+
 }
