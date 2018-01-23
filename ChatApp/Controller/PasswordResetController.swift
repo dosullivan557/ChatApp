@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-class PasswordResetController: UIViewController {
+class PasswordResetController: UIViewController, UITextFieldDelegate {
     
     let titleMain: UITextView = {
         let title = UITextView()
@@ -28,8 +28,19 @@ class PasswordResetController: UIViewController {
         tf.placeholder = "Email"
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.backgroundColor = UIColor.white
+        tf.autocapitalizationType = .none
+        tf.keyboardType = .emailAddress
         return tf
     }()
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
     let resetButton: UIButton = {
         let button = UIButton()
@@ -60,6 +71,14 @@ class PasswordResetController: UIViewController {
         view.addSubview(cancelButton)
         setupItems()
         
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        
+        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
+        //tap.cancelsTouchesInView = false
+        
+        view.addGestureRecognizer(tap)
+        
     }
     
     func setupItems(){
@@ -86,16 +105,37 @@ class PasswordResetController: UIViewController {
     }
     @objc func handlePasswordReset(){
         if let email = emailField.text {
+            if isValidEmail(testStr: email) {
             Auth.auth().sendPasswordReset(withEmail: email, completion: { (Error) in
                 if Error != nil {
-                    print("successful, show alert")
+                    self.showAlert(title: "Invalid Email", message: (Error?.localizedDescription)! + " Please Enter a valid Email")
                 }
                 else {
-                    print(Error?.localizedDescription)
+                    self.showAlert(title: "Email has been sent", message: "An email has been sent with instructions to reset your password.")
                 }
             })
         }
+        }
+        else {
+            showAlert(title: "Invalid Email", message: "Please enter a valid Email Address")
+        }
     }
+    //tests email locally
+    func isValidEmail(testStr:String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluate(with: testStr)
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 
 
 }
