@@ -9,6 +9,27 @@
 import UIKit
 import Firebase
 
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
+    }
+}
+
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l > r
+    default:
+        return rhs < lhs
+    }
+}
+
 class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -141,12 +162,18 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             return false
         }
         if (dateFieldS.text?.isEmpty)! {
+            showAlert(title: "Invalid Start Date.", message: "Please enter a valid Start Date.")
             return false
         }
         if (dateFieldF.text?.isEmpty)! {
+            showAlert(title: "Invalid End Date.", message: "Please enter a valid End Date.")
             return false
         }
-        
+        if((sDate?.timeIntervalSince1970 as! NSNumber).int32Value > (fDate?.timeIntervalSince1970 as! NSNumber).int32Value){
+            showAlert(title: "Invalid Dates.", message: "Your Start date is after your end date. Please enter valid dates and try again.")
+            return false
+
+        }
         
         return true
     }
@@ -165,7 +192,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-        let myRef = Database.database().reference().child("events").childByAutoId()
         let event = Event()
         event.title = titleField.text
         event.desc = descriptionField.text
@@ -173,15 +199,18 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         event.finishTime = fDate?.timeIntervalSince1970 as NSNumber?
         event.host = uid
         event.invitee = user?.id
-        
-        let values = ["Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!] as [String : Any]
+        event.id = NSUUID().uuidString
+        let myRef = Database.database().reference().child("events").child(event.id!)
+
+        let values = ["Id" : event.id, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : ""] as [String : Any]
         
         myRef.updateChildValues(values) { (error, ref) in
             if error != nil {
-                print(error ?? "")
+                self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
+                self.postError(error: error!)
                 return
             }
-        
+            showAlert(title: "Event has been submitted", message: "This event has been sent to \(self.user?.name) to confirm.")
             
             let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
             
@@ -191,9 +220,24 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
             recipientUserEventRef.updateChildValues([messageId: 1])
             
+            
+        }
+        
+        func showAlert(title: String, message: String) {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
+                alert.dismiss(animated: true, completion: nil)
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
         
     }
+    func postError(error: Error){
+        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
+        let values = ["Error Description": error.localizedDescription]
+        ref.updateChildValues(values as [String: AnyObject])
+    }
+    
     func dateToSecs() -> Int {
         return Int(datePicker.date.timeIntervalSince1970)
     }

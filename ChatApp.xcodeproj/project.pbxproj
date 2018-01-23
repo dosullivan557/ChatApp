@@ -28,6 +28,9 @@
 		DE4BDD901FF5475700E67C45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE4BDD8F1FF5475700E67C45 /* GoogleService-Info.plist */; };
 		DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */; };
 		DECD33852016AC0400772123 /* ReportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD33842016AC0400772123 /* ReportController.swift */; };
+		DECD3387201777F400772123 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD3386201777F400772123 /* HelpController.swift */; };
+		DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD338820177F1A00772123 /* NewGroupMessageController.swift */; };
+		DECD338B2017FA6300772123 /* MyEventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD338A2017FA6300772123 /* MyEventsController.swift */; };
 		DEDD53B01FFE6B7000B10E62 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */; };
 		DEDD53B41FFFC87900B10E62 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B31FFFC87900B10E62 /* Message.swift */; };
 		DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B61FFFD27C00B10E62 /* UserCell.swift */; };
@@ -90,6 +93,9 @@
 		DE4BDD8F1FF5475700E67C45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		DECD33842016AC0400772123 /* ReportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportController.swift; sourceTree = "<group>"; };
+		DECD3386201777F400772123 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
+		DECD338820177F1A00772123 /* NewGroupMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupMessageController.swift; sourceTree = "<group>"; };
+		DECD338A2017FA6300772123 /* MyEventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyEventsController.swift; sourceTree = "<group>"; };
 		DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		DEDD53B31FFFC87900B10E62 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		DEDD53B61FFFD27C00B10E62 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
@@ -229,9 +235,12 @@
 				DEF0FE17201635B7009DD4CC /* MyProfileController.swift */,
 				DE2D67CA200A6F5D0084078A /* CalendarController.swift */,
 				DE2D67CE200BF8740084078A /* EventsController.swift */,
+				DECD338A2017FA6300772123 /* MyEventsController.swift */,
 				DEF461922012D9E200FD4327 /* EventController.swift */,
 				DEF4618E200FD79600FD4327 /* PasswordResetController.swift */,
 				DECD33842016AC0400772123 /* ReportController.swift */,
+				DECD3386201777F400772123 /* HelpController.swift */,
+				DECD338820177F1A00772123 /* NewGroupMessageController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -559,6 +568,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DEDD53B01FFE6B7000B10E62 /* ChatLogController.swift in Sources */,
+				DECD3387201777F400772123 /* HelpController.swift in Sources */,
 				DE2D67CB200A6F5D0084078A /* CalendarController.swift in Sources */,
 				DEF461932012D9E200FD4327 /* EventController.swift in Sources */,
 				DEF0D4B81FF58F250062AF22 /* NewMessageController.swift in Sources */,
@@ -575,7 +585,9 @@
 				DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */,
 				DEF4618F200FD79600FD4327 /* PasswordResetController.swift in Sources */,
 				DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */,
+				DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */,
 				DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */,
+				DECD338B2017FA6300772123 /* MyEventsController.swift in Sources */,
 				DE4BDD5F1FF5244E00E67C45 /* AppDelegate.swift in Sources */,
 				DE2D67C52006E2D20084078A /* ProfileController.swift in Sources */,
 			);
