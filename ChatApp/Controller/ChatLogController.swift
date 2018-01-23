@@ -61,7 +61,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         self.hidesBottomBarWhenPushed = true
         reload()
         super.viewDidLoad()
-        collectionView?.backgroundColor = UIColor.white
+        collectionView?.backgroundColor = UIColor(patternImage: UIImage(named:"background")!)
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.alwaysBounceVertical = true
         collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
@@ -128,13 +128,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 message.receiveId = dictionary["RecieveId"] as? String
                 message.timestamp = dictionary["TimeStamp"] as? NSNumber
                 
-                if message.chatWithId() == self.user?.id{
                     self.messages.append(message)
                     
                     DispatchQueue.main.async(execute: {
                         self.collectionView?.reloadData()
                     })
-                }
+                
             }, withCancel: nil)
         })
     }
