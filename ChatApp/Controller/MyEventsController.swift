@@ -36,85 +36,32 @@ class MyEventsController: UITableViewController {
         //        self.hidesBottomBarWhenPushed = true
     }
     
-    
-    
-    //Defines the current user of the system, and passes it to another method to setup the navigation bar
-    
-    override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
-        
-        let decline = UITableViewRowAction(style: .normal, title: "Decline") { action, index in
-            print("decline button tapped")
-            self.declineFunc(index: index)
-        }
-        decline.backgroundColor = UIColor(r: 206, g: 27, b: 0)
-        
-        let accept = UITableViewRowAction(style: .normal, title: "Accept") { action, index in
-            
-            print("accept button tapped")
-            self.acceptFunc(index: index)
-        }
-        accept.backgroundColor = UIColor(r: 0, g: 168, b: 48)
-        
-        return [accept, decline]
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
     }
     
-    func declineFunc(index: IndexPath){
-        print("Decline")
-        self.updateDatabase(IndexPath: index, bool: false)
-        self.events.remove(at: index.row)
-        DispatchQueue.main.async() {
-            self.tableView.deleteRows(at: [index], with: .fade)
-        }
-        self.handleReload()
-        self.showAlert(title: "Event Declines", message: "This event has been removed.")
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        let event = events[indexPath.row]
         
-    }
-    func acceptFunc(index: IndexPath){
-        let currentEvent = events[index.row]
-        let eventStore: EKEventStore = EKEventStore()
-        eventStore.requestAccess(to: .event) { (bool, error) in
-            if (bool) && (error == nil) {
-                print("granted \(bool)")
-                let event:EKEvent = EKEvent(eventStore: eventStore)
-                event.title = currentEvent.title
-                event.startDate = Date(timeIntervalSince1970: currentEvent.startTime as! TimeInterval)
-                event.endDate = Date(timeIntervalSince1970: currentEvent.finishTime as! TimeInterval)
-                event.notes = currentEvent.desc
-                event.calendar = eventStore.defaultCalendarForNewEvents
-                do {
-                    try eventStore.save(event, span: .thisEvent)
-                } catch let error as NSError {
-                    self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
-                    self.postError(error: error)
-                    return
-                }
-                self.updateDatabase(IndexPath: index, bool: true)
-                self.events.remove(at: index.row)
-                DispatchQueue.main.async() {
-                    self.tableView.deleteRows(at: [index], with: .fade)
-                }
-                self.handleReload()
-                self.showAlert(title: "Event Accepted", message: "Event has been confirmed, and is now in your calendar")
-            }
-            else {
-                self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
-                self.postError(error: error!)
+        if editingStyle == .delete {
+            self.events.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            guard let eventId = event.eventWithId() else {
                 return
             }
+            
+            if let currentUid = Auth.auth().currentUser?.uid {
+                let ref = Database.database().reference().child("events").child(event.id!)
+                ref.removeValue()
+                
+                let hostIdRef = Database.database().reference().child("user-events").child(currentUid).child(eventId).child(event.id!)
+                let inviteeIdRef = Database.database().reference().child("user-events").child(eventId).child(currentUid).child(event.id!)
+                hostIdRef.removeValue()
+                inviteeIdRef.removeValue()
+            }
         }
     }
-    
-    
-    func updateDatabase(IndexPath: IndexPath, bool: Bool){
-        let event = events[IndexPath.row]
-        
-        let ref = Database.database().reference().child("events").child(event.id!)
-        
-        let values = ["Id" : event.id, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : bool] as [String : Any]
-        
-        ref.updateChildValues(values)
-    }
-    
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
         let values = ["Error Description": error.localizedDescription]
@@ -144,10 +91,12 @@ class MyEventsController: UITableViewController {
         return 1
     }
     
+    
+    
     override func viewDidAppear(_ animated: Bool) {
-        if let id = currentUser.id {
-            if id == Auth.auth().currentUser?.uid {
+            if  currentUser.id == Auth.auth().currentUser?.uid {
                 print("Same user")
+                return
             }
             else {
                 print("Different")
@@ -155,11 +104,8 @@ class MyEventsController: UITableViewController {
                 setupNavBarWithUser(currentUser)
                 observeUserEvents()
                 handleReload()
-            }
         }
-        else {
-            print("error")
-        }
+        print("Error")
         
     }
     
