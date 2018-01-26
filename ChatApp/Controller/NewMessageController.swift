@@ -25,7 +25,10 @@ class NewMessageController: UITableViewController {
     }
     
     @objc func handleGroup () {
-        
+        let group = NewGroupMessageController()
+        group.AllUsers = users
+        group.messagesController = messagesController
+        show(group, sender: self)
     }
     
     @objc func handleCancel(){
@@ -59,10 +62,6 @@ class NewMessageController: UITableViewController {
     }
     //Reloads the tableview.
     @objc func handleReload() {
-        let user = User()
-        user.name = "Group"
-        user.email = "New Group Message"
-        users.append(user)
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
         })
@@ -86,9 +85,10 @@ class NewMessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
         dismiss(animated: true)
-        let user = self.users[indexPath.row]
+        var usersToChatWith = [User]()
+        usersToChatWith.append(self.users[indexPath.row])
         
-        self.messagesController.showChatControllerForUser(user)
+        self.messagesController.showChatControllerForUser(usersToChatWith)
     }
     //Defines the height of each cell.
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
