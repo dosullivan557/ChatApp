@@ -169,7 +169,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             showAlert(title: "Invalid End Date.", message: "Please enter a valid End Date.")
             return false
         }
-        if((sDate?.timeIntervalSince1970 as! NSNumber).int32Value > (fDate?.timeIntervalSince1970 as! NSNumber).int32Value){
+        if((sDate?.timeIntervalSince1970 as NSNumber?)?.int32Value > (fDate?.timeIntervalSince1970 as NSNumber?)?.int32Value){
             showAlert(title: "Invalid Dates.", message: "Your Start date is after your end date. Please enter valid dates and try again.")
             return false
 
@@ -202,7 +202,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         event.id = NSUUID().uuidString
         let myRef = Database.database().reference().child("events").child(event.id!)
 
-        let values = ["Id" : event.id, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : ""] as [String : Any]
+        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : ""] as [String : Any]
         
         myRef.updateChildValues(values) { (error, ref) in
             if error != nil {
@@ -210,7 +210,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 self.postError(error: error!)
                 return
             }
-            showAlert(title: "Event has been submitted", message: "This event has been sent to \(self.user?.name) to confirm.")
+            showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: self.user?.name)) to confirm.")
             
             let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
             
