@@ -12,16 +12,32 @@ import Firebase
 class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout{
     //Variables.
     var messages = [Message]()
-    var user: User?{
+    var users: [User?] = []{
         didSet{
             let titleView = UITextView()
-            titleView.text = user?.name!.components(separatedBy: " ")[0]
-            titleView.isEditable = false
-            titleView.isUserInteractionEnabled = true
-            titleView.backgroundColor? = UIColor.clear
-            let tap = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
 
-            titleView.addGestureRecognizer(tap)
+            if users.count == 1 {
+                chatWithUser = users[0]!
+                titleView.text = chatWithUser.name!.components(separatedBy: " ")[0]
+                titleView.isEditable = false
+                titleView.isUserInteractionEnabled = true
+                titleView.backgroundColor? = UIColor.clear
+                let tap = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
+                
+                titleView.addGestureRecognizer(tap)
+                observeMessages()
+
+            }
+            else {
+                titleView.text = "Group"
+                titleView.isEditable = false
+                titleView.isUserInteractionEnabled = true
+                titleView.backgroundColor? = UIColor.clear
+                let tap = UITapGestureRecognizer(target: self, action: #selector(showGroupProfile))
+                titleView.addGestureRecognizer(tap)
+                observeGroupMessages()
+            }
+
 
             let calendarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showCalendar))
             calendarButton.image = UIImage(named: "CalendarIcon")
@@ -29,14 +45,16 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             navigationItem.rightBarButtonItem = calendarButton
             navigationItem.titleView = titleView
 
-            observeMessages()
-        }
+            }
     }
+    @objc func showGroupProfile(){
+        print("123")
+    }
+    var chatWithUser = User()
     @objc func showUserProfile(){
         let profileController = ProfileController()
-        profileController.user = user
+        profileController.user = chatWithUser
         self.show(profileController, sender: self)
-        print("tapped")
     }
     lazy var inputTextField: UITextField = {
         let inputTextField = UITextField()
@@ -45,9 +63,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         inputTextField.delegate = self
         return inputTextField
     }()
-    @objc func handleNameClick() {
-        print("Name Tap")
-    }
+
     
     lazy var calenderButton: UIImageView = {
         let imageView = UIImageView()
@@ -103,7 +119,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     @objc func showCalendar(){
         print("calendar")
         let calendarView = CalendarController()
-        calendarView.user = user
+        calendarView.user = chatWithUser
         self.show(calendarView, sender: self)
         
     }
@@ -114,7 +130,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             return
         }
         
-        let ref = Database.database().reference().child("user-messages").child(uid).child((self.user?.id)!)
+        let ref = Database.database().reference().child("user-messages").child(uid).child((self.chatWithUser.id)!)
         ref.observe(.childAdded, with: { (DataSnapshot) in
             let messageId = DataSnapshot.key
             let messagesRef = Database.database().reference().child("messages").child(messageId)
@@ -137,7 +153,34 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             }, withCancel: nil)
         })
     }
-    
+    func observeGroupMessages() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let ref = Database.database().reference().child("Groups").child(uid).childByAutoId()
+        ref.observe(.childAdded, with: { (DataSnapshot) in
+            let messageId = DataSnapshot.key
+            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            messagesRef.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+                guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
+                    return
+                }
+                let message = Message()
+                message.message = dictionary["text"] as? String
+                message.sendId = dictionary["SendId"] as? String
+                message.receiveId = dictionary["RecieveId"] as? String
+                message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                
+                self.messages.append(message)
+                
+                DispatchQueue.main.async(execute: {
+                    self.collectionView?.reloadData()
+                })
+                
+            }, withCancel: nil)
+        })
+    }
     var containerViewBA: NSLayoutConstraint?
     
     func reload(){
@@ -147,6 +190,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         })
     }
     
+    @objc func handleCorrectSend() {
+        if users.count == 1 {
+            handleSend()
+        }
+        else {
+            handleGroupSend()
+        }
+    }
     //Defines the textfield and submit button.
     func setupInputComponents(){
         let containerView = UIView()
@@ -172,7 +223,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         sendButton.centerYAnchor.constraint(equalTo:containerView.centerYAnchor).isActive = true
         sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
+        sendButton.addTarget(self, action: #selector(handleCorrectSend), for: .touchUpInside)
         //text field
         
         containerView.addSubview(inputTextField)
@@ -208,6 +259,44 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         return NSString(string: text).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
+    
+    
+    //This method is called when the send button is pressed.
+    @objc func handleGroupSend() {
+        
+        if inputTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            inputTextField.text = ""
+            print("Cannot send empty messages")
+            return
+        }
+        
+        let ref = Database.database().reference().child("messages")
+        let childRef = ref.childByAutoId()
+        let recieveId = "1"
+        let sendId = Auth.auth().currentUser!.uid
+        let timestamp = Int(Date().timeIntervalSince1970)
+        
+        
+        let values = ["text": inputTextField.text!, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error ?? "")
+                return
+            }
+            for i in 1...self.users.count {
+                let userMessagesRef = Database.database().reference().child("user-messages").child(sendId).child((self.users[i-1]?.id)!)
+            let messageId = childRef.key
+            userMessagesRef.updateChildValues([messageId: 1])
+            
+                let recipientUserMessagesRef = Database.database().reference().child("user-messages").child((self.users[i-1]?.id)!).child(sendId)
+            recipientUserMessagesRef.updateChildValues([messageId: 1])
+            }
+        }
+        self.inputTextField.text = ""
+    }
+    
+    
     //This method is called when the send button is pressed.
     @objc func handleSend() {
         
@@ -219,7 +308,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
-        let recieveId = user!.id!
+        let recieveId = chatWithUser.id!
         let sendId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
         
@@ -269,7 +358,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.textView.textColor = UIColor.black
             cell.profileImage.isHidden = false
             //load other person's image
-            if let profileImageUrl = self.user?.profileImageUrl {
+            if let profileImageUrl = self.chatWithUser.profileImageUrl {
                 cell.profileImage.loadImageUsingCache(urlString: profileImageUrl)
             }
         }

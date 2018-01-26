@@ -31,6 +31,7 @@
 		DECD3387201777F400772123 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD3386201777F400772123 /* HelpController.swift */; };
 		DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD338820177F1A00772123 /* NewGroupMessageController.swift */; };
 		DECD338B2017FA6300772123 /* MyEventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD338A2017FA6300772123 /* MyEventsController.swift */; };
+		DECD338D2018A1E300772123 /* GroupChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD338C2018A1E300772123 /* GroupChatLogController.swift */; };
 		DEDD53B01FFE6B7000B10E62 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */; };
 		DEDD53B41FFFC87900B10E62 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B31FFFC87900B10E62 /* Message.swift */; };
 		DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B61FFFD27C00B10E62 /* UserCell.swift */; };
@@ -96,6 +97,7 @@
 		DECD3386201777F400772123 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
 		DECD338820177F1A00772123 /* NewGroupMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupMessageController.swift; sourceTree = "<group>"; };
 		DECD338A2017FA6300772123 /* MyEventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyEventsController.swift; sourceTree = "<group>"; };
+		DECD338C2018A1E300772123 /* GroupChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatLogController.swift; sourceTree = "<group>"; };
 		DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		DEDD53B31FFFC87900B10E62 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		DEDD53B61FFFD27C00B10E62 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 				DECD33842016AC0400772123 /* ReportController.swift */,
 				DECD3386201777F400772123 /* HelpController.swift */,
 				DECD338820177F1A00772123 /* NewGroupMessageController.swift */,
+				DECD338C2018A1E300772123 /* GroupChatLogController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -585,6 +588,7 @@
 				DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */,
 				DEF4618F200FD79600FD4327 /* PasswordResetController.swift in Sources */,
 				DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */,
+				DECD338D2018A1E300772123 /* GroupChatLogController.swift in Sources */,
 				DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */,
 				DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */,
 				DECD338B2017FA6300772123 /* MyEventsController.swift in Sources */,
