@@ -16,17 +16,15 @@ extension UIImageView {
         self.image = nil
         //check cache for image first
         if let cachedImage = imageCache.object(forKey: urlString as AnyObject) as? UIImage{
-            print("image found in cache")
             self.image = cachedImage
             return
         }
-        print("Image redownloaded")
         if let profileImageUrl = urlString {
             print("pass")
             let url = URL(string: profileImageUrl)
             URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
                 if error != nil{
-                    print("failed downloading")
+                    self.image = UIImage(named:"defaultPic")
                     return
                 }
                 DispatchQueue.main.async(){
