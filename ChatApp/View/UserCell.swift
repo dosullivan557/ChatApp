@@ -55,6 +55,7 @@ class UserCell: UITableViewCell {
     
     
     fileprivate func setupNameAndProfileImage() {
+        
         if let id = message?.chatWithId() {
             let ref = Database.database().reference().child("users").child(id)
             profileImageView.image = nil
@@ -80,6 +81,8 @@ class UserCell: UITableViewCell {
         detailTextLabel?.frame = CGRect(x: 64, y: detailTextLabel!.frame.origin.y + 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
     }
 
+
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
