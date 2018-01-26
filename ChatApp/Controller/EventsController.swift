@@ -178,7 +178,12 @@ class EventsController: UITableViewController {
         //pass event through
         let eventController = EventController()
         eventController.event = event
+        eventController.hidesBottomBarWhenPushed = true
+        
         show(eventController, sender: self)
+    }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
     }
     
     func observeUserEvents() {
@@ -203,13 +208,7 @@ class EventsController: UITableViewController {
                         event.invitee = dictionary["Invitee"] as? String
                         event.startTime = dictionary["StartTime"] as? NSNumber
                         event.finishTime = dictionary["FinishTime"] as? NSNumber
-                        print("npfsm oisefjsiuef nseiufnsrhf rusf nsuhfn sieojfn esijfnsrdjhlgfn srjklgn drljk gnrjlsk n")
-                        print(event.invitee)
-                        print(self.currentUser.id)
                         if let acceptedS = dictionary["Accepted"] as? String {
-                            print("npfsm oisefjsiuef nseiufnsrhf rusf nsuhfn sieojfn esijfnsrdjhlgfn srjklgn drljk gnrjlsk n")
-                            print(event.invitee)
-                            print(self.currentUser.id)
                             if event.invitee == self.currentUser.id {
                                 if acceptedS == "" {
                                     self.events.append(event)
