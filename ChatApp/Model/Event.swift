@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 //Event object
 class Event: NSObject {
     var id: String?
@@ -19,6 +20,15 @@ class Event: NSObject {
     
     func toString() -> String {
         return ("title:\(title!), desc:\(desc!), host:\(host!), invitee:\(invitee!), startTime:\(startTime!), finishTime:\(finishTime!)")
+    }
+    
+    func eventWithId() -> String? {
+        if invitee == Auth.auth().currentUser?.uid {
+            return host
+        }
+        else {
+            return invitee
+        }
     }
     
 }
