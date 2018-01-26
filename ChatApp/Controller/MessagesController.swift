@@ -190,7 +190,9 @@ class MessagesController: UITableViewController {
             self.user.name = dictionary["name"] as? String
             self.user.id = chatId
             self.user.profileImageUrl = dictionary["profileImageUrl"] as? String
-            self.showChatControllerForUser(self.user)
+            var chatWithUser = [User]()
+            chatWithUser.append(self.user)
+            self.showChatControllerForUser(chatWithUser)
         }
             ,withCancel: nil)
     }
@@ -269,12 +271,20 @@ class MessagesController: UITableViewController {
         
     }
     //Opens a chat log with a user which is passed in.
-    func showChatControllerForUser(_ user: User) {
+    func showChatControllerForUser(_ user: [User]) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-        chatLogController.user = user
+        chatLogController.users = user
         chatLogController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(chatLogController, animated: true)
     }
+    
+    //Opens a chat log with a user which is passed in.
+//    func showChatControllerForGroup(_ users: [User]) {
+//        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+//        chatLogController.users = users
+//        chatLogController.hidesBottomBarWhenPushed = true
+//        navigationController?.pushViewController(chatLogController, animated: true)
+//    }
     //This method is called when logging out.
     @objc func handleLogout() {
         
