@@ -210,8 +210,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 self.postError(error: error!)
                 return
             }
-            showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: self.user?.name)) to confirm.")
-            
+            showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+
             let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
             
             let messageId = myRef.key
