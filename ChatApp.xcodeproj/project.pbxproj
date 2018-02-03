@@ -10,6 +10,7 @@
 		90E2EB65B1FFBA4AA933AB63 /* libPods-ChatApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DD04DDC7D41CFA7AF0F70FB /* libPods-ChatApp.a */; };
 		9B66D3ECCFBE2C0656C75204 /* libPods-ChatAppUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C93F49780ACCF8421ED47D8A /* libPods-ChatAppUITests.a */; };
 		AA9E2C1777B21EC989C77FE4 /* libPods-ChatAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4759EC96D109F7CA016FDEDF /* libPods-ChatAppTests.a */; };
+		DE13E3C2202610DD0021D057 /* badWords.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE13E3C1202610DD0021D057 /* badWords.txt */; };
 		DE2D67C52006E2D20084078A /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67C42006E2D20084078A /* ProfileController.swift */; };
 		DE2D67C72006E35F0084078A /* MyTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67C62006E35F0084078A /* MyTabBar.swift */; };
 		DE2D67CB200A6F5D0084078A /* CalendarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67CA200A6F5D0084078A /* CalendarController.swift */; };
@@ -70,6 +71,7 @@
 		8DD04DDC7D41CFA7AF0F70FB /* libPods-ChatApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C47A83CEAE027671A46755C /* Pods-ChatAppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatAppUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatAppUITests/Pods-ChatAppUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C93F49780ACCF8421ED47D8A /* libPods-ChatAppUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatAppUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE13E3C1202610DD0021D057 /* badWords.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = badWords.txt; sourceTree = "<group>"; };
 		DE2D67C42006E2D20084078A /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		DE2D67C62006E35F0084078A /* MyTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTabBar.swift; sourceTree = "<group>"; };
 		DE2D67CA200A6F5D0084078A /* CalendarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarController.swift; sourceTree = "<group>"; };
@@ -160,6 +162,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DE13E3C0202610CB0021D057 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				DE13E3C1202610DD0021D057 /* badWords.txt */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		DE47D18F1FF96A85000B6C08 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,6 +204,7 @@
 		DE4BDD5D1FF5244E00E67C45 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				DE13E3C0202610CB0021D057 /* Data */,
 				DEDD53B51FFFD25B00B10E62 /* View */,
 				DE47D18F1FF96A85000B6C08 /* Helpers */,
 				DEFA87A91FF7EEEE0025FAA6 /* Model */,
@@ -386,6 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE4BDD691FF5244E00E67C45 /* LaunchScreen.storyboard in Resources */,
+				DE13E3C2202610DD0021D057 /* badWords.txt in Resources */,
 				DEF46191200FE0D800FD4327 /* background.JPG in Resources */,
 				DE4BDD901FF5475700E67C45 /* GoogleService-Info.plist in Resources */,
 				DE4BDD661FF5244E00E67C45 /* Assets.xcassets in Resources */,

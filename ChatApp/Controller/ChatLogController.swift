@@ -12,6 +12,8 @@ import Firebase
 class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout{
     //Variables.
     var messages = [Message]()
+    
+    
     var users: [User?] = []{
         didSet{
             let titleView = UITextView()
@@ -83,11 +85,44 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
 
-
+        setupSanitiseWords()
         setupInputComponents()
         setupKeyboard()
     }
+    func setupSanitiseWords() {
+        
+        let file = Bundle.main.path(forResource: "badWords", ofType: "txt")
+        var readString = ""
+        do {
+            readString = try String(contentsOfFile: file!, encoding: String.Encoding.utf8)
+        } catch let error as NSError {
+            print("error   \(error)")
+            return
+        }
+        sanitiseWords = readString.components(separatedBy: "\r\n")
+        print(sanitiseWords)
+    }
+    
+    func sanitiseMessage(Message: String) -> String{
+        var sanitisedMessage = Message
+        var words = Message.components(separatedBy: " ")
+        for i in 0...(sanitiseWords.count-1) {
 
+            for j in 0...(words.count - 1) {
+                if sanitiseWords[i].caseInsensitiveCompare(words[j]) == ComparisonResult.orderedSame {
+                    var badWord = words[j]
+                    var goodWord = String(describing: badWord.characters.first!)
+                    for k in 1...(words[j].characters.count - 1) {
+                        goodWord = goodWord + "*"
+                    }
+                    goodWord = goodWord + String(describing: badWord.characters.last!)
+                    words[j] = goodWord
+                }
+            }
+        }
+        sanitisedMessage = words.joined(separator: " ")
+        return sanitisedMessage
+    }
     
     func setupKeyboard(){
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -296,6 +331,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         self.inputTextField.text = ""
     }
     
+    var sanitiseWords = [String]()
     
     //This method is called when the send button is pressed.
     @objc func handleSend() {
@@ -311,9 +347,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let recieveId = chatWithUser.id!
         let sendId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
+        let message = sanitiseMessage(Message: inputTextField.text!)
         
-        
-        let values = ["text": inputTextField.text!, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
+        let values = ["text": message, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
             if error != nil {
