@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -300,7 +301,9 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     }()
 
-    
+    let defaultHeight = CGFloat(30)
+    let labelHeight = CGFloat(40)
+    let spacing = CGFloat(10)
     func setupFields(){
         //main title
         
@@ -308,35 +311,35 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         titleField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         titleField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         titleField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        titleField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        titleField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
         
-        descriptionField.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: 25).isActive = true
+        descriptionField.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: spacing).isActive = true
         descriptionField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         descriptionField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         descriptionField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        descriptionField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        descriptionField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
         
-        labelStart.topAnchor.constraint(equalTo:descriptionField.bottomAnchor,constant: 25).isActive = true
+        labelStart.topAnchor.constraint(equalTo:descriptionField.bottomAnchor,constant: spacing).isActive = true
         labelStart.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         labelStart.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
-        labelStart.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        labelStart.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
 
         dateFieldS.topAnchor.constraint(equalTo: labelStart.bottomAnchor).isActive = true
         dateFieldS.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldS.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateFieldS.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        dateFieldS.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        dateFieldS.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
         
-        labelFinish.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: 25).isActive = true
+        labelFinish.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: spacing).isActive = true
         labelFinish.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
         labelFinish.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
-        labelFinish.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        labelFinish.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
         
         dateFieldF.topAnchor.constraint(equalTo: labelFinish.bottomAnchor).isActive = true
         dateFieldF.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateFieldF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        dateFieldF.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        dateFieldF.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
         
         submitButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         submitButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true

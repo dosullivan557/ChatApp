@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 //Table cell implementation so can edit the layout of each cell.
 class UserCell: UITableViewCell {
-    
+
     var message: Message? {
         didSet {
             setupNameAndProfileImage()
@@ -23,7 +23,7 @@ class UserCell: UITableViewCell {
             else{
                 detailTextLabel?.text = message?.message
             }
-            //from yesterday
+            //from last week
             if let seconds = message?.timestamp?.doubleValue {
                 if (seconds < Double(Date().timeIntervalSince1970) - 604800) {
                     let timestampDate = Date(timeIntervalSince1970: seconds)
@@ -31,6 +31,37 @@ class UserCell: UITableViewCell {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "dd/MM/yy"
                     timeLabel.text = dateFormatter.string(from: timestampDate)
+                }
+                else if (seconds < Double(Date().timeIntervalSince1970) - 172800) {
+                    let timestampDate = Date(timeIntervalSince1970: seconds)
+                    print(timestampDate)
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                    
+                    let formatter  = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd"
+                    let todayDate = formatter.date(from: String(describing: dateFormatter.string(from: timestampDate)))
+                    let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+                    let myComponents = myCalendar.components(.weekday, from: todayDate!)
+                    let weekDay = myComponents.weekday
+                    switch weekDay! {
+                    case 1:
+                        timeLabel.text =  "Monday"
+                    case 2:
+                        timeLabel.text =  "Tuesday"
+                    case 3:
+                        timeLabel.text =  "Wednesday"
+                    case 4:
+                        timeLabel.text =  "Thursday"
+                    case 5:
+                        timeLabel.text =  "Friday"
+                    case 6:
+                        timeLabel.text =  "Saturday"
+                    case 7:
+                        timeLabel.text =  "Sunday"
+                    default:
+                        timeLabel.text =  ""
+                    }
                 }
             else if (seconds < Double(Date().timeIntervalSince1970) - 86400) {
                     let timestampDate = Date(timeIntervalSince1970: seconds)
