@@ -23,12 +23,31 @@ class UserCell: UITableViewCell {
             else{
                 detailTextLabel?.text = message?.message
             }
+            //from yesterday
             if let seconds = message?.timestamp?.doubleValue {
-                let timestampDate = Date(timeIntervalSince1970: seconds)
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "h:mm a"
-                timeLabel.text = dateFormatter.string(from: timestampDate)
+                if (seconds < Double(Date().timeIntervalSince1970) - 604800) {
+                    let timestampDate = Date(timeIntervalSince1970: seconds)
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "dd/MM/yy"
+                    timeLabel.text = dateFormatter.string(from: timestampDate)
+                }
+            else if (seconds < Double(Date().timeIntervalSince1970) - 86400) {
+                    let timestampDate = Date(timeIntervalSince1970: seconds)
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "h:mm a"
+                    timeLabel.text = ("Yesterday: " + dateFormatter.string(from: timestampDate))
+                }
+                //from today
+                else {
+                    let timestampDate = Date(timeIntervalSince1970: seconds)
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "h:mm a"
+                    timeLabel.text = dateFormatter.string(from: timestampDate)
+                }
+
             }
             
             
@@ -106,7 +125,8 @@ class UserCell: UITableViewCell {
         //time label bottom
 //        timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         
-        timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+//        timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: textLabel!.heightAnchor).isActive = true
     }
     

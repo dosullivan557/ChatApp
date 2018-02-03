@@ -162,13 +162,11 @@ class MessagesController: UITableViewController {
     }
     //defines how to open a new message controller when given an input.
     @objc func handleNewMessage() {
-        
         let newMessageController = NewMessageController()
         newMessageController.messagesController = self
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
-    
     //checks whether the user is logged in; if so, then fill in the information of the view, otherwise logout. This function is called when the app is first loaded.
     func checkIfUserIsLoggedIn() {
         if Auth.auth().currentUser?.uid == nil {
@@ -179,8 +177,8 @@ class MessagesController: UITableViewController {
     }
     //called when a tablecell is selected.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         let message = messages[indexPath.row]
+        
         guard let chatId = message.chatWithId() else {
             return
         }
@@ -189,6 +187,7 @@ class MessagesController: UITableViewController {
             guard let dictionary = DataSnapshot.value as? [String: AnyObject] else {
                 return
             }
+            
             self.user.email = dictionary["email"] as? String
             self.user.name = dictionary["name"] as? String
             self.user.id = chatId
