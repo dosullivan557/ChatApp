@@ -273,9 +273,24 @@ class EventController: UIViewController {
         
     }
     
+    func stringFromTimeInterval(interval: TimeInterval) -> String {
+        
+        let ti = NSInteger(interval)
+        
+        let ms = Int((interval .truncatingRemainder(dividingBy: 1)) * 1000)
+        
+        let minutes = (ti / 60) % 60
+        let hours = (ti / 3600)
+        if String(describing: hours) == "0"
+        {
+            return String(format: "%0.2d mins",minutes)
+        }
+        return String(format: "%0.2d h %0.2d mins:",hours,minutes)
+    }
+    
     func setupContainer(){
-        picview.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        picview.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        picview.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        picview.widthAnchor.constraint(equalToConstant: 50).isActive = true
         picview.centerXAnchor.constraint(equalTo: eventWith.centerXAnchor).isActive = true
         picview.topAnchor.constraint(equalTo: eventWith.topAnchor).isActive = true
     
@@ -285,6 +300,30 @@ class EventController: UIViewController {
         nameLabel.topAnchor.constraint(equalTo: picview.bottomAnchor).isActive = true
         
     }
+    
+    @objc func openMapForPlace() {
+        
+//        let latitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
+//        let longitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
+//
+//        let regionDistance:CLLocationDistance = 10000
+//        let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
+//        let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)
+//        let options = [
+//            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
+//            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
+//        ]
+//        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
+//        let mapItem = MKMapItem(placemark: placemark)
+//        mapItem.name = "Place Name"
+//        mapItem.openInMaps(launchOptions: options)
+        
+        let coordinate = CLLocationCoordinate2DMake((event?.location[0]?.doubleValue)!,(event?.location[1]?.doubleValue)!)
+        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
+        mapItem.name = event?.location[2]! as! String
+        mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving])
+    }
+    
     func setupEstimateBox(){
         walkingIcon.topAnchor.constraint(equalTo: estimateBox.topAnchor).isActive = true
         walkingIcon.centerXAnchor.constraint(equalTo: walkingField.centerXAnchor).isActive = true
