@@ -229,6 +229,50 @@ class EventController: UIViewController {
         view.addSubview(eventWith)
         setupFields()
     }
+    
+    func fillInEstimates(request: MKDirectionsRequest) {
+        request.transportType = .walking
+        
+        let directionsWalk = MKDirections(request: request)
+        directionsWalk.calculate { (response, error) in
+            guard let response = response else {
+                if let error = error {
+                    print(error)
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.walkingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+        }
+        
+        request.transportType = .automobile
+        
+        let directionsDrive = MKDirections(request: request)
+        directionsDrive.calculate { (response, error) in
+            guard let response = response else {
+                if let error = error {
+                    (error)
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.drivingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+        }
+        
+        let directionsTransit = MKDirections(request: request)
+        directionsTransit.calculate { (response, error) in
+            guard let response = response else {
+                if let error = error {
+                    print(error)
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.transitField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+        }
+        
+    }
+    
     func setupContainer(){
         picview.heightAnchor.constraint(equalToConstant: 100).isActive = true
         picview.widthAnchor.constraint(equalToConstant: 100).isActive = true
