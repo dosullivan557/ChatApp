@@ -8,8 +8,10 @@
 
 import UIKit
 import Firebase
+import MapKit
+import CoreLocation
 
-class EventController: UIViewController {
+class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     var event : Event? {
         didSet {
             self.navigationItem.title = event?.title
@@ -26,6 +28,12 @@ class EventController: UIViewController {
         }
     }
     var user = User()
+    
+    let mapView : MKMapView = {
+        let mv = MKMapView()
+        mv.translatesAutoresizingMaskIntoConstraints = false
+        return mv
+    }()
     
     func fetchUser(){
         Database.database().reference().child("users").child((event?.eventWithId())!).observe(.value, with: { (DataSnapshot) in
@@ -225,6 +233,7 @@ class EventController: UIViewController {
         view.addSubview(dateFieldF)
         eventWith.addSubview(picview)
         eventWith.addSubview(nameLabel)
+        setupEstimateBox()
         setupContainer()
         view.addSubview(eventWith)
         setupFields()
