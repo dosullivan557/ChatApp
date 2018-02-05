@@ -51,13 +51,14 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
         
     }
+
     let descriptionBox: UITextView = {
         let view = UITextView()
         view.isEditable = false
         view.allowsEditingTextAttributes = false
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = false
-        view.font = UIFont(name: "arial", size: 20)
+        view.font = UIFont(name: "arial", size: 10)
 
         view.textColor = UIColor.black
         return view
@@ -94,7 +95,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         field.layer.borderColor = UIColor.black.cgColor
         field.layer.borderWidth = 1
         field.backgroundColor = UIColor.white
-        field.font = UIFont(name: "arial", size: 20)
+        field.font = UIFont(name: "arial", size: 10)
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
     }()
@@ -108,7 +109,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         field.backgroundColor = UIColor.white
         field.layer.borderWidth = 1
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.font = UIFont(name: "arial", size: 20)
+        field.font = UIFont(name: "arial", size: 10)
 
         return field
     }()
@@ -205,7 +206,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         let view = UIImageView()
         view.image = UIImage(named:"defaultPic")
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 50
+        view.layer.cornerRadius = 25
         view.layer.masksToBounds = true
         return view
     }()
@@ -220,8 +221,21 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         field.textAlignment = .center
         return field
     }()
+    
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.purple
+        renderer.lineWidth = 5.0
         
+        return renderer
+    }
+    let locationManager = CLLocationManager()
+    let destinationCoordinates =  CLLocationCoordinate2D()
     override func viewDidLoad() {
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(openMapForPlace))
+
         super.viewDidLoad()
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         self.hidesBottomBarWhenPushed = true
@@ -233,6 +247,17 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         view.addSubview(dateFieldF)
         eventWith.addSubview(picview)
         eventWith.addSubview(nameLabel)
+
+        
+        estimateBox.addSubview(walkingIcon)
+        estimateBox.addSubview(walkingField)
+        estimateBox.addSubview(drivingIcon)
+        estimateBox.addSubview(drivingField)
+        estimateBox.addSubview(transitIcon)
+        estimateBox.addSubview(transitField)
+        estimateBox.addSubview(drivingArea)
+        view.addSubview(mapView)
+        drivingArea.addGestureRecognizer(tap)
         setupEstimateBox()
         setupContainer()
         view.addSubview(eventWith)
