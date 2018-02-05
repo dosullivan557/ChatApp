@@ -10,7 +10,7 @@
 import UIKit
 import Firebase
 import EventKit
-
+import MapKit
 class MyEventsController: UITableViewController {
     let cellEId = "cellEId"
     var events = [Event]()
@@ -152,8 +152,10 @@ class MyEventsController: UITableViewController {
                         event.invitee = dictionary["Invitee"] as? String
                         event.startTime = dictionary["StartTime"] as? NSNumber
                         event.finishTime = dictionary["FinishTime"] as? NSNumber
+                        event.location = (dictionary["Location"] as? [NSString?])!
+                        print("start time: \(event.startTime)")
+                        print("finish time: \(event.finishTime)")
                         if let acceptedS = dictionary["Accepted"] as? String {
-
                             if event.host == self.currentUser.id {
                                 if acceptedS == "" || acceptedS == "true"{
                                     self.events.append(event)
