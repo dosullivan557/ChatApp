@@ -289,33 +289,42 @@ class EventController: UIViewController {
         descriptionBox.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         descriptionBox.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         descriptionBox.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        descriptionBox.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        descriptionBox.heightAnchor.constraint(equalToConstant: defaultHeight*1.5).isActive = true
         
-        labelStart.topAnchor.constraint(equalTo: descriptionBox.bottomAnchor, constant: 20).isActive = true
+        labelStart.topAnchor.constraint(equalTo: descriptionBox.bottomAnchor).isActive = true
         labelStart.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         labelStart.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        labelStart.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        labelStart.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
         
         dateFieldS.topAnchor.constraint(equalTo: labelStart.bottomAnchor).isActive = true
         dateFieldS.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldS.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        dateFieldS.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        dateFieldS.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
         
-        labelFinish.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: 20).isActive = true
+        labelFinish.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor).isActive = true
         labelFinish.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         labelFinish.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        labelFinish.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        labelFinish.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
         
         dateFieldF.topAnchor.constraint(equalTo: labelFinish.bottomAnchor).isActive = true
         dateFieldF.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldF.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        dateFieldF.heightAnchor.constraint(equalToConstant: 50).isActive = true
-       
-        eventWith.topAnchor.constraint(equalTo: dateFieldF.bottomAnchor,constant: 20).isActive = true
+        dateFieldF.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+        
+        mapView.topAnchor.constraint(equalTo: dateFieldF.bottomAnchor,constant: spacing).isActive = true
+        mapView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        mapView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        mapView.heightAnchor.constraint(equalToConstant: 135).isActive = true
+        
+        estimateBox.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        estimateBox.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        estimateBox.centerXAnchor.constraint(equalTo: eventWith.centerXAnchor).isActive = true
+        estimateBox.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: spacing).isActive = true
+        
+        eventWith.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
         eventWith.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         eventWith.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        eventWith.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        
+        eventWith.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
     }
 
