@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 
-
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -31,7 +30,6 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
-class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -186,6 +184,12 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         self.present(alert, animated: true, completion: nil)
     }
     
+    func exampleFill() {
+        titleField.text = "Nandos"
+        descriptionField.text = "Nandos"
+        locationField.text = "Nando's"
+    }
+    var completed = false
     @objc func handleSubmit(){
         if !validate() {
             return
@@ -201,30 +205,43 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         event.host = uid
         event.invitee = user?.id
         event.id = NSUUID().uuidString
-        let myRef = Database.database().reference().child("events").child(event.id!)
-
-        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : ""] as [String : Any]
+//        print(findLocation())
         
-        myRef.updateChildValues(values) { (error, ref) in
-            if error != nil {
-                self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
-                self.postError(error: error!)
-                return
-            }
-            showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+        findLocation()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+            // Your code with delay
+            print(self.closest)
+            var array = [NSString]()
+            array.append(self.closest.placemark.coordinate.latitude.description as NSString)
+            array.append(self.closest.placemark.coordinate.longitude.description as NSString)
+            array.append(self.closest.placemark.title as! NSString)
 
-            let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
+            event.location = array
             
-            let messageId = myRef.key
-            userEventRef.updateChildValues([messageId: 1])
+            let myRef = Database.database().reference().child("events").child(event.id!)
+            let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : "", "Location": event.location] as [String : Any]
             
-            let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
-            recipientUserEventRef.updateChildValues([messageId: 1])
-            
-            
+                myRef.updateChildValues(values) { (error, ref) in
+                    if error != nil {
+                        self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
+                        self.postError(error: error!)
+                        return
+                    }
+                    self.showCustomAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+
+                    let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
+                    
+                    let messageId = myRef.key
+                    userEventRef.updateChildValues([messageId: 1])
+                    
+                    let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
+                    recipientUserEventRef.updateChildValues([messageId: 1])
+                
+                }
+            }
         }
         
-        func showAlert(title: String, message: String) {
+        func showCustomAlert(title: String, message: String) {
             let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
                 alert.dismiss(animated: true, completion: nil)
@@ -232,7 +249,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             self.present(alert, animated: true, completion: nil)
         }
         
-    }
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
         let values = ["Error Description": error.localizedDescription]
@@ -270,19 +286,115 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }
     }
     
+
     
+    var closest = MKMapItem()
+    func findLocation() {
+
+        let locationManager = CLLocationManager()
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+        }
+        else {
+            print("permissions are needed")
+            return
+        }
+        
+        let currentLocation = locationManager.location
+
+        
+        let searchBarText = locationField.text
+        let request = MKLocalSearchRequest()
+        request.region = mapView.region
+        request.naturalLanguageQuery = searchBarText
+
+        let search = MKLocalSearch(request: request)
+
+        search.start { response, error in
+            guard let response = response else {
+                print("ERROR!")
+                return
+            }
+            let currentCoordinates = currentLocation?.coordinate
+            self.closest = response.mapItems[0]
+//            print("Start value :\(self.closest)")
+            print(response.mapItems.count)
+            if response.mapItems.count > 1 {
+            for i in 1...(response.mapItems.count - 1){
+                print("Checking another")
+                let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
+                let destLat = Double(response.mapItems[i].placemark.coordinate.latitude)
+                let currentLong = Double((currentCoordinates?.longitude)!)
+                let currentLat = Double((currentCoordinates?.latitude)!)
+                let currentClosestLong = Double(self.closest.placemark.coordinate.longitude)
+                let currentClosestLat = Double(self.closest.placemark.coordinate.latitude)
+ 
+                if (destLong.distance(to: currentLong) + destLat.distance(to: currentLat)) < ((currentClosestLat.distance(to: currentLat) + currentClosestLong.distance(to: currentLong))){
+                    print("Found closer: \(self.closest.placemark.coordinate)")
+                    
+                    self.closest = response.mapItems[i]
+                }
+            }
+            print("Finished searching. Closeset is: \(self.closest)")
+        
+            }
+            else {
+                let newRequest = MKLocalSearchRequest()
+                newRequest.naturalLanguageQuery = searchBarText
+                
+                let newSearch = MKLocalSearch(request: newRequest)
+                
+                newSearch.start { response, error in
+                    guard let response = response else {
+                        print("ERROR!")
+                        return
+                    }
+                    let currentCoordinates = currentLocation?.coordinate
+                    self.closest = response.mapItems[0]
+                    //            print("Start value :\(self.closest)")
+                    print(response.mapItems.count)
+                    if response.mapItems.count > 1 {
+                        for i in 1...(response.mapItems.count - 1){
+                            print("Checking another")
+                            let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
+                            let destLat = Double(response.mapItems[i].placemark.coordinate.latitude)
+                            let currentLong = Double((currentCoordinates?.longitude)!)
+                            let currentLat = Double((currentCoordinates?.latitude)!)
+                            let currentClosestLong = Double(self.closest.placemark.coordinate.longitude)
+                            let currentClosestLat = Double(self.closest.placemark.coordinate.latitude)
+                            
+                            if (destLong.distance(to: currentLong) + destLat.distance(to: currentLat)) < ((currentClosestLat.distance(to: currentLat) + currentClosestLong.distance(to: currentLong))){
+                                print("Found closer: \(self.closest.placemark.coordinate)")
+                                
+                                self.closest = response.mapItems[i]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+
+    let mapView = MKMapView()
+
     
     override func viewDidLoad() {
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
 //        navigationController?.navigationBar.barTintColor = UIColor(r: 233, g: 175,b: 50)
-
+        mapView.delegate = self
+        mapView.showsUserLocation = true
         //date picker
         dateFieldS.inputView = datePicker
         dateFieldS.inputAccessoryView = tb
         dateFieldF.inputView = datePicker
         dateFieldF.inputAccessoryView = tb
-    
-        
+        exampleFill()
         view.addSubview(titleField)
         view.addSubview(descriptionField)
         view.addSubview(labelStart)
@@ -292,6 +404,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         view.addSubview(submitButton)
         setupFields()
     }
+
+    
     let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
