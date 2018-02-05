@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import MapKit
 //Event object
 class Event: NSObject {
     var id: String?
@@ -17,6 +18,7 @@ class Event: NSObject {
     var invitee: String?
     var startTime: NSNumber?
     var finishTime: NSNumber?
+    var location = [NSString?]()
     
     func toString() -> String {
         return ("title:\(title!), desc:\(desc!), host:\(host!), invitee:\(invitee!), startTime:\(startTime!), finishTime:\(finishTime!)")
