@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import MapKit
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
@@ -30,6 +31,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
+class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -99,6 +101,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         return label
     }()
     
+    
     @objc func selectedDate(){
         let timeFormatter = DateFormatter()
         timeFormatter.timeStyle = DateFormatter.Style.short
@@ -115,6 +118,24 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
         }
     }
+    
+
+    
+    let tb : UIToolbar = {
+        let toolBar = UIToolbar()
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = UIColor.purple
+        toolBar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        
+        
+        toolBar.setItems([spaceButton, doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        return toolBar
+    }()
     
     
     let dateFieldS : UITextField = {
@@ -149,6 +170,13 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         button.setTitleColor(UIColor.white, for: .normal)
         
         return button
+    }()
+    
+    let locationField : UITextField = {
+        let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.placeholder = "Enter Location"
+        return field
     }()
     
     func validate() -> Bool {
@@ -260,22 +288,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 
     
-    let tb : UIToolbar = {
-        let toolBar = UIToolbar()
-        toolBar.barStyle = UIBarStyle.default
-        toolBar.isTranslucent = true
-        toolBar.tintColor = UIColor.purple
-        toolBar.sizeToFit()
-        
-        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
-        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
 
-        
-        toolBar.setItems([spaceButton, doneButton], animated: false)
-        toolBar.isUserInteractionEnabled = true
-        return toolBar
-    }()
-    
     @objc func donePicker(){
 
         if dateFieldS.isEditing {
@@ -402,6 +415,9 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         view.addSubview(dateFieldF)
         view.addSubview(labelFinish)
         view.addSubview(submitButton)
+        view.addSubview(locationField)
+
+        
         setupFields()
     }
 
@@ -454,6 +470,12 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         dateFieldF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateFieldF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         dateFieldF.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+        
+        locationField.topAnchor.constraint(equalTo: dateFieldF.bottomAnchor, constant: spacing).isActive = true
+        locationField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        locationField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        locationField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        locationField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
         
         submitButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         submitButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
