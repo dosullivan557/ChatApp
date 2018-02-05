@@ -111,6 +111,88 @@ class EventController: UIViewController {
 
         return view
     }()
+    
+    let estimateBox: UIView =  {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let walkingIcon : UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "walk")
+        return image
+    }()
+    
+    let walkingField : UITextView = {
+        let field = UITextView()
+        field.allowsEditingTextAttributes = false
+        field.isEditable = false
+        field.isUserInteractionEnabled = false
+        field.textAlignment = .center
+        field.layer.borderColor = UIColor.black.cgColor
+        field.backgroundColor = UIColor.white
+        field.layer.borderWidth = 1
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.font = UIFont(name: "arial", size: 10)
+        
+        return field
+    }()
+    
+    
+    let drivingIcon : UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "car")
+        return image
+    }()
+    
+    let drivingField : UITextView = {
+        let field = UITextView()
+        field.allowsEditingTextAttributes = false
+        field.isEditable = false
+        field.isUserInteractionEnabled = false
+        field.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openMapForPlace)))
+        field.layer.borderColor = UIColor.black.cgColor
+        field.backgroundColor = UIColor.white
+        field.layer.borderWidth = 1
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.font = UIFont(name: "arial", size: 10)
+        
+        field.textAlignment = .center
+        return field
+    }()
+    
+    let drivingArea : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+//        view.backgroundColor = UIColor.purple
+        return view
+    }()
+    
+    let transitIcon : UIImageView = {        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "transit")
+        return image
+    }()
+
+    let transitField : UITextView = {
+        let field = UITextView()
+        field.allowsEditingTextAttributes = false
+        field.isEditable = false
+        field.isUserInteractionEnabled = false
+        field.layer.borderColor = UIColor.black.cgColor
+        field.backgroundColor = UIColor.white
+        field.layer.borderWidth = 1
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.font = UIFont(name: "arial", size: 10)
+        field.textAlignment = .center
+
+        return field
+    }()
+    
     let picview: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named:"defaultPic")
