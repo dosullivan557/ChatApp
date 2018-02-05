@@ -285,6 +285,13 @@ class EventController: UIViewController {
         nameLabel.topAnchor.constraint(equalTo: picview.bottomAnchor).isActive = true
         
     }
+    let fieldWidth = CGFloat(80)
+    let imageWidth = CGFloat(25)
+    let defaultHeight = CGFloat(30)
+    let labelHeight = CGFloat(40)
+    let spaces = CGFloat(25)
+    let spacing = CGFloat(10)
+    
     func setupFields(){
         descriptionBox.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         descriptionBox.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
