@@ -331,7 +331,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         directionsDrive.calculate { (response, error) in
             guard let response = response else {
                 if let error = error {
-                    (error)
+                    print(error.localizedDescription)
                 }
                 return
             }
@@ -357,7 +357,6 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
         let ti = NSInteger(interval)
         
-        let ms = Int((interval .truncatingRemainder(dividingBy: 1)) * 1000)
         
         let minutes = (ti / 60) % 60
         let hours = (ti / 3600)
@@ -365,7 +364,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         {
             return String(format: "%0.2d mins",minutes)
         }
-        return String(format: "%0.2d h %0.2d mins:",hours,minutes)
+        return String(format: "%0.2d h %0.2d mins",hours,minutes)
     }
     
     func setupContainer(){
@@ -400,7 +399,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
         let coordinate = CLLocationCoordinate2DMake((event?.location[0]?.doubleValue)!,(event?.location[1]?.doubleValue)!)
         let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
-        mapItem.name = event?.location[2]! as! String
+        mapItem.name = event?.location[2]! as String?
         mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving])
     }
     

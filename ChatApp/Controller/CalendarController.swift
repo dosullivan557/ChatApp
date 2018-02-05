@@ -242,7 +242,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             var array = [NSString]()
             array.append(self.closest.placemark.coordinate.latitude.description as NSString)
             array.append(self.closest.placemark.coordinate.longitude.description as NSString)
-            array.append(self.closest.placemark.title as! NSString)
+            array.append(self.closest.placemark.title! as NSString)
 
             event.location = array
             

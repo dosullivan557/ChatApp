@@ -153,8 +153,6 @@ class MyEventsController: UITableViewController {
                         event.startTime = dictionary["StartTime"] as? NSNumber
                         event.finishTime = dictionary["FinishTime"] as? NSNumber
                         event.location = (dictionary["Location"] as? [NSString?])!
-                        print("start time: \(event.startTime)")
-                        print("finish time: \(event.finishTime)")
                         if let acceptedS = dictionary["Accepted"] as? String {
                             if event.host == self.currentUser.id {
                                 if acceptedS == "" || acceptedS == "true"{

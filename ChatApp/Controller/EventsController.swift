@@ -107,7 +107,7 @@ class EventsController: UITableViewController {
         
         let ref = Database.database().reference().child("events").child(event.id!)
         
-        let values = ["Id" : event.id, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : bool] as [String : Any]
+        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : bool] as [String : Any]
         
         ref.updateChildValues(values)
     }
