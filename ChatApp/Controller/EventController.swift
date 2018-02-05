@@ -285,6 +285,43 @@ class EventController: UIViewController {
         nameLabel.topAnchor.constraint(equalTo: picview.bottomAnchor).isActive = true
         
     }
+    func setupEstimateBox(){
+        walkingIcon.topAnchor.constraint(equalTo: estimateBox.topAnchor).isActive = true
+        walkingIcon.centerXAnchor.constraint(equalTo: walkingField.centerXAnchor).isActive = true
+        walkingIcon.widthAnchor.constraint(equalToConstant: imageWidth).isActive = true
+        walkingIcon.heightAnchor.constraint(equalToConstant: imageWidth).isActive = true
+        
+        walkingField.topAnchor.constraint(equalTo: walkingIcon.bottomAnchor, constant: 5).isActive = true
+        walkingField.leftAnchor.constraint(equalTo: estimateBox.leftAnchor).isActive = true
+        walkingField.widthAnchor.constraint(equalToConstant: fieldWidth).isActive = true
+        walkingField.bottomAnchor.constraint(equalTo: estimateBox.bottomAnchor).isActive = true
+        
+        
+        drivingField.topAnchor.constraint(equalTo: drivingIcon.bottomAnchor, constant: 5).isActive = true
+        drivingField.leftAnchor.constraint(equalTo: walkingField.rightAnchor, constant: spaces).isActive = true
+        drivingField.widthAnchor.constraint(equalToConstant: fieldWidth).isActive = true
+        drivingField.bottomAnchor.constraint(equalTo: estimateBox.bottomAnchor).isActive = true
+        
+        drivingIcon.topAnchor.constraint(equalTo: estimateBox.topAnchor).isActive = true
+        drivingIcon.centerXAnchor.constraint(equalTo: drivingField.centerXAnchor).isActive = true
+        drivingIcon.widthAnchor.constraint(equalToConstant: imageWidth).isActive = true
+        drivingIcon.heightAnchor.constraint(equalToConstant: imageWidth).isActive = true
+        
+        drivingArea.topAnchor.constraint(equalTo: estimateBox.topAnchor).isActive = true
+        drivingArea.centerXAnchor.constraint(equalTo: drivingField.centerXAnchor).isActive = true
+        drivingArea.widthAnchor.constraint(equalTo: drivingField.widthAnchor).isActive = true
+        drivingArea.heightAnchor.constraint(equalTo: estimateBox.heightAnchor).isActive = true
+        
+        transitIcon.centerXAnchor.constraint(equalTo: transitField.centerXAnchor).isActive = true
+        transitIcon.topAnchor.constraint(equalTo: estimateBox.topAnchor).isActive = true
+        transitIcon.widthAnchor.constraint(equalToConstant: imageWidth).isActive = true
+        transitIcon.heightAnchor.constraint(equalToConstant: imageWidth).isActive = true
+        
+        transitField.topAnchor.constraint(equalTo: walkingIcon.bottomAnchor, constant: 5).isActive = true
+        transitField.leftAnchor.constraint(equalTo: drivingField.rightAnchor, constant: spaces).isActive = true
+        transitField.widthAnchor.constraint(equalToConstant: fieldWidth).isActive = true
+        transitField.bottomAnchor.constraint(equalTo: estimateBox.bottomAnchor).isActive = true
+    }
     let fieldWidth = CGFloat(80)
     let imageWidth = CGFloat(25)
     let defaultHeight = CGFloat(30)
