@@ -211,12 +211,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }))
         self.present(alert, animated: true, completion: nil)
     }
-    
-    func exampleFill() {
-        titleField.text = "Nandos"
-        descriptionField.text = "Nandos"
-        locationField.text = "Nando's"
-    }
+
     var completed = false
     @objc func handleSubmit(){
         if !validate() {
@@ -407,7 +402,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         dateFieldS.inputAccessoryView = tb
         dateFieldF.inputView = datePicker
         dateFieldF.inputAccessoryView = tb
-        exampleFill()
         view.addSubview(titleField)
         view.addSubview(descriptionField)
         view.addSubview(labelStart)
