@@ -78,6 +78,10 @@ class EventsController: UITableViewController {
                 event.endDate = Date(timeIntervalSince1970: currentEvent.finishTime as! TimeInterval)
                 event.notes = currentEvent.desc
                 event.calendar = eventStore.defaultCalendarForNewEvents
+                event.location = currentEvent.location[2] as? String
+                event.addAlarm(EKAlarm(relativeOffset: currentEvent.startTime as! TimeInterval))
+                event.addAlarm(EKAlarm(relativeOffset: (currentEvent.startTime as! TimeInterval) - (3600 as TimeInterval)))
+
                 do {
                     try eventStore.save(event, span: .thisEvent)
                 } catch let error as NSError {
@@ -91,7 +95,7 @@ class EventsController: UITableViewController {
                     self.tableView.deleteRows(at: [index], with: .fade)
                 }
                 self.handleReload()
-                self.showAlert(title: "Event Accepted", message: "Event has been confirmed, and is now in your calendar")
+                self.showAlert(title: "Event Accepted", message: "Event has been confirmed, and is now in your calendar. We will remind you an hour before the event, as well as at the planned meeting time!.")
             }
             else {
                 self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
@@ -186,6 +190,47 @@ class EventsController: UITableViewController {
         return 72
     }
     
+    func eventConflict(newEvent: Event) -> Bool {
+
+        
+        let eventStore = EKEventStore()
+        let calendars = eventStore.calendars(for: .event)
+    
+        for calendar in calendars {
+            
+            var events = eventStore.events(matching: NSPredicate.init(block: {_,_ in return true}))
+//
+//            print("number of events in calander: \(events.count)")
+//                for event in events {
+//                    titles.append(event.title)
+//                    startDates.append(event.startDate)
+//                    endDates.append(event.endDate)
+//                }
+//
+            events.sort(by: { (event1, event2) -> Bool in
+                return event1.startDate.timeIntervalSince1970 < event2.startDate.timeIntervalSince1970
+            })
+
+            if let currentEventST = newEvent.startTime?.doubleValue, let currentEventET = newEvent.finishTime?.doubleValue{
+                for event in events {
+                    let eventStartTime = event.startDate.timeIntervalSince1970 as Double
+                    let eventEndTime = event.endDate.timeIntervalSince1970 as Double
+                    if ((currentEventST < eventStartTime) && (currentEventST < eventEndTime) && (currentEventET > eventStartTime) && (currentEventET < eventEndTime))  {
+                        print("huh")
+                    }
+                }
+                
+            }
+            
+            
+            
+            
+        }
+    
+    
+        return false
+    }
+    
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -208,6 +253,7 @@ class EventsController: UITableViewController {
                         event.invitee = dictionary["Invitee"] as? String
                         event.startTime = dictionary["StartTime"] as? NSNumber
                         event.finishTime = dictionary["FinishTime"] as? NSNumber
+                        event.location = (dictionary["Location"] as? [NSString?])!
                         if let acceptedS = dictionary["Accepted"] as? String {
                             if event.invitee == self.currentUser.id {
                                 if acceptedS == "" {
