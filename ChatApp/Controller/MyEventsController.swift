@@ -130,6 +130,33 @@ class MyEventsController: UITableViewController {
         show(eventController, sender: self)
     }
     
+    func addEventToCalendar(eventToAdd: Event) {
+        let eventStore: EKEventStore = EKEventStore()
+        eventStore.requestAccess(to: .event) { (bool, error) in
+            if (bool) && (error == nil) {
+                print("granted \(bool)")
+                let event:EKEvent = EKEvent(eventStore: eventStore)
+                event.title = eventToAdd.title
+                event.startDate = Date(timeIntervalSince1970: eventToAdd.startTime as! TimeInterval)
+                event.endDate = Date(timeIntervalSince1970: eventToAdd.finishTime as! TimeInterval)
+                event.notes = eventToAdd.desc
+                event.calendar = eventStore.defaultCalendarForNewEvents
+                do {
+                    try eventStore.save(event, span: .thisEvent)
+                } catch let error as NSError {
+                    self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
+                    self.postError(error: error)
+                    return
+                }
+            }
+            else {
+                self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
+                self.postError(error: error!)
+                return
+            }
+        }
+    }
+    
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -156,6 +183,9 @@ class MyEventsController: UITableViewController {
                         if let acceptedS = dictionary["Accepted"] as? String {
                             if event.host == self.currentUser.id {
                                 if acceptedS == "" || acceptedS == "true"{
+                                    if(acceptedS == "true") {
+                                        self.addEventToCalendar(eventToAdd: event)
+                                    }
                                     self.events.append(event)
                                 }
                             }
