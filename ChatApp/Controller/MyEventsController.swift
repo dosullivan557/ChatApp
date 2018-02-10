@@ -62,11 +62,25 @@ class MyEventsController: UITableViewController {
             }
         }
     }
+    
+    /**
+     Uploads any errors to the database for examination.
+     - Parameters:
+         - error: The error code which is called.
+     */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
         let values = ["Error Description": error.localizedDescription]
         ref.updateChildValues(values as [String: AnyObject])
     }
+    
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+     
+     */
     
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
@@ -75,8 +89,11 @@ class MyEventsController: UITableViewController {
         }))
         self.present(alert, animated: true, completion: nil)
     }
-    
-    //gets passed the current user of the system, and then sets up the navigation bar with that users information.
+    /**
+     Gets passed the current user of the system, and then sets up the navigation bar with that users information.
+     - Parameters:
+        - user: The current user of the application.
+    */
     func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
         
@@ -92,7 +109,7 @@ class MyEventsController: UITableViewController {
     }
     
     
-    
+    //Not needed?
     override func viewDidAppear(_ animated: Bool) {
             if  currentUser.id == Auth.auth().currentUser?.uid {
                 print("Same user")
@@ -105,10 +122,9 @@ class MyEventsController: UITableViewController {
                 observeUserEvents()
                 handleReload()
         }
-        print("Error")
-        
     }
     
+    /// Reloads the table view.
     @objc func handleReload(){
         DispatchQueue.main.async() {
             self.tableView.reloadData()
@@ -130,6 +146,11 @@ class MyEventsController: UITableViewController {
         show(eventController, sender: self)
     }
     
+    /**
+      If the event has been accepted by the other user, it adds the event to their calendar.
+     - Parameters:
+         - eventToAdd: The event to add to the calendar.
+     */
     func addEventToCalendar(eventToAdd: Event) {
         let eventStore: EKEventStore = EKEventStore()
         eventStore.requestAccess(to: .event) { (bool, error) in
@@ -157,6 +178,9 @@ class MyEventsController: UITableViewController {
         }
     }
     
+    /**
+     Gets all the users events.
+     */
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return

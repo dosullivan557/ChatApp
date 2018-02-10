@@ -55,6 +55,12 @@ class EventsController: UITableViewController {
         return [accept, decline]
     }
     
+    /**
+     This is called when the decline event button is pressed. It removes the event from the cell, and then updates the database to say that it was declined.
+     - Parameters:
+         - index: The index of the table view to remove.
+
+     */
     func declineFunc(index: IndexPath){
         print("Decline")
         self.updateDatabase(IndexPath: index, bool: false)
@@ -63,9 +69,15 @@ class EventsController: UITableViewController {
             self.tableView.deleteRows(at: [index], with: .fade)
         }
         self.handleReload()
-        self.showAlert(title: "Event Declines", message: "This event has been removed.")
+        self.showAlert(title: "Event Declined", message: "This event has been removed.")
         
     }
+    
+    /**
+     This is called when the accept event button is pressed. It gets access to the calendar, and then adds it in. Once it has been accepted, it removes it from the table view.
+     - Parameters:
+         - index: The index of the table view to add.
+     */
     func acceptFunc(index: IndexPath){
         let currentEvent = events[index.row]
         let eventStore: EKEventStore = EKEventStore()
@@ -78,9 +90,9 @@ class EventsController: UITableViewController {
                 event.endDate = Date(timeIntervalSince1970: currentEvent.finishTime as! TimeInterval)
                 event.notes = currentEvent.desc
                 event.calendar = eventStore.defaultCalendarForNewEvents
-                event.location = currentEvent.location[2] as? String
-                event.addAlarm(EKAlarm(relativeOffset: currentEvent.startTime as! TimeInterval))
-                event.addAlarm(EKAlarm(relativeOffset: (currentEvent.startTime as! TimeInterval) - (3600 as TimeInterval)))
+                event.location = currentEvent.location[2] as String?
+//                event.addAlarm(EKAlarm(relativeOffset: currentEvent.startTime as! TimeInterval))
+//                event.addAlarm(EKAlarm(relativeOffset: (currentEvent.startTime as! TimeInterval) - (3600 as TimeInterval)))
 
                 do {
                     try eventStore.save(event, span: .thisEvent)
@@ -105,7 +117,12 @@ class EventsController: UITableViewController {
         }
     }
     
-    
+    /**
+     Update the information in the database to say whether it has been accepted or declined.
+     - Parameters:
+         - IndexPath: The index of the tableCell which is to be accepted.
+         - bool: The value to update the accepted value of that event to.
+     */
     func updateDatabase(IndexPath: IndexPath, bool: Bool){
         let event = events[IndexPath.row]
         
@@ -115,12 +132,25 @@ class EventsController: UITableViewController {
         
         ref.updateChildValues(values)
     }
-    
+    /**
+     Uploads any errors to the database for examination.
+     - Parameters:
+         - error: The error code which is called.
+     */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
         let values = ["Error Description": error.localizedDescription]
         ref.updateChildValues(values as [String: AnyObject])
     }
+    
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+     
+     */
     
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
@@ -130,7 +160,11 @@ class EventsController: UITableViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    //gets passed the current user of the system, and then sets up the navigation bar with that users information.
+    /**
+     Gets passed the current user of the system, and then sets up the navigation bar with that users information.
+     - Parameters:
+         - user: The current user.
+    */
     func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
         
@@ -163,7 +197,7 @@ class EventsController: UITableViewController {
         }
         
     }
-    
+    ///Reloads the table.
     @objc func handleReload(){
         DispatchQueue.main.async() {
             self.tableView.reloadData()
@@ -190,9 +224,13 @@ class EventsController: UITableViewController {
         return 72
     }
     
+    /**
+     Checks whether there is a conflicting event in the users calendar.
+     - Parameters:
+         - newEvent: The event to check from.
+     - Returns: a boolean value to see if there is any conflicts.
+     */
     func eventConflict(newEvent: Event) -> Bool {
-
-        
         let eventStore = EKEventStore()
         let calendars = eventStore.calendars(for: .event)
     
@@ -215,7 +253,7 @@ class EventsController: UITableViewController {
                 for event in events {
                     let eventStartTime = event.startDate.timeIntervalSince1970 as Double
                     let eventEndTime = event.endDate.timeIntervalSince1970 as Double
-                    if ((currentEventST < eventStartTime) && (currentEventST < eventEndTime) && (currentEventET > eventStartTime) && (currentEventET < eventEndTime))  {
+                    if ((currentEventST < eventStartTime) && (currentEventST < eventEndTime) && (currentEventET > eventStartTime) && (currentEventET < eventEndTime)) {
                         print("huh")
                     }
                 }
@@ -230,7 +268,9 @@ class EventsController: UITableViewController {
     
         return false
     }
-    
+    /**
+     Gets all the users events.
+     */
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return

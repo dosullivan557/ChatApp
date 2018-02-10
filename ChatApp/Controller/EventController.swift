@@ -28,29 +28,21 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         }
     }
     var user = User()
+    let fieldWidth = CGFloat(80)
+    let imageWidth = CGFloat(25)
+    let defaultHeight = CGFloat(30)
+    let labelHeight = CGFloat(40)
+    let spaces = CGFloat(25)
+    let spacing = CGFloat(10)
+    let locationManager = CLLocationManager()
+    let destinationCoordinates =  CLLocationCoordinate2D()
+    
     
     let mapView : MKMapView = {
         let mv = MKMapView()
         mv.translatesAutoresizingMaskIntoConstraints = false
         return mv
     }()
-    
-    func fetchUser(){
-        Database.database().reference().child("users").child((event?.eventWithId())!).observe(.value, with: { (DataSnapshot) in
-            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
-                let user = User()
-                user.name = dictionary["name"] as? String
-                user.email = dictionary["email"] as? String
-                user.profileImageUrl = dictionary["profileImageUrl"] as? String
-                user.id = DataSnapshot.key
-                self.user = user
-                self.nameLabel.text = user.name!
-                self.picview.loadImageUsingCache(urlString: user.profileImageUrl)
-            }
-        }, withCancel: nil)
-        
-        
-    }
 
     let descriptionBox: UITextView = {
         let view = UITextView()
@@ -222,6 +214,23 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return field
     }()
     
+    ///Fetches the other user sinformation.
+    func fetchUser(){
+        Database.database().reference().child("users").child((event?.eventWithId())!).observe(.value, with: { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
+                let user = User()
+                user.name = dictionary["name"] as? String
+                user.email = dictionary["email"] as? String
+                user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                user.id = DataSnapshot.key
+                self.user = user
+                self.nameLabel.text = user.name!
+                self.picview.loadImageUsingCache(urlString: user.profileImageUrl)
+            }
+        }, withCancel: nil)
+        
+        
+    }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(overlay: overlay)
@@ -230,8 +239,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
         return renderer
     }
-    let locationManager = CLLocationManager()
-    let destinationCoordinates =  CLLocationCoordinate2D()
+   
     override func viewDidLoad() {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(openMapForPlace))
@@ -265,6 +273,18 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         mapView.showsScale = true
         mapView.showsUserLocation = true
         
+       
+        view.addSubview(estimateBox)
+        setupMaps()
+        setupEstimateBox()
+        setupContainer()
+        view.addSubview(eventWith)
+        setupFields()
+    }
+    /**
+     Initialises the map and gets permissions, which allows us to get the users current location and use it to get the directions.
+     */
+    func setupMaps () {
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
         
@@ -301,58 +321,59 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
             let rekt = route.polyline.boundingMapRect
             self.mapView.setRegion(MKCoordinateRegionForMapRect(rekt), animated: true)
         }
-        view.addSubview(estimateBox)
         fillInEstimates(request: directionRequest)
 
-        setupEstimateBox()
-        setupContainer()
-        view.addSubview(eventWith)
-        setupFields()
     }
-    
+
+    /**
+     Estimates the time for the each method of transport, and then sets the time in the relevant textField.
+     - Parameters:
+         - request: The MKDirectionsRequest which is to be used to get the route.
+     */
     func fillInEstimates(request: MKDirectionsRequest) {
+        //Walking
         request.transportType = .walking
-        
-        let directionsWalk = MKDirections(request: request)
-        directionsWalk.calculate { (response, error) in
-            guard let response = response else {
-                if let error = error {
-                    print(error)
-                }
-                return
-            }
-            let route = response.routes[0]
-            self.walkingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
-        }
-        
+        self.walkingField.text = stringFromTimeInterval(interval: estimate(request: request).expectedTravelTime)
+
+        //Car
         request.transportType = .automobile
+        self.drivingField.text = stringFromTimeInterval(interval: estimate(request: request).expectedTravelTime)
         
-        let directionsDrive = MKDirections(request: request)
-        directionsDrive.calculate { (response, error) in
-            guard let response = response else {
-                if let error = error {
-                    print(error.localizedDescription)
-                }
-                return
-            }
-            let route = response.routes[0]
-            self.drivingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
-        }
+        //Transit
+        request.transportType = .transit
+        self.transitField.text = stringFromTimeInterval(interval: estimate(request: request).expectedTravelTime)
+       
+    }
         
+    
+    /**
+     Calculates the route to the destination, and returns the quickest route.
+     - Parameters:
+         - request: The MKDirectionsRequest for which you want to get the route for.
+     - Returns: Returns the fastest route.
+     */
+    func estimate(request: MKDirectionsRequest) -> MKRoute{
+        var route = MKRoute()
         let directionsTransit = MKDirections(request: request)
         directionsTransit.calculate { (response, error) in
             guard let response = response else {
                 if let error = error {
-                    print(error)
+                    print(error.localizedDescription)
+                    return
                 }
                 return
             }
-            let route = response.routes[0]
-            self.transitField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+            route = response.routes[0]
         }
-        
+        return route
+
     }
-    
+    /**
+     Converts a time interval into a string.
+     - Parameters:
+         - interval: TimeInterval to convert.
+     - Returns: Returns the formatted TimeInterval as a String.
+     */
     func stringFromTimeInterval(interval: TimeInterval) -> String {
         
         let ti = NSInteger(interval)
@@ -366,7 +387,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         }
         return String(format: "%0.2d h %0.2d mins",hours,minutes)
     }
-    
+    ///Sets up the container constraints.
     func setupContainer(){
         picview.heightAnchor.constraint(equalToConstant: 50).isActive = true
         picview.widthAnchor.constraint(equalToConstant: 50).isActive = true
@@ -380,6 +401,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
     }
     
+    ///Called when the driving icon is pressed.
     @objc func openMapForPlace() {
         
 //        let latitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
@@ -402,7 +424,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         mapItem.name = event?.location[2]! as String?
         mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving])
     }
-    
+///Sets up view constraints.
     func setupEstimateBox(){
         walkingIcon.topAnchor.constraint(equalTo: estimateBox.topAnchor).isActive = true
         walkingIcon.centerXAnchor.constraint(equalTo: walkingField.centerXAnchor).isActive = true
@@ -440,13 +462,8 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         transitField.widthAnchor.constraint(equalToConstant: fieldWidth).isActive = true
         transitField.bottomAnchor.constraint(equalTo: estimateBox.bottomAnchor).isActive = true
     }
-    let fieldWidth = CGFloat(80)
-    let imageWidth = CGFloat(25)
-    let defaultHeight = CGFloat(30)
-    let labelHeight = CGFloat(40)
-    let spaces = CGFloat(25)
-    let spacing = CGFloat(10)
-    
+
+///Sets up the view constraints
     func setupFields(){
         descriptionBox.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         descriptionBox.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

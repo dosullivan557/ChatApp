@@ -45,7 +45,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             profileImage.loadImageUsingCache(urlString: user?.profileImageUrl)
         }
     }
-
+    ///
     @objc func handleTap() {
         handleSelectProfileImageView()
     }
@@ -91,13 +91,14 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         return button
     }()
     
+    ///Opens the myevents controller.
     @objc func handleMyEvents(){
         let myEventController = MyEventsController()
         myEventController.currentUser = user!
         self.navigationController?.isNavigationBarHidden = false
         show(myEventController, sender: self)
     }
-    
+    ///Opens the help controller.
     @objc func handleHelp() {
         let helpController = HelpController()
         
@@ -119,6 +120,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         getUser()
     }
     
+    ///Sets up the overlay constraints for resetting the profile picture.
     func setupOverlay() {
         overlay.addSubview(label)
         
@@ -133,6 +135,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         label.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
         
     }
+    
+    ///Sets up the views constraints.
     func setupFields(){
         profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImage.heightAnchor.constraint(equalToConstant: 150).isActive = true
@@ -159,6 +163,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         helpButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         helpButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
+    
+    ///Gets your users information and sets the data.
     func getUser(){
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
             if let dictionary = DataSnapshot.value as? [String: AnyObject]{
@@ -173,7 +179,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         }, withCancel: nil)
     }
     
-    //Image picker.
+    /// Opens up an image picker and allows the user to select the picture.
     @objc func handleSelectProfileImageView(){
         let picker = UIImagePickerController()
         print("picker")
@@ -181,8 +187,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         picker.allowsEditing = true
         
         present(picker, animated: true, completion: nil)
-        
     }
+    ///Deletes the users current profile picture.
     func deleteImageFromDatabase() {
         let optionalVal = user?.profileImageUrl?.components(separatedBy: "%2F")[1].prefix(40)
         if let imageName = optionalVal {
@@ -201,6 +207,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             }
         }
     }
+    ///Uploads the new profile image for the user.
     func uploadImageToDatabase(){
         let storageRef = Storage.storage().reference().child("profileImages").child("\(NSUUID().uuidString).png")
         if let uploadData = UIImagePNGRepresentation(self.profileImage.image!){
@@ -221,6 +228,12 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             
         }
     }
+    
+    /**
+     Updates the users information in the database.
+     - Parameters:
+         - values: The values to update.
+     */
     func updateValuesInDatabase(values: [String: AnyObject]) {
         if let id = Auth.auth().currentUser?.uid{
             print("Yes")
@@ -259,7 +272,11 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     }
 
     
-    
+    /**
+    Sets up the page with the user's information.
+     - Parameters:
+         - user: The current users information.
+     */
     func setupWithUser(user: User){
         if let profileImageUrl = user.profileImageUrl {
             profileImage.loadImageUsingCache(urlString: profileImageUrl)

@@ -32,13 +32,6 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 1
-    }
     var user: User? {
         didSet{
 
@@ -47,7 +40,14 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     }
     var sDate : Date?
     var fDate : Date?
+    var closest = MKMapItem()
+    let mapView = MKMapView()
+
     
+    let defaultHeight = CGFloat(30)
+    let labelHeight = CGFloat(40)
+    let spacing = CGFloat(10)
+
     let titleField : UITextField = {
         let title = UITextField()
         title.placeholder = "Enter Title"
@@ -100,26 +100,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
-    
-    
-    @objc func selectedDate(){
-        let timeFormatter = DateFormatter()
-        timeFormatter.timeStyle = DateFormatter.Style.short
-        timeFormatter.dateStyle = DateFormatter.Style.long
-        let strDate = timeFormatter.string(from: datePicker.date)
-        // do what you want to do with the string.
-        if dateFieldS.isEditing {
-            dateFieldS.text = strDate
-            sDate = datePicker.date
-        }
-        if dateFieldF.isEditing {
-            dateFieldF.text = strDate
-            fDate = datePicker.date
-
-        }
-    }
-    
-
     
     let tb : UIToolbar = {
         let toolBar = UIToolbar()
@@ -179,6 +159,116 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return field
     }()
     
+    
+    let containerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.borderWidth = 1
+        return view
+        
+    }()
+    
+    
+    override func viewDidLoad() {
+        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
+        //        navigationController?.navigationBar.barTintColor = UIColor(r: 233, g: 175,b: 50)
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+        //date picker
+        dateFieldS.inputView = datePicker
+        dateFieldS.inputAccessoryView = tb
+        dateFieldF.inputView = datePicker
+        dateFieldF.inputAccessoryView = tb
+        view.addSubview(titleField)
+        view.addSubview(descriptionField)
+        view.addSubview(labelStart)
+        view.addSubview(dateFieldS)
+        view.addSubview(dateFieldF)
+        view.addSubview(labelFinish)
+        view.addSubview(submitButton)
+        view.addSubview(locationField)
+        
+        
+        setupFields()
+    }
+    
+    
+    
+    ///Sets up the view constraints.
+    func setupFields(){
+        //main title
+        
+        titleField.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
+        titleField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        titleField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        titleField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        titleField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+        
+        descriptionField.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: spacing).isActive = true
+        descriptionField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        descriptionField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        descriptionField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        descriptionField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+        
+        labelStart.topAnchor.constraint(equalTo:descriptionField.bottomAnchor,constant: spacing).isActive = true
+        labelStart.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        labelStart.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
+        labelStart.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
+        
+        dateFieldS.topAnchor.constraint(equalTo: labelStart.bottomAnchor).isActive = true
+        dateFieldS.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        dateFieldS.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        dateFieldS.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        dateFieldS.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+        
+        labelFinish.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: spacing).isActive = true
+        labelFinish.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
+        labelFinish.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
+        labelFinish.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
+        
+        dateFieldF.topAnchor.constraint(equalTo: labelFinish.bottomAnchor).isActive = true
+        dateFieldF.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        dateFieldF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        dateFieldF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        dateFieldF.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+        
+        locationField.topAnchor.constraint(equalTo: dateFieldF.bottomAnchor, constant: spacing).isActive = true
+        locationField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        locationField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        locationField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        locationField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+        
+        submitButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        submitButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
+        submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25).isActive = true
+    }
+    
+    /**
+     Gets date from datepicker and sets the date to the relevant text field.
+     */
+    @objc func selectedDate(){
+        let timeFormatter = DateFormatter()
+        timeFormatter.timeStyle = DateFormatter.Style.short
+        timeFormatter.dateStyle = DateFormatter.Style.long
+        let strDate = timeFormatter.string(from: datePicker.date)
+        // do what you want to do with the string.
+        if dateFieldS.isEditing {
+            dateFieldS.text = strDate
+            sDate = datePicker.date
+        }
+        if dateFieldF.isEditing {
+            dateFieldF.text = strDate
+            fDate = datePicker.date
+            
+        }
+    }
+    
+    /**
+     Validates the information provided in the fields.
+     - Returns: The boolean value to symbolise whether the values are valid or not.
+    */
     func validate() -> Bool {
         if (titleField.text?.count)! < 5 {
             showAlert(title: "Invalid Title", message: "Please enter a valid title. (Minimum of 5 characters).")
@@ -204,6 +294,16 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         
         return true
     }
+    
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+     
+     */
+    
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
@@ -212,7 +312,9 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         self.present(alert, animated: true, completion: nil)
     }
 
-    var completed = false
+    /**
+     Called when the submit button is pressed. Adds all the information into an object, and uploads it to the database.
+     */
     @objc func handleSubmit(){
         if !validate() {
             return
@@ -250,7 +352,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                         self.postError(error: error!)
                         return
                     }
-                    self.showCustomAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+                    self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
 
                     let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
                     
@@ -263,27 +365,30 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 }
             }
         }
-        
-        func showCustomAlert(title: String, message: String) {
-            let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
-                alert.dismiss(animated: true, completion: nil)
-            }))
-            self.present(alert, animated: true, completion: nil)
-        }
-        
+    
+
+    /**
+     Uploads any errors to the database for examination.
+     - Parameters:
+         - error: The error code which is called.
+     */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
         let values = ["Error Description": error.localizedDescription]
         ref.updateChildValues(values as [String: AnyObject])
     }
     
+    /**
+    Converts the time from a datepicker to seconds.
+    */
     func dateToSecs() -> Int {
         return Int(datePicker.date.timeIntervalSince1970)
     }
 
     
-
+    /**
+     When the done button in the toolbar is pressed, it checks which datefield is being edited, and then forces the finish of that, which will hide the picker.
+     */
     @objc func donePicker(){
 
         if dateFieldS.isEditing {
@@ -296,9 +401,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     
 
     
-    var closest = MKMapItem()
+    /**
+        This method checks for permissions, and if it doesn't have them, it will not do anything, otherwise, it will get the current users location, and search for a place with the name which is given which is close to the location. If it cannot find any, it will search over a larger area, and then gets the location. Once it finds locations, it will sort through them and find the closest one, and then it sets the variable closest to it.
+     */
     func findLocation() {
-
         let locationManager = CLLocationManager()
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
@@ -312,6 +418,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             print("permissions are needed")
             return
         }
+        
         
         let currentLocation = locationManager.location
 
@@ -366,7 +473,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                     self.closest = response.mapItems[0]
                     //            print("Start value :\(self.closest)")
                     print(response.mapItems.count)
-                    if response.mapItems.count > 1 {
                         for i in 1...(response.mapItems.count - 1){
                             print("Checking another")
                             let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
@@ -381,99 +487,17 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                                 
                                 self.closest = response.mapItems[i]
                             }
-                        }
                     }
                 }
             }
         }
     }
     
-
-    let mapView = MKMapView()
-
-    
-    override func viewDidLoad() {
-        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
-//        navigationController?.navigationBar.barTintColor = UIColor(r: 233, g: 175,b: 50)
-        mapView.delegate = self
-        mapView.showsUserLocation = true
-        //date picker
-        dateFieldS.inputView = datePicker
-        dateFieldS.inputAccessoryView = tb
-        dateFieldF.inputView = datePicker
-        dateFieldF.inputAccessoryView = tb
-        view.addSubview(titleField)
-        view.addSubview(descriptionField)
-        view.addSubview(labelStart)
-        view.addSubview(dateFieldS)
-        view.addSubview(dateFieldF)
-        view.addSubview(labelFinish)
-        view.addSubview(submitButton)
-        view.addSubview(locationField)
-
-        
-        setupFields()
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
     }
-
     
-    let containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.borderColor = UIColor.black.cgColor
-        view.layer.borderWidth = 1
-        return view
-    
-    }()
-
-    let defaultHeight = CGFloat(30)
-    let labelHeight = CGFloat(40)
-    let spacing = CGFloat(10)
-    func setupFields(){
-        //main title
-        
-        titleField.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
-        titleField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        titleField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        titleField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        titleField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-        
-        descriptionField.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: spacing).isActive = true
-        descriptionField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        descriptionField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        descriptionField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        descriptionField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-        
-        labelStart.topAnchor.constraint(equalTo:descriptionField.bottomAnchor,constant: spacing).isActive = true
-        labelStart.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        labelStart.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
-        labelStart.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
-
-        dateFieldS.topAnchor.constraint(equalTo: labelStart.bottomAnchor).isActive = true
-        dateFieldS.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        dateFieldS.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        dateFieldS.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        dateFieldS.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-        
-        labelFinish.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: spacing).isActive = true
-        labelFinish.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
-        labelFinish.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
-        labelFinish.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
-        
-        dateFieldF.topAnchor.constraint(equalTo: labelFinish.bottomAnchor).isActive = true
-        dateFieldF.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        dateFieldF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        dateFieldF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        dateFieldF.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-        
-        locationField.topAnchor.constraint(equalTo: dateFieldF.bottomAnchor, constant: spacing).isActive = true
-        locationField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        locationField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        locationField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        locationField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-        
-        submitButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        submitButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
-        submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25).isActive = true
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 1
     }
 }

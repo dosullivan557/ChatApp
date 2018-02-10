@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-//Table cell implementation so can edit the layout of each cell.
+///Table cell implementation so can edit the layout of each cell. This has been used for users in NewChatLogController and MessagesController.
 class UserCell: UITableViewCell {
 
     var message: Message? {
@@ -85,7 +85,7 @@ class UserCell: UITableViewCell {
         }
     }
 
-    
+    ///UIImageView for the profile image of the user.
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -95,6 +95,7 @@ class UserCell: UITableViewCell {
         return imageView
     }()
     
+    ///Label inside of the usercell which is used for the timestamp.
     let timeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
@@ -104,6 +105,9 @@ class UserCell: UITableViewCell {
     }()
     
     
+    /**
+      This function gets the users profile image, and sets it in the cell.
+     */
     fileprivate func setupNameAndProfileImage() {
         
         if let id = message?.chatWithId() {
@@ -123,6 +127,9 @@ class UserCell: UITableViewCell {
         }
     }
 
+    /**
+      Defines how the textLabel should be positioned inside of the cells
+     */
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -132,7 +139,9 @@ class UserCell: UITableViewCell {
     }
 
 
-    
+    /**
+      Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
+     */
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         

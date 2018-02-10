@@ -15,7 +15,12 @@ class Message: NSObject {
     var message: String?
     var timestamp: NSNumber?
     
-    //method that returns your chatting partner's ID, so you can check which user is the correct user.
+    /**
+        Method that returns your chatting partner's ID, so you can check which user is the correct user.
+     
+     
+     - Returns: The userId of the user you are chatting with.
+    */
     func chatWithId() -> String? {
     if sendId == Auth.auth().currentUser?.uid {
         return receiveId

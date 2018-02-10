@@ -50,6 +50,10 @@ class ReportController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
+    
+    /**
+     Called when the submit report button is pressed.
+     */
     @objc func handleReport() {
         guard let id = Auth.auth().currentUser?.uid else {
             return
@@ -66,6 +70,7 @@ class ReportController: UIViewController, UITextFieldDelegate {
         
     }
     
+    /// Called when a report has been submitted successfully.
     func sucessfulReport(){
         let alert = UIAlertController(title: "Thank you", message: "Thank you for reporting this user. We will look into this!", preferredStyle: UIAlertControllerStyle.alert)
         
@@ -83,16 +88,16 @@ class ReportController: UIViewController, UITextFieldDelegate {
         view.addSubview(reportButton)
         setupFields()
     }
-    
+    ///Hides Keyboard when called.
     @objc func hideKeyboard() {
         view.self.endEditing(true)
     }
-    //Hides the keyboard when the return key is pressed.
+    ///Hides the keyboard when the return key is pressed.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return true
     }
-    
+    ///Sets up view constraints.
     func setupFields() {
         pageTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 75).isActive = true
         pageTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

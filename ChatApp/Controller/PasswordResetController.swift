@@ -33,14 +33,8 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         return tf
     }()
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return true
-    }
-    
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
+
+
     
     let resetButton: UIButton = {
         let button = UIButton()
@@ -58,6 +52,19 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         button.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
         return button
     }()
+    
+    ///Keyboard hides when return key is pressed.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
+    
+    ///Dismisses keyboard when called.
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    ///Called when the cancel button is pressed.
     @objc func handleCancel(){
         dismiss(animated: true, completion: nil)
     }
@@ -74,13 +81,11 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         
-        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-        //tap.cancelsTouchesInView = false
-        
         view.addGestureRecognizer(tap)
         
     }
     
+    ///Sets up the views constraints.
     func setupItems(){
 
         cancelButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
@@ -103,6 +108,8 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         resetButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         resetButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
     }
+    
+    /// Handles the password reset by using Firebase Authentications method to send an email to reset the password.
     @objc func handlePasswordReset(){
         if let email = emailField.text {
             if isValidEmail(testStr: email) {
@@ -120,13 +127,27 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
             showAlert(title: "Invalid Email", message: "Please enter a valid Email Address")
         }
     }
-    //tests email locally
+    
+    /**
+     Is called to verify the whether the email is valid locally before sending it to Firebase. Uses a regular expression to check the email typed in abides by the conventions.
+     - Parameters:
+     - testStr: The string to test.
+     - Returns: A boolean value to say whether the email is valid.
+     */
     func isValidEmail(testStr:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: testStr)
     }
+    
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+     
+     */
     
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)

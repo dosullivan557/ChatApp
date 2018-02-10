@@ -8,13 +8,14 @@
 
 import UIKit
 import Firebase
-//Table cell implementation so can edit the layout of each cell.
+//Table cell implementation so can edit the layout of each cell. Used to define the way a cell looks - for events.
 class EventCell: UITableViewCell {
     
+    /*
+      When the event is set for the cell, set this information using the variable's data.
+     */
     var event: Event? {
         didSet {
-            
-            
             let startTimestampDate = Date(timeIntervalSince1970: event?.startTime as! TimeInterval)
             let finishTimestampDate = Date(timeIntervalSince1970: event?.finishTime as! TimeInterval)
             let dateFormatter = DateFormatter()
@@ -35,7 +36,9 @@ class EventCell: UITableViewCell {
     }()
     
 
-
+    /**
+     Sets up the image and name of the user for the event.
+    */
     func setupNameAndProfileImage() {
         if let eventWithId = event?.eventWithId() {
             let ref = Database.database().reference().child("users").child(eventWithId)
@@ -55,6 +58,9 @@ class EventCell: UITableViewCell {
         }
     }
     
+    /**
+     Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
+     */
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -63,6 +69,9 @@ class EventCell: UITableViewCell {
         detailTextLabel?.frame = CGRect(x: 64, y: detailTextLabel!.frame.origin.y + 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
     }
     
+    /**
+     Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
+     */
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         

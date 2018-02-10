@@ -7,12 +7,15 @@
 //
 import UIKit
 import Firebase
+
+/// My TabBar for MessagesController
 class MyTabBar: UITabBarController {
     var tabList = [UIViewController]()
     let messagesController = MessagesController()
     let eventController = EventsController()
     let myProfileController = MyProfileController()
     var currentUser = User()
+    
     override func viewDidLoad() {
         getCurrentUser()
 
@@ -29,6 +32,9 @@ class MyTabBar: UITabBarController {
             passUsersThrough(user: currentUser)
         }
     }
+    /**
+     * Gets the current users information.
+     */
     func getCurrentUser(){
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
             if let dictionary = DataSnapshot.value as? [String: AnyObject]{
@@ -41,13 +47,25 @@ class MyTabBar: UITabBarController {
             }
         }, withCancel: nil)
     }
-    
+    /**
+      Passes the current user into the tabs so it can set them up.
+      - Parameters:
+          - user: The current user to be passed to its views so they can be setup.
+     */
     func passUsersThrough(user: User) {
         self.currentUser = user
 
         self.eventController.currentUser = user
         self.myProfileController.user = user
     }
+    /**
+      Creates a tab element, and adds it to the current tabbar.
+    
+     - Parameters:
+         - view: The view to add.
+         - title: The title of the tab bar element to add.
+         - imageName: The name of the image to set as the tab bar item's image.
+     */
     func createElements(view: UIViewController,title: String, imageName: String) {
         let view = view
         let navController = UINavigationController(rootViewController: view)

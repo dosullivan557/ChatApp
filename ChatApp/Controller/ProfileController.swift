@@ -47,6 +47,8 @@ class ProfileController : UIViewController {
         button.addTarget(self, action: #selector(handleReport), for: .touchUpInside)
         return button
     }()
+    
+    ///Opens the report controller.
     @objc func handleReport(){
         let reportController = ReportController()
         reportController.user = user
@@ -60,6 +62,7 @@ class ProfileController : UIViewController {
         setupWithUser(user: user!)
         setupFields()
     }
+    ///Sets up the field constraints.
     func setupFields(){
         profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImage.heightAnchor.constraint(equalToConstant: 150).isActive = true
@@ -78,7 +81,7 @@ class ProfileController : UIViewController {
     }
 
     
-
+    ///Sets up the profile controller with the user.
     func setupWithUser(user: User){
         if let profileImageUrl = user.profileImageUrl {
             profileImage.loadImageUsingCache(urlString: profileImageUrl)

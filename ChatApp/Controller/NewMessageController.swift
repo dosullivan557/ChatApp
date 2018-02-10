@@ -8,7 +8,7 @@
 import UIKit
 import Firebase
 class NewMessageController: UITableViewController {
-    //Constants.
+//    Constants.
     let cellId = "cellId"
     //Variables
     var users = [User]()
@@ -18,28 +18,29 @@ class NewMessageController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group", style: .plain,target: self, action: #selector(handleGroup))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group", style: .plain,target: self, action: #selector(handleGroup))
         fetchUser()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
     }
     
-    @objc func handleGroup () {
-        let group = NewGroupMessageController()
-        group.AllUsers = users
-        group.messagesController = messagesController
-        show(group, sender: self)
-    }
     
+//    @objc func handleGroup () {
+//        let group = NewGroupMessageController()
+//        group.AllUsers = users
+//        group.messagesController = messagesController
+//        show(group, sender: self)
+//    }
+    
+    ///Cancel Button being pressed.
     @objc func handleCancel(){
         dismiss(animated: true, completion: nil)
     }
     //Defines the number of cells in the tableview.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    
         return users.count
     }
-    //Fetches each user from the database, and populates the tableview with each user.
+    ///Fetches each user from the database, and populates the tableview cells with each user.
     func fetchUser(){
         Database.database().reference().child("users").observe(.childAdded, with: { (DataSnapshot) in
             if let dictionary = DataSnapshot.value as? [String: AnyObject]{
@@ -60,7 +61,7 @@ class NewMessageController: UITableViewController {
         
         
     }
-    //Reloads the tableview.
+    ///Reloads the tableview.
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()

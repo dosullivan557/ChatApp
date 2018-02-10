@@ -31,7 +31,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
-
+///The tableview of all messages.
 class MessagesController: UITableViewController {
     //constant variables.
     let cellId = "cellId"
@@ -42,7 +42,7 @@ class MessagesController: UITableViewController {
     var messagesDictionary = [String: Message]()
     var user = User()
     
-
+    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
 
@@ -82,6 +82,7 @@ class MessagesController: UITableViewController {
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
     }
+    ///Shows alert to check whether the user definitely wants to log out. If so, It will handle the logout, otherwise, it will do nothing.
     @objc func checkLogout() {
         let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
         
@@ -96,7 +97,9 @@ class MessagesController: UITableViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    //checks the database for the messages for the current user.
+    /**
+    Checks the database for the messages for the current user. All this gets added into a dictionary of the user's Id, and then sorts the values into time order.
+     */
     func observeUserMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -136,18 +139,18 @@ class MessagesController: UITableViewController {
             
         }, withCancel: nil)
     }
-    //Reloads the table view
+    ///Reloads the table view using the main thread.
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
         })
     }
     
-    //Gives the number of rows in the table view.
+    ///Gives the number of rows in the table view.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
-    //Specifies each element in the table view.
+    ///Specifies each element in the table view.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
@@ -156,7 +159,7 @@ class MessagesController: UITableViewController {
         
         return cell
     }
-    //Defines the height of each table cell.
+    ///Defines the height of each table cell.
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
     }
@@ -167,15 +170,15 @@ class MessagesController: UITableViewController {
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
-    //checks whether the user is logged in; if so, then fill in the information of the view, otherwise logout. This function is called when the app is first loaded.
+    ///Checks whether the user is logged in; if so, then fill in the information of the view, otherwise logout. This function is called when the app is first loaded.
     func checkIfUserIsLoggedIn() {
         if Auth.auth().currentUser?.uid == nil {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         } else {
-            fetchUserAndSetupNavBarTitle()
+            fetchUser()
         }
     }
-    //called when a tablecell is selected.
+    ///Called when a tablecell is selected.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
         
@@ -199,8 +202,11 @@ class MessagesController: UITableViewController {
             ,withCancel: nil)
     }
     
-    //Defines the current user of the system, and passes it to another method to setup the navigation bar.
-    func fetchUserAndSetupNavBarTitle() {
+    /**
+     Defines the current user of the system, and passes it to [setupNavBarWithUser(_ user: User)]( )) to setup the navigation bar for the particular user.
+
+      */
+    func fetchUser() {
         guard let uid = Auth.auth().currentUser?.uid else {
             //for some reason uid = nil
             return
@@ -222,7 +228,11 @@ class MessagesController: UITableViewController {
         }, withCancel: nil)
     }
     
-    //gets passed the current user of the system, and then sets up the navigation bar with that users information.
+    /**
+     Reads in the current user of the system which has been passed through from the [fetchUser()]() method. From here, it resets information such as the messages array and the messages dictionary, reloads the table to show the empty table, and then calls [observeUserMessages()]() to observe all the users messages. As well as this, everything is added into the navigation bar and positioned correctly.
+     - Parameters:
+         - user: Reads in the current user of the system, and will use this user object to set all the information in the navigation bar.
+     */
     func setupNavBarWithUser(_ user: User) {
         messages.removeAll()
         messagesDictionary.removeAll()
@@ -272,7 +282,11 @@ class MessagesController: UITableViewController {
         self.navigationItem.titleView = titleView
         
     }
-    //Opens a chat log with a user which is passed in.
+    /**
+     Opens a chat log with an array of users, which is passed in.
+     - Parameters:
+         - user: The list of users that are being read in, and will be used to setup a chatlog controller.
+     */
     func showChatControllerForUser(_ user: [User]) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.users = user
@@ -287,7 +301,11 @@ class MessagesController: UITableViewController {
 //        chatLogController.hidesBottomBarWhenPushed = true
 //        navigationController?.pushViewController(chatLogController, animated: true)
 //    }
-    //This method is called when logging out.
+    
+    
+    /**
+     This function is called if there is no user logged into the system or if the user wants to logout.
+     */
     @objc func handleLogout() {
         
         do {

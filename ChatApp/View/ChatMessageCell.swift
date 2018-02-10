@@ -7,8 +7,9 @@
 //
 
 import UIKit
-//CollectionViewCell's implementation so can edit the layout of each cell.
+///CollectionViewCell's implementation so can edit the layout of each cell. This is used in the ChatLogController to layout the messages.
 class ChatMessageCell: UICollectionViewCell {
+    ///Where the message text appears.
     let textView: UITextView = {
         let tv = UITextView()
         tv.backgroundColor = UIColor.clear
@@ -18,6 +19,7 @@ class ChatMessageCell: UICollectionViewCell {
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
+    ///The message container that resembles a bubble.
     let bubbleView: UIView={
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -34,12 +36,16 @@ class ChatMessageCell: UICollectionViewCell {
         imageView.layer.masksToBounds = true
         return imageView
     }()
-    
+    /*
+      These NSLayoutConstraints are made global so I can change them when I want to. It is used once I determine who sent a certain message. If the currently logged in user sent the message, I can change the right anchor, and if it is another user, I can change left anchor. As well as this, when I estimate the width of the container which will be needed to hold the message, I can change the width anchor of the bubbleView to say how wide it should be.
+     */
     var bubbleWidth: NSLayoutConstraint?
     var bubbleViewRA : NSLayoutConstraint?
     var bubbleViewLA : NSLayoutConstraint?
     
-    
+    /**
+     Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
+     */
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(bubbleView)
