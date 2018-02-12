@@ -395,7 +395,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
 //        message.message = encrypt(message: message, messageId: childRef.description())
         
-        let values = ["text": message, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
+        print("Key: \(id)")
+        let encryptedMessage = message
+        encryptedMessage.encrypt(key: id)
+        print(encryptedMessage.message)
+        let values = ["text": encryptedMessage.message, "RecieveId": message.receiveId, "SendId": message.sendId, "TimeStamp": message.timestamp] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
             if error != nil {
