@@ -29,4 +29,20 @@ class Message: NSObject {
         return sendId
         }
     }
+    /**
+     Creates a string to use as the key.
+     - Parameters:
+        - key: The Key for the encryption - MessageId.
+     - Returns: Returns the correct key to use.
+     */
+    fileprivate func getKey(key: String) -> String{
+        var newKey = ""
+        let chars = stringToList(text: key)
+        for char in chars{
+            if((char >= "a") && (char <= "z")){
+                newKey += char.charToString()
+            }
+        }
+        return newKey.lowercased()
+    }
 }
