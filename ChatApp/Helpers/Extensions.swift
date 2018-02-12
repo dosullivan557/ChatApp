@@ -10,6 +10,22 @@ import UIKit
 //Stores cache of the profile images.
 let imageCache = NSCache<AnyObject, AnyObject>()
 
+
+//Ease of use for setting a colour
+extension UIColor {
+    convenience init(r: CGFloat, g: CGFloat, b: CGFloat){
+        self.init(red:r/255, green: g/255, blue: b/255, alpha:1)
+    }
+    
+    convenience init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat){
+        self.init(red:r/255, green: g/255, blue: b/255, alpha:a)
+    }
+    static let niceOrange: UIColor = UIColor(r: 255, g: 184, b: 77, a: 1)
+    static let niceBlue: UIColor = UIColor(r: 0, g: 136, b: 204, a: 0.5)
+}
+
+
+
 //Extended UIImageView to add this functionality
 extension UIImageView {
     
