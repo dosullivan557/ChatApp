@@ -54,4 +54,52 @@ class Message: NSObject {
         
         return list
     }
+    
+    func encrypt(key: String) {
+        message = message?.lowercased()
+        let newKey = getKey(key: key.lowercased())
+        var enc = ""
+        var counter = 0
+        let keyChars = stringToList(text: newKey.lowercased())
+        let aChar = stringToList(text: "a")[0].asciiValue
+        let zChar = stringToList(text: "z")[0].asciiValue
+//        print("key: \(key)")
+//        print("newKey: \(newKey)")
+//        print("chars: \(keyChars)")
+//        print("aChar: \(aChar!)")
+//        print("zChar: \(zChar!)")
+
+    for char in (message?.characters)! {
+
+//            print("algor: \(algor)")
+            if(char == " ") {
+                enc += " "
+//                print("Space")
+                print(" ")
+            }
+            else if (char.asciiValue! < aChar! || char.asciiValue! > zChar!) {
+                print(char)
+                enc += char.charToString()
+            }
+            else {
+                let partOne = (char.asciiValue! + keyChars[counter].asciiValue!)
+                let algor = ((partOne - 2 * aChar!) % 26 + aChar!)
+                if(algor >= aChar!) && (algor <= zChar!) {
+                print("Char +\(Character(UnicodeScalar(algor)!).charToString())")
+                enc += Character(UnicodeScalar(algor)!).charToString()
+                }
+//            else {
+////                print("specialValue")
+//                print(char)
+//                enc += char.charToString()
+//            }
+//        print("enc: \(enc)")
+//        print("counter\(counter)")
+            counter = (counter+1) % newKey.count
+        }
+        
+//        print(enc)
+        message = enc
+        }
+    }
 }
