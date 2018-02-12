@@ -102,4 +102,43 @@ class Message: NSObject {
         message = enc
         }
     }
+    
+    func decrypt(key: String) {
+        let newKey = getKey(key: key.lowercased())
+        var dec = ""
+        var counter = 0
+        let keyChars = stringToList(text: newKey)
+        let aChar = stringToList(text: "a")[0].asciiValue
+        let zChar = stringToList(text: "z")[0].asciiValue
+        
+//        print("key: \(key)")
+//        print("newKey: \(newKey)")
+//        print("chars: \(keyChars)")
+//        print("aChar: \(aChar!)")
+//        print("zChar: \(zChar!)")
+        
+        for char in (message?.characters)! {
+
+            if(char == " " ) {
+                dec += " "
+            }
+            else if (char.asciiValue! < aChar! || char.asciiValue! > zChar!) {
+                dec += char.charToString()
+            }
+            else{
+                let partOne = char.asciiValue! - keyChars[counter].asciiValue!
+                let algor = ((partOne + 26) % 26 + aChar!)
+                
+                if ((algor >= aChar!) && (algor <= zChar!)) {
+                    dec += Character(UnicodeScalar(algor)!).charToString()
+                }
+
+                counter = (counter+1) % newKey.count
+
+                }
+        }
+        message = dec
+        print(dec)
+    }
+    
 }
