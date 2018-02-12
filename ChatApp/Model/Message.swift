@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-//message object
 ///A Message object that holds the user id of the sender and the receiver, the message, and a timestamp.
 class Message: NSObject {
     var sendId: String?
