@@ -45,4 +45,13 @@ class Message: NSObject {
         }
         return newKey.lowercased()
     }
+    
+    func stringToList(text: String) -> [Character] {
+        var list = [Character]()
+        for char in text.characters {
+            list.append(char)
+        }
+        
+        return list
+    }
 }
