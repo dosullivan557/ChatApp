@@ -119,7 +119,7 @@ class MessagesController: UITableViewController {
                     message.timestamp = dictionary["TimeStamp"] as? NSNumber
                     message.receiveId = dictionary["RecieveId"] as? String
                     message.sendId = dictionary["SendId"] as? String
-                    
+                    message.decrypt(key: DataSnapshot.key)
                     if let chatId = message.chatWithId() {
                         self.messagesDictionary[chatId] = message
                         
@@ -171,11 +171,13 @@ class MessagesController: UITableViewController {
         present(navController, animated: true, completion: nil)
     }
     ///Checks whether the user is logged in; if so, then fill in the information of the view, otherwise logout. This function is called when the app is first loaded.
-    func checkIfUserIsLoggedIn() {
+    func checkIfUserIsLoggedIn() -> Bool{
         if Auth.auth().currentUser?.uid == nil {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
+            return false
         } else {
             fetchUser()
+            return true
         }
     }
     ///Called when a tablecell is selected.
