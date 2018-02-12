@@ -16,7 +16,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         title.isEditable = false
         title.isUserInteractionEnabled = false
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.textColor = UIColor.purple
+        title.textColor = UIColor.black
         title.backgroundColor = UIColor.clear
         title.font = UIFont.systemFont(ofSize: 25)
         title.textAlignment = .center
@@ -40,7 +40,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         let button = UIButton()
         button.setTitle("Reset Password", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.purple
+        button.backgroundColor = UIColor.niceBlue
         button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
         return button
     }()
@@ -71,7 +71,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
+        view.backgroundColor = UIColor.niceOrange
         view.addSubview(titleMain)
         view.addSubview(emailField)
         view.addSubview(resetButton)

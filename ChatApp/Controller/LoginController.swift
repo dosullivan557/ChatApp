@@ -26,7 +26,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     //picture container
     let pictureContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
+        view.backgroundColor = UIColor.niceOrange
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 20
         view.layer.masksToBounds = true
@@ -37,7 +37,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     //register Button
     lazy var loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(r:106, g: 96, b: 120)
+        button.backgroundColor = UIColor.niceBlue
         button.setTitle("Register", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor(r: 239, g: 239, b: 239), for: .normal)
@@ -117,8 +117,12 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     //segmented display
     let loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
+        sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white], for: UIControlState.selected)
+        sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
         sc.translatesAutoresizingMaskIntoConstraints = false
-        sc.tintColor = UIColor.white
+        sc.tintColor = UIColor.niceBlue
+        
+//        sc.backgroundColor = UIColor.niceBlue
         sc.selectedSegmentIndex = 1
         sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
         return sc
@@ -128,7 +132,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         let button = UIButton()
         button.setTitle("Clear Image", for: .normal)
         button.addTarget(self, action: #selector(handleClearImage), for: .touchUpInside)
-        button.setTitleColor(UIColor.purple, for: .normal)
+        button.setTitleColor(UIColor.niceBlue, for: .normal)
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -149,7 +153,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         let button = UIButton()
         button.setTitle("Forgotten Password?", for: .normal)
         button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
-        button.setTitleColor(UIColor.purple, for: .normal)
+        button.setTitleColor(UIColor.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.alpha = 0
         
@@ -158,7 +162,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
+        view.backgroundColor = UIColor.niceOrange
         //add the inputs, button, and image into the view
         view.addSubview(inputsContainerView)
         view.addSubview(loginRegisterButton)
@@ -658,10 +662,4 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         })
     }
     
-}
-//Ease of use for setting a colour
-extension UIColor {
-    convenience init(r: CGFloat, g: CGFloat, b: CGFloat){
-        self.init(red:r/255, green: g/255, blue: b/255, alpha:1)
-    }
 }
