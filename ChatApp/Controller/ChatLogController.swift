@@ -379,13 +379,21 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             inputTextField.text = ""
             return
         }
-        
+        let id = NSUUID().uuidString
         let ref = Database.database().reference().child("messages")
-        let childRef = ref.childByAutoId()
+        let childRef = ref.child(id)
         let recieveId = chatWithUser.id!
         let sendId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
-        let message = sanitiseMessage(Message: inputTextField.text!)
+//        let message = sanitiseMessage(Message: inputTextField.text!)
+        
+        let message = Message()
+        message.message = sanitiseMessage(Message: inputTextField.text!)
+        message.receiveId = chatWithUser.id!
+        message.sendId = Auth.auth().currentUser!.uid
+        message.timestamp = Int(Date().timeIntervalSince1970) as NSNumber
+        
+//        message.message = encrypt(message: message, messageId: childRef.description())
         
         let values = ["text": message, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
         
