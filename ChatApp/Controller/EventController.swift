@@ -214,7 +214,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return field
     }()
     
-    ///Fetches the other user sinformation.
+    ///Fetches the user the event is planned with.
     func fetchUser(){
         Database.database().reference().child("users").child((event?.eventWithId())!).observe(.value, with: { (DataSnapshot) in
             if let dictionary = DataSnapshot.value as? [String: AnyObject]{
@@ -273,18 +273,6 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         mapView.showsScale = true
         mapView.showsUserLocation = true
         
-       
-        view.addSubview(estimateBox)
-        setupMaps()
-        setupEstimateBox()
-        setupContainer()
-        view.addSubview(eventWith)
-        setupFields()
-    }
-    /**
-     Initialises the map and gets permissions, which allows us to get the users current location and use it to get the directions.
-     */
-    func setupMaps () {
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
         
@@ -321,58 +309,67 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
             let rekt = route.polyline.boundingMapRect
             self.mapView.setRegion(MKCoordinateRegionForMapRect(rekt), animated: true)
         }
+        view.addSubview(estimateBox)
         fillInEstimates(request: directionRequest)
 
+        setupEstimateBox()
+        setupContainer()
+        view.addSubview(eventWith)
+        setupFields()
     }
-
     /**
      Estimates the time for the each method of transport, and then sets the time in the relevant textField.
      - Parameters:
-         - request: The MKDirectionsRequest which is to be used to get the route.
+     - request: The MKDirectionsRequest which is to be used to get the route.
      */
-    func fillInEstimates(request: MKDirectionsRequest) {
-        //Walking
-        request.transportType = .walking
-        self.walkingField.text = stringFromTimeInterval(interval: estimate(request: request).expectedTravelTime)
 
-        //Car
+    func fillInEstimates(request: MKDirectionsRequest) {
+        request.transportType = .walking
+        
+        let directionsWalk = MKDirections(request: request)
+        directionsWalk.calculate { (response, error) in
+            guard let response = response else {
+                if let error = error {
+                    print(error)
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.walkingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+        }
+        
         request.transportType = .automobile
-        self.drivingField.text = stringFromTimeInterval(interval: estimate(request: request).expectedTravelTime)
         
-        //Transit
-        request.transportType = .transit
-        self.transitField.text = stringFromTimeInterval(interval: estimate(request: request).expectedTravelTime)
-       
-    }
+        let directionsDrive = MKDirections(request: request)
+        directionsDrive.calculate { (response, error) in
+            guard let response = response else {
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.drivingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+        }
         
-    
-    /**
-     Calculates the route to the destination, and returns the quickest route.
-     - Parameters:
-         - request: The MKDirectionsRequest for which you want to get the route for.
-     - Returns: Returns the fastest route.
-     */
-    func estimate(request: MKDirectionsRequest) -> MKRoute{
-        var route = MKRoute()
         let directionsTransit = MKDirections(request: request)
         directionsTransit.calculate { (response, error) in
             guard let response = response else {
                 if let error = error {
-                    print(error.localizedDescription)
-                    return
+                    print(error)
                 }
                 return
             }
-            route = response.routes[0]
+            let route = response.routes[0]
+            self.transitField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
         }
-        return route
-
+        
     }
     /**
      Converts a time interval into a string.
-     - Parameters:
+     - Parameter:
          - interval: TimeInterval to convert.
-     - Returns: Returns the formatted TimeInterval as a String.
+     - Return: Returns the formate
      */
     func stringFromTimeInterval(interval: TimeInterval) -> String {
         
