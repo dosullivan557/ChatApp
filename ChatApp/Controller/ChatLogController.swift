@@ -133,6 +133,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 }
             }
         }
+        }
         sanitisedMessage = words.joined(separator: " ")
         return sanitisedMessage
     }
@@ -205,7 +206,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 message.sendId = dictionary["SendId"] as? String
                 message.receiveId = dictionary["RecieveId"] as? String
                 message.timestamp = dictionary["TimeStamp"] as? NSNumber
-                
+                message.decrypt(key: DataSnapshot.key)
                     self.messages.append(message)
                     
                     DispatchQueue.main.async(execute: {
