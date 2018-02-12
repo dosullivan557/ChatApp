@@ -67,5 +67,10 @@ extension Character {
     var asciiValue: UInt32? {
         return String(self).unicodeScalars.filter{$0.isASCII}.first?.value
     }
+    func charToString() -> String{
+        var string = ""
+        string.append(self)
+        return string
+    }
 }
 
