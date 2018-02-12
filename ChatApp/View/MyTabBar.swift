@@ -11,19 +11,27 @@ import Firebase
 /// My TabBar for MessagesController
 class MyTabBar: UITabBarController {
     var tabList = [UIViewController]()
+
+    var currentUser = User() {
+        didSet {
+            self.passUsersThrough(user: self.currentUser)
+        }
+    }
+    
     let messagesController = MessagesController()
     let eventController = EventsController()
     let myProfileController = MyProfileController()
-    var currentUser = User()
     
     override func viewDidLoad() {
-        getCurrentUser()
+
+        
 
         createElements(view: messagesController, title: "Messages", imageName: "Messages")
         createElements(view: eventController, title: "Events", imageName: "event")
         createElements(view: myProfileController, title: "Profile", imageName: "profile")
         
         viewControllers = tabList
+
     }
     override func viewDidAppear(_ animated: Bool) {
         let delegate = UIApplication.shared.delegate as? AppDelegate
@@ -53,8 +61,9 @@ class MyTabBar: UITabBarController {
           - user: The current user to be passed to its views so they can be setup.
      */
     func passUsersThrough(user: User) {
-        self.currentUser = user
-
+        
+        print("set")
+        self.messagesController.user = user
         self.eventController.currentUser = user
         self.myProfileController.user = user
     }

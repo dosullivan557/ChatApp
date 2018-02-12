@@ -12,7 +12,16 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var currentUser = User()
+    var currentUser = User() {
+        didSet {
+            updateUser()
+            tb.currentUser = currentUser
+            window?.rootViewController = tb
+
+        }
+    }
+    let tb = MyTabBar()
+
     func updateUser() {
         if let id = Auth.auth().currentUser?.uid {
             Database.database().reference().child("users").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -37,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         
         //        window?.rootViewController = UINavigationController(rootViewController: MessagesController())
-        window?.rootViewController = MyTabBar()
+        window?.rootViewController = tb
         
         
         return true

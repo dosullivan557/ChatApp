@@ -9,14 +9,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ChatApp/View/UserCell.swift"
-            timestampString = "539961620.397421"
+            filePath = "ChatApp/Controller/EventController.swift"
+            timestampString = "540170930.569441"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
-            landmarkName = "UserCell"
-            landmarkType = "3">
+            startingLineNumber = "362"
+            endingLineNumber = "362"
+            landmarkName = "fillInEstimates(request:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
