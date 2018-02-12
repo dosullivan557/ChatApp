@@ -122,12 +122,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 
             for j in 0...(words.count - 1) {
                 if sanitiseWords[i].caseInsensitiveCompare(words[j]) == ComparisonResult.orderedSame {
-                    var badWord = words[j]
-                    var goodWord = String(describing: badWord.characters.first!)
-                    for k in 1...(words[j].characters.count - 1) {
-                        goodWord = goodWord + "*"
-                    }
-                    words[j] = goodWord + String(describing: badWord.characters.last!)
+                    if(words[j] != ""){
+                        var badWord = words[j]
+                        var goodWord = String(describing: badWord.characters.first!)
+                        for k in 1...(words[j].characters.count - 1) {
+                            goodWord = goodWord + "*"
+                        }
+                        words[j] = goodWord + String(describing: badWord.characters.last!)
+
                 }
             }
         }
