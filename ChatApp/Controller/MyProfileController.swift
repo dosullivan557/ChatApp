@@ -90,6 +90,59 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         return button
     }()
     
+    let deleteProfileButton : UIButton = {
+        let button = UIButton()
+        button.setTitle("Delete Profile", for: .normal)
+        button.setTitleColor(UIColor.red, for: .normal)
+        button.addTarget(self, action: #selector(deletePressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    @objc func deletePressed(){
+        showDeleteAlert(title:"Deleting your account.", message: "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.")    }
+    func handleDelete(){
+        print("Deleting the account")
+        handleLogout()
+    }
+    
+    
+    /**
+     This function is called if there is no user logged into the system or if the user wants to logout.
+     */
+    @objc func handleLogout() {
+        Auth.auth().currentUser?.delete(completion: nil)
+        let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
+        ref.removeValue()
+        do {
+            try Auth.auth().signOut()
+        } catch let logoutError{
+            print(logoutError)
+        }
+        
+            tabBarController?.selectedIndex = 0
+
+    }
+    
+    
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
+     
+     */
+    
+    func showDeleteAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+            self.handleDelete()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
     ///Opens the myevents controller.
     @objc func handleMyEvents(){
         let myEventController = MyEventsController()
@@ -113,6 +166,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         view.addSubview(emailLabel)
         view.addSubview(helpButton)
         view.addSubview(myEventsButton)
+        view.addSubview(deleteProfileButton)
         self.navigationController?.isNavigationBarHidden = true
         setupFields()
         setupOverlay()
@@ -161,6 +215,11 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         helpButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         helpButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         helpButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        deleteProfileButton.topAnchor.constraint(equalTo: helpButton.bottomAnchor).isActive = true
+        deleteProfileButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        deleteProfileButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        deleteProfileButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     ///Gets your users information and sets the data.

@@ -61,6 +61,10 @@ class MessagesController: UITableViewController {
         }
     } 
     override func viewDidAppear(_ animated: Bool) {
+        print("appeared")
+        if Auth.auth().currentUser?.uid == nil {
+            perform(#selector(handleLogout), with: nil, afterDelay: 0)
+        }
         let ad = UIApplication.shared.delegate as! AppDelegate
         if (ad.currentUser.profileImageUrl != user.profileImageUrl){
             user = ad.currentUser
@@ -303,6 +307,8 @@ class MessagesController: UITableViewController {
 //        chatLogController.hidesBottomBarWhenPushed = true
 //        navigationController?.pushViewController(chatLogController, animated: true)
 //    }
+    
+    
     
     
     /**
