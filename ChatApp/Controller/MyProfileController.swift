@@ -39,7 +39,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     }()
     var user : User? {
         didSet {
-            print("Profile page set")
             nameLabel.text = user?.name
             emailLabel.text = user?.email
             profileImage.loadImageUsingCache(urlString: user?.profileImageUrl)
