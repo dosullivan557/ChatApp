@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//Stores cache of the profile images.
+///Stores cache of the profile images.
 let imageCache = NSCache<AnyObject, AnyObject>()
 
 
@@ -81,9 +81,14 @@ extension String {
 }
 
 extension Character {
+    ///Gets the ascii value of the character.
     var asciiValue: UInt32? {
         return String(self).unicodeScalars.filter{$0.isASCII}.first?.value
     }
+    /**
+     Takes a character and coverts it into a string containing just that character.
+     - Returns: Returns the string.
+     */
     func charToString() -> String{
         var string = ""
         string.append(self)
