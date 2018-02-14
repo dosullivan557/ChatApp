@@ -73,6 +73,11 @@ class Message: NSObject {
         print(stringToList(text: message!))
         for char in (stringToList(text: message!)) {
             print(char)
+            guard let character = char.asciiValue else {
+                enc += char.charToString()
+                continue
+            }
+
             if(char == " ") {
                 enc += " "
                 print(" ")
@@ -117,6 +122,11 @@ class Message: NSObject {
         let capAChar = stringToList(text: "A")[0].asciiValue
         
         for char in messageChars {
+            guard let character = char.asciiValue else {
+                dec += char.charToString()
+                continue
+            }
+            
             if(char == " " ) {
                 dec += " "
             }
