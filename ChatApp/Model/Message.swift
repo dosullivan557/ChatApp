@@ -56,51 +56,53 @@ class Message: NSObject {
     }
     
     func encrypt(key: String) {
-        message = message?.lowercased()
         let newKey = getKey(key: key.lowercased())
         var enc = ""
         var counter = 0
         let keyChars = stringToList(text: newKey.lowercased())
         let aChar = stringToList(text: "a")[0].asciiValue
         let zChar = stringToList(text: "z")[0].asciiValue
-//        print("key: \(key)")
-//        print("newKey: \(newKey)")
-//        print("chars: \(keyChars)")
-//        print("aChar: \(aChar!)")
-//        print("zChar: \(zChar!)")
+        let capZChar = stringToList(text: "Z")[0].asciiValue
+        let capAChar = stringToList(text: "A")[0].asciiValue
 
-    for char in (message?.characters)! {
 
-//            print("algor: \(algor)")
+        print("aChar: \(aChar!)")
+        print("zChar: \(zChar!)")
+        print("CapAChar: \(capAChar!)")
+        print("CapZChar: \(capZChar!)")
+        print(stringToList(text: message!))
+        for char in (stringToList(text: message!)) {
+            print(char)
             if(char == " ") {
                 enc += " "
-//                print("Space")
                 print(" ")
             }
-            else if (char.asciiValue! < aChar! || char.asciiValue! > zChar!) {
+            else if ((char > "!" && char <= "/") || (char >= ":" && char <= "@" )) {
+                print("Special Character")
+                enc += char.charToString()
+            }
+            else if (char.asciiValue! >= aChar! && char.asciiValue! <= zChar!){
+                print("lowercase")
+                let partOne = (char.asciiValue! + keyChars[counter].asciiValue!)
+                let algor = ((partOne - 2 * aChar!) % 26 + aChar!)
+                enc += Character(UnicodeScalar(algor)!).charToString()
+                counter = (counter+1) % newKey.count
+            }
+            else if (char.asciiValue! >= capAChar! && char.asciiValue! <= capZChar!){
+                print("capital")
+                let partOne = (char.asciiValue! +  stringToList(text: keyChars[counter].charToString().uppercased())[0].asciiValue!)
+                let algor = ((partOne - 2 * capAChar!) % 26 + capAChar!)
+                //                print("Char +\(Character(UnicodeScalar(algor)!).charToString())")
+                enc += Character(UnicodeScalar(algor)!).charToString()
+                counter = (counter+1) % newKey.count
+            }
+            else {
                 print(char)
                 enc += char.charToString()
             }
-            else {
-                let partOne = (char.asciiValue! + keyChars[counter].asciiValue!)
-                let algor = ((partOne - 2 * aChar!) % 26 + aChar!)
-                if(algor >= aChar!) && (algor <= zChar!) {
-                print("Char +\(Character(UnicodeScalar(algor)!).charToString())")
-                enc += Character(UnicodeScalar(algor)!).charToString()
-                }
-//            else {
-////                print("specialValue")
-//                print(char)
-//                enc += char.charToString()
-//            }
-//        print("enc: \(enc)")
-//        print("counter\(counter)")
-            counter = (counter+1) % newKey.count
         }
-        
-//        print(enc)
         message = enc
-        }
+
     }
     
     func decrypt(key: String) {
@@ -110,35 +112,45 @@ class Message: NSObject {
         let keyChars = stringToList(text: newKey)
         let aChar = stringToList(text: "a")[0].asciiValue
         let zChar = stringToList(text: "z")[0].asciiValue
+        let messageChars = stringToList(text: message!)
+        let capZChar = stringToList(text: "Z")[0].asciiValue
+        let capAChar = stringToList(text: "A")[0].asciiValue
         
-//        print("key: \(key)")
-//        print("newKey: \(newKey)")
-//        print("chars: \(keyChars)")
-//        print("aChar: \(aChar!)")
-//        print("zChar: \(zChar!)")
-        
-        for char in (message?.characters)! {
-
+        for char in messageChars {
             if(char == " " ) {
                 dec += " "
             }
-            else if (char.asciiValue! < aChar! || char.asciiValue! > zChar!) {
-                dec += char.charToString()
-            }
-            else{
-                let partOne = char.asciiValue! - keyChars[counter].asciiValue!
-                let algor = ((partOne + 26) % 26 + aChar!)
+
+            else if (char.asciiValue! > aChar! && char.asciiValue! < zChar!){
+        
+                let partOne = (char.asciiValue!.hashValue - keyChars[counter].asciiValue!.hashValue)
+                let algor = (((partOne + 26) % 26) + aChar!.hashValue)
                 
-                if ((algor >= aChar!) && (algor <= zChar!)) {
-                    dec += Character(UnicodeScalar(algor)!).charToString()
-                }
+            
+                dec += Character(UnicodeScalar(algor)!).charToString()
 
                 counter = (counter+1) % newKey.count
 
-                }
+
+            }
+            else if (char.asciiValue! >= capAChar! && char.asciiValue! <= capZChar!) {
+                
+                let partOne = (char.asciiValue!.hashValue - stringToList(text: keyChars[counter].charToString().uppercased())[0].asciiValue!.hashValue)
+                let algor = (((partOne + 26) % 26) + capAChar!.hashValue)
+                
+                
+                dec += Character(UnicodeScalar(algor)!).charToString()
+                
+                counter = (counter+1) % newKey.count
+
+            //            print(dec)
         }
+            else {
+                dec += char.charToString()
+            }
         message = dec
-        print(dec)
+//        print(dec)
     }
     
+}
 }
