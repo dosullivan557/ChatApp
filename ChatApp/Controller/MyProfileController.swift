@@ -101,7 +101,10 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     @objc func deletePressed(){
         showDeleteAlert(title:"Deleting your account.", message: "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.")    }
     func handleDelete(){
-        print("Deleting the account")
+        Auth.auth().currentUser?.delete(completion: nil)
+        let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
+        ref.removeValue()
+
         handleLogout()
     }
     
@@ -110,9 +113,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
      This function is called if there is no user logged into the system or if the user wants to logout.
      */
     @objc func handleLogout() {
-        Auth.auth().currentUser?.delete(completion: nil)
-        let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
-        ref.removeValue()
+
         do {
             try Auth.auth().signOut()
         } catch let logoutError{
@@ -147,16 +148,20 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     @objc func handleMyEvents(){
         let myEventController = MyEventsController()
         myEventController.currentUser = user!
-        self.navigationController?.isNavigationBarHidden = false
+//        self.navigationController?.isNavigationBarHidden = false
         show(myEventController, sender: self)
     }
     ///Opens the help controller.
     @objc func handleHelp() {
         let helpController = HelpController()
-        
+        helpController.hidesBottomBarWhenPushed = true
+//        self.navigationController?.isNavigationBarHidden = false
+
         show(helpController, sender: self)
     }
     override func viewDidLoad() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
+
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         label.addGestureRecognizer(tap)
         view.backgroundColor = UIColor.white
@@ -167,11 +172,28 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         view.addSubview(helpButton)
         view.addSubview(myEventsButton)
         view.addSubview(deleteProfileButton)
-        self.navigationController?.isNavigationBarHidden = true
+//        self.navigationController?.isNavigationBarHidden = true
         setupFields()
         setupOverlay()
         getUser()
     }
+    
+    
+    ///Shows alert to check whether the user definitely wants to log out. If so, It will handle the logout, otherwise, it will do nothing.
+    @objc func checkLogout() {
+        let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+            self.handleLogout()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     
     ///Sets up the overlay constraints for resetting the profile picture.
     func setupOverlay() {
@@ -194,7 +216,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImage.heightAnchor.constraint(equalToConstant: 150).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        profileImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+        profileImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
         
         nameLabel.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 20).isActive = true
         nameLabel.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
@@ -241,7 +263,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     @objc func handleSelectProfileImageView(){
         let picker = UIImagePickerController()
         print("picker")
-        picker.delegate = self as! UIImagePickerControllerDelegate & UINavigationControllerDelegate
+        picker.delegate = self as UIImagePickerControllerDelegate & UINavigationControllerDelegate
         picker.allowsEditing = true
         
         present(picker, animated: true, completion: nil)
@@ -351,7 +373,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
 //            self.setupWithUser(user: user!)
 //        }
 
-        self.navigationController?.isNavigationBarHidden = true
+//        self.navigationController?.isNavigationBarHidden = true
 
     }
 }
