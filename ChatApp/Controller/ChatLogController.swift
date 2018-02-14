@@ -384,22 +384,18 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let childRef = ref.child(id)
         let recieveId = chatWithUser.id!
         let sendId = Auth.auth().currentUser!.uid
-        let timestamp = Int(Date().timeIntervalSince1970)
-//        let message = sanitiseMessage(Message: inputTextField.text!)
+//        let timestamp = Int(Date().timeIntervalSince1970)
+        let sanitisedMessage = sanitiseMessage(Message: inputTextField.text!)
         
         let message = Message()
-        message.message = sanitiseMessage(Message: inputTextField.text!)
+        message.message = sanitisedMessage
         message.receiveId = chatWithUser.id!
         message.sendId = Auth.auth().currentUser!.uid
         message.timestamp = Int(Date().timeIntervalSince1970) as NSNumber
         
-//        message.message = encrypt(message: message, messageId: childRef.description())
         
-        print("Key: \(id)")
-        let encryptedMessage = message
-        encryptedMessage.encrypt(key: id)
-        print(encryptedMessage.message)
-        let values = ["text": encryptedMessage.message, "RecieveId": message.receiveId, "SendId": message.sendId, "TimeStamp": message.timestamp] as [String : Any]
+       message.encrypt(key: id)
+        let values = ["text": message.message, "RecieveId": message.receiveId, "SendId": message.sendId, "TimeStamp": message.timestamp] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
             if error != nil {
