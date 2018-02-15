@@ -124,20 +124,28 @@ class Message: NSObject {
         let capAChar = stringToList(text: "A")[0].asciiValue
         
         for char in messageChars {
+            print(char)
             guard let character = char.asciiValue else {
+//                print("IDK")
                 dec += char.charToString()
                 continue
             }
             if(char == " " ) {
                 dec += " "
+//                print("space")
             }
-            else if (char.asciiValue! > aChar! && char.asciiValue! < zChar!){
+            else if (char.asciiValue! >= aChar! && char.asciiValue! <= zChar!){
+//                print("Lower")
+                
                 let partOne = (char.asciiValue!.hashValue - keyChars[counter].asciiValue!.hashValue)
                 let algor = (((partOne + 26) % 26) + aChar!.hashValue)
+                print("part1: \(partOne)")
+                print("Algor: \(algor)")
                 dec += Character(UnicodeScalar(algor)!).charToString()
                 counter = (counter+1) % newKey.count
             }
             else if (char.asciiValue! >= capAChar! && char.asciiValue! <= capZChar!) {
+//                print("Upper")
                 let partOne = (char.asciiValue!.hashValue - stringToList(text: keyChars[counter].charToString().uppercased())[0].asciiValue!.hashValue)
                 let algor = (((partOne + 26) % 26) + capAChar!.hashValue)
                 dec += Character(UnicodeScalar(algor)!).charToString()
