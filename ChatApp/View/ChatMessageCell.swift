@@ -42,6 +42,7 @@ class ChatMessageCell: UICollectionViewCell {
     var bubbleWidth: NSLayoutConstraint?
     var bubbleViewRA : NSLayoutConstraint?
     var bubbleViewLA : NSLayoutConstraint?
+    var bubbleViewCA : NSLayoutConstraint?
     
     /**
      Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
@@ -66,7 +67,7 @@ class ChatMessageCell: UICollectionViewCell {
         bubbleWidth?.isActive = true
         bubbleView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
         bubbleViewLA = bubbleView.leftAnchor.constraint(equalTo:profileImage.rightAnchor, constant: 10)
-        
+        bubbleViewCA = bubbleView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         //x,y,width,height
         profileImage.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
         //profile image in bottom of the cell
@@ -77,6 +78,10 @@ class ChatMessageCell: UICollectionViewCell {
         profileImage.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant:32).isActive = true
         profileImage.heightAnchor.constraint(equalToConstant:32).isActive = true
+    }
+    func setTouchable(bool: Bool) {
+        self.isUserInteractionEnabled = true
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
