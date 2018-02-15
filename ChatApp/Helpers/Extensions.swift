@@ -78,6 +78,19 @@ extension String {
         let end = index(startIndex, offsetBy: r.upperBound)
         return String(self[Range(start ..< end)])
     }
+    
+    func stringToChars(String: String) -> [Character] {
+        var chars = [Character]()
+      
+        for char in String {
+            chars.append(char)
+        }
+        return chars
+    }
+    
+        func matches(_ regex: String) -> Bool {
+            return self.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+    }
 }
 
 extension Character {
