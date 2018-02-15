@@ -49,6 +49,8 @@ class NewMessageController: UITableViewController {
                 user.email = dictionary["email"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 user.id = DataSnapshot.key
+                if user.id != Auth.auth().currentUser?.uid {
+                    
                 self.users.append(user)
                 
                 self.users.sort(by: { (u1, u2) -> Bool in
@@ -57,6 +59,8 @@ class NewMessageController: UITableViewController {
                 self.timer?.invalidate()
                 self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
             }
+            }
+
         }, withCancel: nil)
         
         
