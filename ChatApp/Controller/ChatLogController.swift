@@ -14,7 +14,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var messages = [Message]()
     var containerViewBA: NSLayoutConstraint?
     var sanitiseWords = [String]()
-
+    var messageSend = String()
     
     var users: [User?] = []{
         didSet{
@@ -30,6 +30,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 
                 titleView.addGestureRecognizer(tap)
                 observeMessages()
+                
+
 
             }
             else {
@@ -84,6 +86,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         setupSanitiseWords()
         setupInputComponents()
         setupKeyboard()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+
+            print(self.messages.count)
+            if self.messages.count == 0 {
+                self.noMessages()
+            }
+        }
     }
     
 //    @objc func showGroupProfile(){
@@ -215,6 +224,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 
             }, withCancel: nil)
         })
+
     }
 //    func observeGroupMessages() {
 //        guard let uid = Auth.auth().currentUser?.uid else {
@@ -250,6 +260,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
      Reloads the collectionView
      */
     func reloadCollectionView(){
+
         DispatchQueue.main.async(execute: {
             self.hidesBottomBarWhenPushed = true
             self.collectionView?.reloadData()
@@ -327,7 +338,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
          - text: The message to use to estimate the size of the bubble container for that message.
      */
     func estimatedBubble(message: String) -> CGRect {
-        
         return NSString(string: message).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
@@ -415,10 +425,24 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     //Defines how many sections that should be in the collection view.
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
         return messages.count
     }
+
+    func noMessages(){
+        let message = Message()
+        message.message = "Say Heyy"
+        message.sendId = "Me"
+        message.receiveId = "Me"
+        messageSend = "Heyy :)"
+        messages.append(message)
+        reloadCollectionView()
+    }
+    
     //Setup each section in the collection view.
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleAutoSend))
+
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         let message = messages[indexPath.item]
         cell.textView.text = message.message
@@ -431,24 +455,51 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.bubbleViewLA?.isActive = false
             cell.bubbleViewRA?.isActive = true
             cell.profileImage.isHidden = true
+            cell.bubbleViewCA?.isActive = false
+            cell.setTouchable(bool: false)
+
         }
-        else {
+        else if message.receiveId != message.sendId {
             //Incoming
             cell.bubbleViewRA?.isActive = false
             cell.bubbleViewLA?.isActive = true
+            cell.bubbleViewCA?.isActive = false
+
             cell.bubbleView.backgroundColor = UIColor.lightGray
             cell.textView.textColor = UIColor.black
             cell.profileImage.isHidden = false
+            cell.setTouchable(bool: false)
+
             //load other person's image
             if let profileImageUrl = self.chatWithUser.profileImageUrl {
                 cell.profileImage.loadImageUsingCache(urlString: profileImageUrl)
             }
         }
+        else {
+            cell.bubbleViewLA?.isActive = false
+            cell.bubbleViewRA?.isActive = false
+            cell.bubbleViewCA?.isActive = true
+            cell.textView.textColor = UIColor.black
+            cell.bubbleView.backgroundColor = UIColor.niceOrange
+            cell.profileImage.isHidden = true
+            cell.setTouchable(bool: true)
+            cell.addGestureRecognizer(tap)
+        }
         return cell
     }
     
     
-    
+    @objc func handleAutoSend() {
+//        self.collectionView?.deleteItems(at: [NSIndexPath(item:1, section:1) as IndexPath])
+
+        self.inputTextField.text = messageSend
+        print(messages[0].message!)
+        messages.removeAll()
+
+        self.handleSend()
+        reloadCollectionView()
+
+    }
     
     ///Hide keyboard when screen is touched
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
