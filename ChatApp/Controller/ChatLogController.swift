@@ -457,6 +457,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.profileImage.isHidden = true
             cell.bubbleViewCA?.isActive = false
             cell.setTouchable(bool: false)
+            cell.removeGestureRecognizer(tap)
+            cell.isUserInteractionEnabled = false
 
         }
         else if message.receiveId != message.sendId {
@@ -469,6 +471,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.textView.textColor = UIColor.black
             cell.profileImage.isHidden = false
             cell.setTouchable(bool: false)
+            cell.removeGestureRecognizer(tap)
+            cell.isUserInteractionEnabled = false
 
             //load other person's image
             if let profileImageUrl = self.chatWithUser.profileImageUrl {
@@ -482,7 +486,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.textView.textColor = UIColor.black
             cell.bubbleView.backgroundColor = UIColor.niceOrange
             cell.profileImage.isHidden = true
-            cell.setTouchable(bool: true)
+//            cell.setTouchable(bool: true)
+            cell.isUserInteractionEnabled = true
             cell.addGestureRecognizer(tap)
         }
         return cell
