@@ -334,8 +334,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         
         findLocation()
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-            // Your code with delay
-            print(self.closest)
             var array = [NSString]()
             array.append(self.closest.placemark.coordinate.latitude.description as NSString)
             array.append(self.closest.placemark.coordinate.longitude.description as NSString)
