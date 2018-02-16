@@ -38,10 +38,10 @@ class EventsController: UITableViewController {
     //Defines the current user of the system, and passes it to another method to setup the navigation bar
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
-        
+        let deleteEvent = events[editActionsForRowAt.row]
         let decline = UITableViewRowAction(style: .normal, title: "Decline") { action, index in
             print("decline button tapped")
-            self.declineFunc(index: index)
+            self.declineFunc(index: index, event: deleteEvent)
         }
         decline.backgroundColor = UIColor(r: 206, g: 27, b: 0)
         
@@ -61,18 +61,73 @@ class EventsController: UITableViewController {
          - index: The index of the table view to remove.
 
      */
-    func declineFunc(index: IndexPath){
+    func declineFunc(index: IndexPath, event: Event){
         print("Decline")
         self.updateDatabase(IndexPath: index, bool: false)
         self.events.remove(at: index.row)
         DispatchQueue.main.async() {
             self.tableView.deleteRows(at: [index], with: .fade)
         }
+        showDeleteAlertSure(title: "You have declined this event", message: "You have declined the event with this user, would you like to send your appologies?", index: index, event: event)
         self.handleReload()
-        self.showAlert(title: "Event Declined", message: "This event has been removed.")
+   
         
     }
     
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
+     
+     */
+    
+    func showDeleteAlertSure(title: String, message: String, index: IndexPath, event: Event) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+            self.sendAppologies(event: event)
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    func sendAppologies(event: Event){
+        
+        let id = NSUUID().uuidString
+        let ref = Database.database().reference().child("messages")
+        let childRef = ref.child(id)
+        let recieveId = event.eventWithId()
+        let sendId = Auth.auth().currentUser?.uid
+        
+        let message = Message()
+        message.message = "I am sorry but I cannot make the event \(event.title!). We will have to organise something very soon!"
+        message.receiveId = event.eventWithId()!
+        message.sendId = Auth.auth().currentUser!.uid
+        message.timestamp = Int(Date().timeIntervalSince1970) as NSNumber
+        
+        
+        message.encrypt(key: id)
+        let values = ["text": message.message, "RecieveId": message.receiveId, "SendId": message.sendId, "TimeStamp": message.timestamp] as [String : Any]
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error ?? "")
+                return
+            }
+            
+            let userMessagesRef = Database.database().reference().child("user-messages").child(sendId!).child(recieveId!)
+            
+            let messageId = childRef.key
+            userMessagesRef.updateChildValues([messageId: 1])
+            
+            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId!).child(sendId!)
+            recipientUserMessagesRef.updateChildValues([messageId: 1])
+        }
+             self.showAlert(title: "Event Declined", message: "This event has been removed.")
+    }
     /**
      This is called when the accept event button is pressed. It gets access to the calendar, and then adds it in. Once it has been accepted, it removes it from the table view.
      - Parameters:
