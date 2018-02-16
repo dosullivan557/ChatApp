@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 import MapKit
-//Event object
+///Object which represents an event.
 class Event: NSObject {
     var id: String?
     var title: String?
