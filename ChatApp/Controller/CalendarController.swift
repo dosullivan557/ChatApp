@@ -330,7 +330,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         event.host = uid
         event.invitee = user?.id
         event.id = NSUUID().uuidString
-//        print(findLocation())
         
         findLocation()
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
