@@ -15,6 +15,15 @@ class Message: NSObject {
     var message: String?
     var timestamp: NSNumber?
     
+    
+    /**
+     Gets the string of the message including all of its information. Used for development.
+     - Returns: The string containing all of the information.
+     */
+    func toString() -> String {
+        return ("sendId:\(sendId!), receiveId:\(receiveId!), message:\(message!), timestamp:\(timestamp!)")
+    }
+    
     /**
         Method that returns your chatting partner's ID, so you can check which user is the correct user.
      
