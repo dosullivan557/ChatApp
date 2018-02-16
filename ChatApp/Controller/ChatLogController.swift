@@ -216,11 +216,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 message.receiveId = dictionary["RecieveId"] as? String
                 message.timestamp = dictionary["TimeStamp"] as? NSNumber
                 message.decrypt(key: DataSnapshot.key)
-                    self.messages.append(message)
-                    
-                    DispatchQueue.main.async(execute: {
-                        self.collectionView?.reloadData()
-                    })
+                self.messages.append(message)
+                self.messages.sort { (m1, m2) -> Bool in
+//                    print((Int)(m1.timestamp!))
+                    return m1.timestamp!.intValue < m2.timestamp!.intValue
+                }
+                    self.reloadCollectionView()
                 
             }, withCancel: nil)
         })
