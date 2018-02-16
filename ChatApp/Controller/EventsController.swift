@@ -91,7 +91,7 @@ class EventsController: UITableViewController {
                 event.notes = currentEvent.desc
                 event.calendar = eventStore.defaultCalendarForNewEvents
                 event.location = currentEvent.location[2] as String?
-//                event.addAlarm(EKAlarm(relativeOffset: currentEvent.startTime as! TimeInterval))
+                event.addAlarm(EKAlarm(relativeOffset: ((currentEvent.startTime?.intValue)! - 3600) as! TimeInterval))
 //                event.addAlarm(EKAlarm(relativeOffset: (currentEvent.startTime as! TimeInterval) - (3600 as TimeInterval)))
 
                 do {
@@ -178,7 +178,20 @@ class EventsController: UITableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    
+    func getCurrentUser(){
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
+                let user = User()
+                user.name = dictionary["name"] as? String
+                user.email = dictionary["email"] as? String
+                user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                user.id = DataSnapshot.key
+                self.currentUser = user
+            }
+        }, withCancel: nil)
+        
+        
+    }
     override func viewDidAppear(_ animated: Bool) {
         if let id = currentUser.id {
             if id == Auth.auth().currentUser?.uid {
@@ -187,9 +200,10 @@ class EventsController: UITableViewController {
             else {
                 print("Different")
                 events.removeAll()
+                handleReload()
+                getCurrentUser()
                 setupNavBarWithUser(currentUser)
                 observeUserEvents()
-                handleReload()
             }
         }
         else {
