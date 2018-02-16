@@ -390,6 +390,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             inputTextField.text = ""
             return
         }
+        if(messages.count == 1) {
+            let message = messages[0]
+            if message.sendId! == message.receiveId! {
+                messages.removeAll()
+                reloadCollectionView()
+            }
+        }
         let id = NSUUID().uuidString
         let ref = Database.database().reference().child("messages")
         let childRef = ref.child(id)
@@ -439,64 +446,199 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         messages.append(message)
         reloadCollectionView()
     }
+    var time: String?
+    var location: String?
+    var desc: String?
     
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+     
+        print(message.message)
+        messageIsAboutEvent(message: message)
+        handleAutoEvent()
+    }
+    
+    @objc func handleAutoEvent(){
+//        print(message.message)
+//        messageIsAboutEvent(message: message)
+//        print(time!)
+//        print(location!)
+//        print(desc!)
+        let calendarView = CalendarController()
+        calendarView.user = chatWithUser
+
+        if let rTime = time {
+            var thing = rTime.components(separatedBy: ":")
+            var adjust = 0
+            var temp = ""
+            for char in thing[0].stringToChars(String: thing[0]) {
+                if char.asciiValue! >= "0".stringToChars(String: "0")[0].asciiValue! && char.asciiValue! <= "9".stringToChars(String: "9")[0].asciiValue! {
+                    print(char.charToString())
+                    temp.append(char.charToString())
+                    print(temp)
+                }
+            }
+            thing[0] = temp
+            temp = ""
+            
+            for char in thing[1].stringToChars(String: thing[1]) {
+                if char.asciiValue! >= "0".stringToChars(String: "0")[0].asciiValue! && char.asciiValue! <= "9".stringToChars(String: "9")[0].asciiValue! {
+                    temp.append(char)
+                }
+            }
+            thing[1] = temp
+            if ((Int) (thing[0])! > 12) {
+                adjust = 12
+            }
+            else {
+                adjust = -12
+            }
+            let timeFormatter = DateFormatter()
+            timeFormatter.timeStyle = DateFormatter.Style.short
+            timeFormatter.dateStyle = DateFormatter.Style.long
+            let correctTime = Date().tomorrow.addingTimeInterval(TimeInterval(((Int) (((Int)(thing[0])! + adjust) * 60 * 60)) + ((Int) ((Int)(thing[1])! * 60))))
+            let strDate = timeFormatter.string(from: correctTime)
+            
+            calendarView.sDate = correctTime
+            calendarView.dateFieldS.text = strDate
+        }
+        if let rLocation = location {
+            calendarView.locationField.text = rLocation
+        }
+        if let rDesc = desc {
+            calendarView.descriptionField.text = rDesc
+        }
+        self.show(calendarView, sender: self)
+    }
+    var eventMessages = [Message]()
     //Setup each section in the collection view.
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleAutoSend))
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         let message = messages[indexPath.item]
         cell.textView.text = message.message
         cell.bubbleWidth?.constant = estimatedBubble(message: message.message!).width + 25
-        
-        if message.sendId == Auth.auth().currentUser?.uid {
-            //outgoing
-            cell.bubbleView.backgroundColor = UIColor.purple
-            cell.textView.textColor = UIColor.white
+        let autoSendMessageGesture = UITapGestureRecognizer(target: self, action: #selector(handleAutoSend))
+//        let autoEvent = UITapGestureRecognizer(target: self, action: #selector(handleAutoEvent(sender:)))
+        //About event
+        if messageIsAboutEvent(message: message) {
+            eventMessages.append(message)
             cell.bubbleViewLA?.isActive = false
-            cell.bubbleViewRA?.isActive = true
-            cell.profileImage.isHidden = true
-            cell.bubbleViewCA?.isActive = false
-            cell.setTouchable(bool: false)
-            cell.removeGestureRecognizer(tap)
-            cell.isUserInteractionEnabled = false
-
-        }
-        else if message.receiveId != message.sendId {
-            //Incoming
             cell.bubbleViewRA?.isActive = false
-            cell.bubbleViewLA?.isActive = true
-            cell.bubbleViewCA?.isActive = false
-
-            cell.bubbleView.backgroundColor = UIColor.lightGray
+            cell.bubbleViewCA?.isActive = true
             cell.textView.textColor = UIColor.black
-            cell.profileImage.isHidden = false
-            cell.setTouchable(bool: false)
-            cell.removeGestureRecognizer(tap)
-            cell.isUserInteractionEnabled = false
+            cell.bubbleView.backgroundColor = UIColor.niceBlue
+            cell.profileImage.isHidden = true
+            cell.isUserInteractionEnabled = true
+//            cell.addGestureRecognizer(autoEvent)
 
-            //load other person's image
-            if let profileImageUrl = self.chatWithUser.profileImageUrl {
-                cell.profileImage.loadImageUsingCache(urlString: profileImageUrl)
-            }
+            cell.removeGestureRecognizer(autoSendMessageGesture)
+
         }
-        else {
+        //Send message
+        else if (message.sendId! == message.receiveId!){
             cell.bubbleViewLA?.isActive = false
             cell.bubbleViewRA?.isActive = false
             cell.bubbleViewCA?.isActive = true
             cell.textView.textColor = UIColor.black
             cell.bubbleView.backgroundColor = UIColor.niceOrange
             cell.profileImage.isHidden = true
-//            cell.setTouchable(bool: true)
-            cell.isUserInteractionEnabled = true
-            cell.addGestureRecognizer(tap)
+            cell.addGestureRecognizer(autoSendMessageGesture)
+//            cell.removeGestureRecognizer(autoEvent)
+
+        }
+        //Outgoing message
+        else if message.sendId == Auth.auth().currentUser?.uid {
+            cell.bubbleView.backgroundColor = UIColor.purple
+            cell.textView.textColor = UIColor.white
+            cell.bubbleViewLA?.isActive = false
+            cell.bubbleViewRA?.isActive = true
+            cell.profileImage.isHidden = true
+            cell.bubbleViewCA?.isActive = false
+            cell.removeGestureRecognizer(autoSendMessageGesture)
+            cell.isUserInteractionEnabled = false
+//            cell.removeGestureRecognizer(autoEvent)
+
+        }
+        //Incoming message
+        else if message.receiveId != message.sendId{
+            cell.bubbleViewRA?.isActive = false
+            cell.bubbleViewLA?.isActive = true
+            cell.bubbleViewCA?.isActive = false
+//            cell.removeGestureRecognizer(autoEvent)
+
+            cell.bubbleView.backgroundColor = UIColor.lightGray
+            cell.textView.textColor = UIColor.black
+            cell.profileImage.isHidden = false
+            cell.setTouchable(bool: false)
+            cell.removeGestureRecognizer(autoSendMessageGesture)
+            cell.isUserInteractionEnabled = false
+            
+            //load other person's image
+            if let profileImageUrl = self.chatWithUser.profileImageUrl {
+                cell.profileImage.loadImageUsingCache(urlString: profileImageUrl)
+            }
         }
         return cell
     }
-    
+
+    func messageIsAboutEvent(message: Message) -> Bool {
+        let words = message.message!.components(separatedBy: " ")
+        var numberOfEventWords = Int()
+        var counter = 0
+        let max = words.count
+        let eventWords = ["at", "cinema", "park", "pub", "college", "uni", "bar"]
+        var foundMeetAt : Bool? = false
+        var timeTest : NSRegularExpression?
+        do {
+            timeTest = try NSRegularExpression(pattern: "(\\d\\d)+[.:]+(\\d\\d)", options: .caseInsensitive)
+        } catch let error{
+            print("error: \(error)")
+        }
+        if message.message!.lowercased().range(of: "meet at") != nil {
+            foundMeetAt = true
+        }
+        for word in words {
+//            print("test: \(String(describing: timeTest?.firstMatch(in: word, options: NSRegularExpression.MatchingOptions.withTransparentBounds, range: word.nsrange))!)")
+            counter += 1
+//            print(word)
+            
+            let test = timeTest?.firstMatch(in: word, options: NSRegularExpression.MatchingOptions.withTransparentBounds, range: word.nsrange)
+//            print("test: \(test)")
+            if (test != nil){
+                numberOfEventWords += 1
+                self.time = word
+            }
+//            print("test: \(test)")
+            else if eventWords.contains(word.lowercased()) {
+               
+                if word == "at" {
+                    if max > counter+1 {
+
+                        if (((words[counter+1].stringToChars(String: words[counter+1]))[0] >= "a") && ((words[counter+1].stringToChars(String: words[counter+1])[0]) <= "z")) {
+                            print("location")
+                            self.location = words[counter+1]
+                        }
+
+                        else {
+                            print("IDK")
+                        }
+                    }
+                }
+                numberOfEventWords += 1
+            }
+        }
+        if(numberOfEventWords > 1) {
+            desc = message.message
+            return true
+        }
+        else{
+            return false
+        }
+    }
     
     @objc func handleAutoSend() {
-//        self.collectionView?.deleteItems(at: [NSIndexPath(item:1, section:1) as IndexPath])
 
         self.inputTextField.text = messageSend
         print(messages[0].message!)
