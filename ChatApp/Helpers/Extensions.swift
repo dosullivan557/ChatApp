@@ -87,10 +87,19 @@ extension String {
         }
         return chars
     }
-    
-        func matches(_ regex: String) -> Bool {
-            return self.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+    var nsrange: NSRange {
+        return NSRange(location: 0, length: utf16.count)
     }
+//    func matches(regex: String) -> Bool {
+//        print("self: \(self)")
+//        
+//        let regExpression = regex
+//        print("regExpression: \(regExpression)")
+//        let test = NSPredicate(format:"SELF MATCHES %@", regExpression)
+//        print("test: \(test)")
+//        return test.evaluate(with: self)
+//        
+//    }
 }
 
 extension Character {
