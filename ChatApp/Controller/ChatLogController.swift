@@ -454,7 +454,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
      
-        print(message.message)
         messageIsAboutEvent(message: message)
         handleAutoEvent()
     }
@@ -588,7 +587,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         var numberOfEventWords = Int()
         var counter = 0
         let max = words.count
-        let eventWords = ["at", "cinema", "park", "pub", "college", "uni", "bar"]
+        let locationWords = ["at", "the", "cinema", "park", "pub", "college", "uni", "bar", "town", "shop", "shops", "nandos", "restaurant", "office", "club",]
         var foundMeetAt : Bool? = false
         var timeTest : NSRegularExpression?
         do {
@@ -611,7 +610,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 self.time = word
             }
 //            print("test: \(test)")
-            else if eventWords.contains(word.lowercased()) {
+            else if locationWords.contains(word.lowercased()) {
                
                 if word == "at" {
                     if max > counter+1 {

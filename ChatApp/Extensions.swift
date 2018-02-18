@@ -90,16 +90,7 @@ extension String {
     var nsrange: NSRange {
         return NSRange(location: 0, length: utf16.count)
     }
-//    func matches(regex: String) -> Bool {
-//        print("self: \(self)")
-//        
-//        let regExpression = regex
-//        print("regExpression: \(regExpression)")
-//        let test = NSPredicate(format:"SELF MATCHES %@", regExpression)
-//        print("test: \(test)")
-//        return test.evaluate(with: self)
-//        
-//    }
+
 }
 
 extension Character {
@@ -128,10 +119,5 @@ extension Date {
     var noon: Date {
         return Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: self)!
     }
-    var month: Int {
-        return Calendar.current.component(.month,  from: self)
-    }
-    var isLastDayOfMonth: Bool {
-        return tomorrow.month != month
-    }
+
 }

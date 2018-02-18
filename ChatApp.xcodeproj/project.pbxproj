@@ -170,14 +170,6 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		DE47D18F1FF96A85000B6C08 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				DE47D1901FF96A9C000B6C08 /* Extensions.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
 		DE4BDD521FF5244E00E67C45 = {
 			isa = PBXGroup;
 			children = (
@@ -206,10 +198,10 @@
 			children = (
 				DE13E3C0202610CB0021D057 /* Data */,
 				DEDD53B51FFFD25B00B10E62 /* View */,
-				DE47D18F1FF96A85000B6C08 /* Helpers */,
 				DEFA87A91FF7EEEE0025FAA6 /* Model */,
 				DE4BDD8C1FF526B300E67C45 /* Controller */,
 				DE4BDD5E1FF5244E00E67C45 /* AppDelegate.swift */,
+				DE47D1901FF96A9C000B6C08 /* Extensions.swift */,
 				DEF46190200FE0D800FD4327 /* background.JPG */,
 				DE4BDD621FF5244E00E67C45 /* Main.storyboard */,
 				DE4BDD651FF5244E00E67C45 /* Assets.xcassets */,
