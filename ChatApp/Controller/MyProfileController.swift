@@ -159,8 +159,15 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
 
         show(helpController, sender: self)
     }
+    @objc func handleShowSettings(){
+        let settingsView = SettingsView()
+        settingsView.currentUser = self.user!
+        settingsView.hidesBottomBarWhenPushed = true
+        show(settingsView, sender: self)
+    }
     override func viewDidLoad() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "gear"), style: .plain, target: self, action: #selector(handleShowSettings))
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         label.addGestureRecognizer(tap)
         view.backgroundColor = UIColor.white
@@ -291,6 +298,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             storageRef.putData(uploadData, metadata: nil, completion: {
                 (metadata, error) in
                 if error != nil{
+                    return
                 }
                 if let profileUrl = metadata?.downloadURL()?.absoluteString{
                     let values = ["name": self.user?.name, "email": self.user?.email, "profileImageUrl": profileUrl] as [String: AnyObject]
