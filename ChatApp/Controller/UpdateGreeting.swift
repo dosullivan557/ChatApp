@@ -38,5 +38,16 @@ class UpdateGreeting: UIViewController {
             ref.updateChildValues(values)
         }
     }
+    override func viewDidLoad() {
+        view.backgroundColor = UIColor.niceOrange
+        super.viewDidLoad()
+        view.addSubview(textField)
+        view.addSubview(button)
+        textField.text = settings?.greeting!
+        setupFields()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+
+        view.addGestureRecognizer(tap)
+    }
 
 }
