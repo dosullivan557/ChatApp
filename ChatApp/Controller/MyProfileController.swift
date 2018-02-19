@@ -161,7 +161,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     }
     override func viewDidLoad() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
-
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         label.addGestureRecognizer(tap)
         view.backgroundColor = UIColor.white
@@ -262,7 +261,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     /// Opens up an image picker and allows the user to select the picture.
     @objc func handleSelectProfileImageView(){
         let picker = UIImagePickerController()
-        print("picker")
         picker.delegate = self as UIImagePickerControllerDelegate & UINavigationControllerDelegate
         picker.allowsEditing = true
         
@@ -277,7 +275,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         storageRef.delete { (Error) in
                 if let error = Error {
                     // Uh-oh, an error occurred!
-                    print("ERROR")
                     print(error)
                     return
                 } else {
@@ -294,8 +291,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             storageRef.putData(uploadData, metadata: nil, completion: {
                 (metadata, error) in
                 if error != nil{
-                    print(error)
-//                    return
                 }
                 if let profileUrl = metadata?.downloadURL()?.absoluteString{
                     let values = ["name": self.user?.name, "email": self.user?.email, "profileImageUrl": profileUrl] as [String: AnyObject]
@@ -316,7 +311,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
      */
     func updateValuesInDatabase(values: [String: AnyObject]) {
         if let id = Auth.auth().currentUser?.uid{
-            print("Yes")
             print(values)
             let ref = Database.database().reference().child("users").child(id)
             ref.updateChildValues(values)
