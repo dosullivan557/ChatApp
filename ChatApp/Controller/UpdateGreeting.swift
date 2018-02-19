@@ -49,5 +49,9 @@ class UpdateGreeting: UIViewController {
 
         view.addGestureRecognizer(tap)
     }
+    
+    @objc func hideKeyboard() {
+        textField.endEditing(true)
+    }
 
 }
