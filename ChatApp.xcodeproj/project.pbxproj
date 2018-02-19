@@ -27,6 +27,9 @@
 		DE4BDD7F1FF5244F00E67C45 /* ChatAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4BDD7E1FF5244F00E67C45 /* ChatAppUITests.swift */; };
 		DE4BDD8E1FF526D500E67C45 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4BDD8D1FF526D500E67C45 /* LoginController.swift */; };
 		DE4BDD901FF5475700E67C45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE4BDD8F1FF5475700E67C45 /* GoogleService-Info.plist */; };
+		DE8393842039BB0C001A378E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8393832039BB0C001A378E /* SettingsView.swift */; };
+		DE839386203B1C9D001A378E /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE839385203B1C9C001A378E /* Settings.swift */; };
+		DE839388203B3CA0001A378E /* UpdateGreeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE839387203B3CA0001A378E /* UpdateGreeting.swift */; };
 		DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */; };
 		DECD33852016AC0400772123 /* ReportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD33842016AC0400772123 /* ReportController.swift */; };
 		DECD3387201777F400772123 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD3386201777F400772123 /* HelpController.swift */; };
@@ -94,6 +97,9 @@
 		DE4BDD801FF5244F00E67C45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DE4BDD8D1FF526D500E67C45 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		DE4BDD8F1FF5475700E67C45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DE8393832039BB0C001A378E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		DE839385203B1C9C001A378E /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		DE839387203B3CA0001A378E /* UpdateGreeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateGreeting.swift; sourceTree = "<group>"; };
 		DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		DECD33842016AC0400772123 /* ReportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportController.swift; sourceTree = "<group>"; };
 		DECD3386201777F400772123 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
@@ -247,6 +253,8 @@
 				DECD3386201777F400772123 /* HelpController.swift */,
 				DECD338820177F1A00772123 /* NewGroupMessageController.swift */,
 				DECD338C2018A1E300772123 /* GroupChatLogController.swift */,
+				DE8393832039BB0C001A378E /* SettingsView.swift */,
+				DE839387203B3CA0001A378E /* UpdateGreeting.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -268,6 +276,7 @@
 				DEFA87AA1FF7EF230025FAA6 /* User.swift */,
 				DEDD53B31FFFC87900B10E62 /* Message.swift */,
 				DE2D67CC200BE8610084078A /* Event.swift */,
+				DE839385203B1C9C001A378E /* Settings.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -576,6 +585,7 @@
 			files = (
 				DEDD53B01FFE6B7000B10E62 /* ChatLogController.swift in Sources */,
 				DECD3387201777F400772123 /* HelpController.swift in Sources */,
+				DE839386203B1C9D001A378E /* Settings.swift in Sources */,
 				DE2D67CB200A6F5D0084078A /* CalendarController.swift in Sources */,
 				DEF461932012D9E200FD4327 /* EventController.swift in Sources */,
 				DEF0D4B81FF58F250062AF22 /* NewMessageController.swift in Sources */,
@@ -589,11 +599,13 @@
 				DE47D1911FF96A9C000B6C08 /* Extensions.swift in Sources */,
 				DE4BDD8E1FF526D500E67C45 /* LoginController.swift in Sources */,
 				DE2D67CF200BF8740084078A /* EventsController.swift in Sources */,
+				DE8393842039BB0C001A378E /* SettingsView.swift in Sources */,
 				DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */,
 				DEF4618F200FD79600FD4327 /* PasswordResetController.swift in Sources */,
 				DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */,
 				DECD338D2018A1E300772123 /* GroupChatLogController.swift in Sources */,
 				DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */,
+				DE839388203B3CA0001A378E /* UpdateGreeting.swift in Sources */,
 				DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */,
 				DECD338B2017FA6300772123 /* MyEventsController.swift in Sources */,
 				DE4BDD5F1FF5244E00E67C45 /* AppDelegate.swift in Sources */,
