@@ -133,30 +133,37 @@ class Message: NSObject {
         let capAChar = stringToList(text: "A")[0].asciiValue
         
         for char in messageChars {
-            guard let character = char.asciiValue else {
-                dec += char.charToString()
-                continue
+            if let character = char.asciiValue {
+                if(char == " " ) {
+                    dec += " "
+                }
+                else if (char.asciiValue! >= aChar! && char.asciiValue! <= zChar!){
+                    
+                    let partOne = (char.asciiValue!.hashValue - keyChars[counter].asciiValue!.hashValue)
+                    let algor = (((partOne + 26) % 26) + aChar!.hashValue)
+                    dec += Character(UnicodeScalar(algor)!).charToString()
+                    counter = (counter+1) % newKey.count
+                }
+                else if (char.asciiValue! >= capAChar! && char.asciiValue! <= capZChar!) {
+                    let partOne = (char.asciiValue!.hashValue - stringToList(text: keyChars[counter].charToString().uppercased())[0].asciiValue!.hashValue)
+                    let algor = (((partOne + 26) % 26) + capAChar!.hashValue)
+                    dec += Character(UnicodeScalar(algor)!).charToString()
+                    counter = (counter+1) % newKey.count
+                }
+                else {
+                    dec += char.charToString()
+                }
+                message = dec
             }
-            if(char == " " ) {
-                dec += " "
-            }
-            else if (char.asciiValue! >= aChar! && char.asciiValue! <= zChar!){
                 
-                let partOne = (char.asciiValue!.hashValue - keyChars[counter].asciiValue!.hashValue)
-                let algor = (((partOne + 26) % 26) + aChar!.hashValue)
-                dec += Character(UnicodeScalar(algor)!).charToString()
-                counter = (counter+1) % newKey.count
-            }
-            else if (char.asciiValue! >= capAChar! && char.asciiValue! <= capZChar!) {
-                let partOne = (char.asciiValue!.hashValue - stringToList(text: keyChars[counter].charToString().uppercased())[0].asciiValue!.hashValue)
-                let algor = (((partOne + 26) % 26) + capAChar!.hashValue)
-                dec += Character(UnicodeScalar(algor)!).charToString()
-                counter = (counter+1) % newKey.count
-            }
             else {
+                print(char.charToString())
                 dec += char.charToString()
+                print(dec)
+                print("ADMOAIFDN AOEINFAEIJ NFAEIJ ")
+//                continue
             }
-        message = dec
+
     }
     
 }
