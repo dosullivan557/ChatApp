@@ -419,17 +419,20 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let childRef = ref.child(id)
         let recieveId = chatWithUser.id!
         let sendId = Auth.auth().currentUser!.uid
-//        let timestamp = Int(Date().timeIntervalSince1970)
+        let timestamp = Int(Date().timeIntervalSince1970)
         let sanitisedMessage = sanitiseMessage(Message: inputTextField.text!)
         
         let message = Message()
         message.message = sanitisedMessage
         message.receiveId = chatWithUser.id!
         message.sendId = Auth.auth().currentUser!.uid
-        message.timestamp = Int(Date().timeIntervalSince1970) as NSNumber
-        
+        message.timestamp = timestamp as NSNumber
+        message.message?.append(" ")
         
        message.encrypt(key: id)
+        
+//       message.message = message.message?.encodeEmoji
+        
         let values = ["text": message.message, "RecieveId": message.receiveId, "SendId": message.sendId, "TimeStamp": message.timestamp] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
@@ -459,7 +462,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         message.message = "Say Heyy"
         message.sendId = "Me"
         message.receiveId = "Me"
-        messageSend = "Heyy :)"
+        
         messages.append(message)
         reloadCollectionView()
     }
