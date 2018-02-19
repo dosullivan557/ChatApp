@@ -228,6 +228,20 @@ class MessagesController: UITableViewController {
                 user.email = dictionary["email"] as? String
                 user.name = dictionary["name"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                
+                let settingsRef = Database.database().reference().child("user-settings").child((user.id)!)
+                settingsRef.observe(.value, with: { (DataSnapshot) in
+                    if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                        
+                    user.settings?.id = user.id
+                    user.settings?.greeting = dictionary["Greeting"] as? String
+                    user.settings?.theirColor = dictionary["TheirColor"] as? String
+                    user.settings?.myColor = dictionary["YourColor"] as? String
+                    }
+                })
+                
+                
+                
                 self.setupNavBarWithUser(user)
                 
             }
