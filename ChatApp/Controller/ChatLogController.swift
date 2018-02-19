@@ -72,10 +72,27 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }()
     
     let cellId = "cellId"
+    func getMessage() {
+        let ref = Database.database().reference().child("user-settings").child((Auth.auth().currentUser?.uid)!)
+        ref.observe(.value, with: { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                let settings = Settings()
+                settings.id = Auth.auth().currentUser?.uid
+                settings.greeting = dictionary["Greeting"] as? String
+                settings.theirColor = dictionary["TheirColor"] as? String
+                settings.myColor = dictionary["YourColor"] as? String
+                self.messageSend = settings.greeting!
+            }
+        })
+        
+        
+        //        messageSend =
+    }
     
     override func viewDidLoad(){
         self.hidesBottomBarWhenPushed = true
         reloadCollectionView()
+        getMessage()
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor(patternImage: UIImage(named:"background")!)
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
