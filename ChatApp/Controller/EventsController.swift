@@ -110,7 +110,7 @@ class EventsController: UITableViewController {
         
         
         message.encrypt(key: id)
-        let values = ["text": message.message, "RecieveId": message.receiveId, "SendId": message.sendId, "TimeStamp": message.timestamp] as [String : Any]
+        let values = ["text": message.message!, "RecieveId": message.receiveId!, "SendId": message.sendId!, "TimeStamp": message.timestamp!] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
             if error != nil {
