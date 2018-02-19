@@ -90,6 +90,7 @@ extension String {
     var nsrange: NSRange {
         return NSRange(location: 0, length: utf16.count)
     }
+    
 
 }
 
