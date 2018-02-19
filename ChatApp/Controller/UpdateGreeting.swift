@@ -11,6 +11,7 @@ import Firebase
 
 class UpdateGreeting: UIViewController {
     
+    var settings : Settings? 
     let textField : UITextField = {
         let tf = UITextField()
         tf.text = ""
