@@ -61,8 +61,6 @@ class MyTabBar: UITabBarController {
           - user: The current user to be passed to its views so they can be setup.
      */
     func passUsersThrough(user: User) {
-        
-        print("set")
         self.messagesController.user = user
         self.eventController.currentUser = user
         self.myProfileController.user = user
