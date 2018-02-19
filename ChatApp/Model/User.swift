@@ -19,6 +19,6 @@ class User: NSObject {
      - Returns: The string containing all of the information.
      */
     func toString() -> String {
-        return ("name:\(name!), email:\(email!), profileImageUrl:\(profileImageUrl!), id:\(id!)")
+        return ("name:\(name!), email:\(email!), profileImageUrl:\(profileImageUrl!), id:\(id!), settings: \(settings)")
     }
 }
