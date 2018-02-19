@@ -30,7 +30,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     self.currentUser.id = snapshot.key
                     self.currentUser.email = dictionary["email"] as? String
                     self.currentUser.name = dictionary["name"] as? String
-                    self.currentUser.profileImageUrl = dictionary["profileImageUrl"] as? String                    
+                    self.currentUser.profileImageUrl = dictionary["profileImageUrl"] as? String
+                    let settingsRef = Database.database().reference().child("user-settings").child(self.currentUser.id!)
+                    settingsRef.observe(.value, with: { (DataSnapshot) in
+                        if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                            let settings = Settings()
+                            settings.id = self.currentUser.id
+                            settings.greeting = dictionary["Greeting"] as? String
+                            settings.theirColor = dictionary["TheirColor"] as? String
+                            settings.myColor = dictionary["YourColor"] as? String
+                            self.currentUser.settings = settings
+                        }
+                    })
                 }
                 
             }, withCancel: nil)
