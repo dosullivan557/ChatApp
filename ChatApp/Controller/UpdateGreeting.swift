@@ -29,5 +29,14 @@ class UpdateGreeting: UIViewController {
         btn.backgroundColor = UIColor.niceBlue
         return btn
     }()
+    
+    @objc func handleSave() {
+        let values = ["Greeting" : textField.text!, "TheirColor" : "Pink", "YourColor" : "Green"]
+        if let id = Auth.auth().currentUser?.uid{
+            print(values)
+            let ref = Database.database().reference().child("user-settings").child(id)
+            ref.updateChildValues(values)
+        }
+    }
 
 }
