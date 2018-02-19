@@ -51,7 +51,18 @@ class MyTabBar: UITabBarController {
                 user.email = dictionary["email"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 user.id = DataSnapshot.key
+                let settingsRef = Database.database().reference().child("user-settings").child((user.id)!)
+                settingsRef.observe(.value, with: { (DataSnapshot) in
+                    if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                        
+                        user.settings?.id = user.id
+                        user.settings?.greeting = dictionary["Greeting"] as? String
+                        user.settings?.theirColor = dictionary["TheirColor"] as? String
+                        user.settings?.myColor = dictionary["YourColor"] as? String
+                    }
+                })
                 self.passUsersThrough(user: user)
+
             }
         }, withCancel: nil)
     }
