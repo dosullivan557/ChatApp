@@ -224,6 +224,7 @@ class MessagesController: UITableViewController {
                 //                self.navigationItem.title = dictionary["name"] as? String
                 
                 let user = User()
+                user.id = snapshot.key
                 user.email = dictionary["email"] as? String
                 user.name = dictionary["name"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
