@@ -13,7 +13,6 @@ class ReportController: UIViewController, UITextFieldDelegate {
     
     var user : User? {
         didSet {
-            let id = user?.id
             pageTitle.text = "Report " + (user?.name!)!
         }
     }
@@ -58,7 +57,7 @@ class ReportController: UIViewController, UITextFieldDelegate {
         guard let id = Auth.auth().currentUser?.uid else {
             return
         }
-        let values = ["UserReported": user?.id!, "Reporter": id, "Comment": textField.text] as [String : Any]
+        let values = ["UserReported": user?.id!, "Reporter": id, "Comment": textField.text!] as [String : Any]
 
         let ref = Database.database().reference().child("Reports").child((user?.id)!).child(id)
         ref.updateChildValues(values, withCompletionBlock: { (err, ref) in
