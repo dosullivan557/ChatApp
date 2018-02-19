@@ -81,7 +81,7 @@ class MessagesController: UITableViewController {
         let image = UIImage(named: "newMessage")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
         
-        checkIfUserIsLoggedIn()
+        _ = checkIfUserIsLoggedIn()
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
