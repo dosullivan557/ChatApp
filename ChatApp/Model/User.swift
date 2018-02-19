@@ -13,7 +13,7 @@ class User: NSObject {
     var name: String?
     var profileImageUrl: String?
     var id: String?
-    
+    var settings : Settings?
     /**
      Gets the string of the user including all of its information. Used for development.
      - Returns: The string containing all of the information.
