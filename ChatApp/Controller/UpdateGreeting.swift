@@ -53,5 +53,17 @@ class UpdateGreeting: UIViewController {
     @objc func hideKeyboard() {
         textField.endEditing(true)
     }
+    func setupFields(){
+        textField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        textField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        textField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        button.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 30).isActive = true
+        button.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
 
 }
