@@ -657,6 +657,13 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             if  err != nil {
                 return
             }
+            let settingsRef = Database.database().reference().child("user-settings").child(uid)
+            let settingsValues = ["Greeting" : "Hey :O", "YourColor" : "Green", "TheirColor" : "Pink"]
+            settingsRef.updateChildValues(settingsValues, withCompletionBlock: { (err, ref) in
+                if err != nil {
+                    return
+                }
+            })
             self.messagesController?.fetchUser()
             self.dismiss(animated: true, completion: nil)
         })
