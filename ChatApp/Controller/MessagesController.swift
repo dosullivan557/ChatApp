@@ -260,7 +260,6 @@ class MessagesController: UITableViewController {
         tableView.reloadData()
         
         observeUserMessages()
-        
         let titleView = UIView()
         titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
         
