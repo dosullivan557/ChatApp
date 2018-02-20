@@ -109,7 +109,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
-        imageView.layer.cornerRadius = 50
+        imageView.layer.cornerRadius = 38
         imageView.contentMode = .scaleAspectFit
         imageView.layer.masksToBounds = true
         return imageView
@@ -198,7 +198,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 10).isActive = true
         pictureContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         pictureContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
-        pictureContainer.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        pictureContainer.heightAnchor.constraint(equalToConstant: 125).isActive = true
         pictureContainerHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         pictureContainerHeightAnchor?.isActive = true
     }
@@ -217,8 +217,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         //x, y, width, height
         profileImageUpload.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImageUpload.topAnchor.constraint(equalTo: pictureContainer.topAnchor).isActive = true
-        profileImageUpload.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        profileImageUpload.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        profileImageUpload.widthAnchor.constraint(equalToConstant: 76).isActive = true
+        profileImageUpload.heightAnchor.constraint(equalToConstant: 76).isActive = true
         
     }
     
@@ -229,7 +229,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
         inputsContainerView.topAnchor.constraint(equalTo: pictureContainer.bottomAnchor, constant: 10).isActive = true
-        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 150)
+        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 130)
         inputsContainerViewHeightAnchor?.isActive = true
         
         inputsContainerView.addSubview(nameTextField)
@@ -237,12 +237,14 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailSeperatorView)
         inputsContainerView.addSubview(passwordTextField)
+        
         //x,y, width, height constraints
         nameTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
         nameTextField.topAnchor.constraint(equalTo:inputsContainerView.topAnchor).isActive = true
         nameTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
         nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         nameTextFieldHeightAnchor?.isActive = true
+        
         //x,y, width, height constraints
         nameSeperatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
         nameSeperatorView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive = true
@@ -255,6 +257,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         emailTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
         emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         emailTextFieldHeightAnchor?.isActive = true
+        
         //x,y, width, height constraints
         emailSeperatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
         emailSeperatorView.topAnchor.constraint(equalTo: emailTextField.bottomAnchor).isActive = true
@@ -298,7 +301,15 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     }
     //Hides the keyboard when the return key is pressed.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
+        if nameTextField.isEditing {
+            emailTextField.becomeFirstResponder()
+        }
+        else if emailTextField.isEditing {
+            passwordTextField.becomeFirstResponder()
+        }
+        else {
+            self.view.endEditing(true)
+        }
         return true
     }
     
@@ -315,7 +326,6 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     
     ///Handles a login of a user.
     @objc func handleLogin(){
-        print("handle login func")
         
         guard let email = emailTextField.text,  let password = passwordTextField.text else {
             showAlert(title: "Invalid data", message: "Invalid email or Password")
@@ -365,7 +375,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             self.showAlert(title: "Invalid Email", message: "Please insert a valid email address, and try again!")
             return
         case AuthErrorCode.emailAlreadyInUse:
-            self.showAlert(title: "Email Already In Use", message: "Email address is already in use, please insert a different one, or login!.")
+            self.showAlert(title: "Email Already In Use", message: "Email address is already in use, please insert a different one, or login!")
             return
             
         case AuthErrorCode.weakPassword:
@@ -528,21 +538,15 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
      - Returns: A boolean to use as a flag to get the users response. This determines whether to continue the registering or to stop and allow the user to upload one.
      */
     func showImageUploadAlert() -> Bool{
-        var bool = true
-        let alert = UIAlertController(title: "No profile image", message: "Would you like to upload a profile image, or not?", preferredStyle: UIAlertControllerStyle.alert)
-        
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-            bool = false
-        }))
-        alert.addAction(UIAlertAction(title: "Yes, Let me!", style: UIAlertActionStyle.default, handler: { (x) in
+        let alert = UIAlertController(title: "No profile image", message: "Please upload a profile picture to help people recognise who they are speaking to.", preferredStyle: UIAlertControllerStyle.alert)
+
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
             self.handleSelectProfileImageView()
-            bool = true
         }
         ))
         self.present(alert, animated: true, completion: nil)
-        return bool
+        return true
     }
     
     /**
@@ -553,9 +557,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
      */
     func isValidPassword(testStr: String) -> Bool{
         let length = testStr.count
-        
         return length >= 7
-        
     }
     
     /**
