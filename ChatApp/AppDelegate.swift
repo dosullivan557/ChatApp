@@ -47,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }, withCancel: nil)
         }
     }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
