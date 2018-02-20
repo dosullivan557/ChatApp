@@ -27,7 +27,7 @@ class MyTabBar: UITabBarController {
         
 
         createElements(view: messagesController, title: "Messages", imageName: "Messages")
-        createElements(view: eventController, title: "Events", imageName: "event")
+        createElements(view: eventController, title: "Events", imageName: "CalendarIcon")
         createElements(view: myProfileController, title: "Profile", imageName: "profile")
         
         viewControllers = tabList
