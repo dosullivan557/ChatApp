@@ -25,6 +25,7 @@ class HelpController: UIViewController, UIWebViewDelegate {
 //        self.view.addSubview(webV)
     }
     
+    ///Setup fields.
     func setupFields(){
 
     }
