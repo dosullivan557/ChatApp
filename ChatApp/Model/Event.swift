@@ -22,7 +22,7 @@ class Event: NSObject {
     
     /**
      Gets the string of the event including all of its information. Used for development.
-     - Returns: The string containing all of the information.
+         - Returns: The string containing all of the information.
      */
     func toString() -> String {
         return ("title:\(title!), desc:\(desc!), host:\(host!), invitee:\(invitee!), startTime:\(startTime!), finishTime:\(finishTime!), location: \(location)")
