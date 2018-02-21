@@ -15,11 +15,16 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var containerViewBA: NSLayoutConstraint?
     var sanitiseWords = [String]()
     var messageSend = String()
-    
+    let currentUserSettings = Settings()
+    var myColor = UIColor()
+    var myTextColor = UIColor()
+    var theirColor = UIColor()
+    var theirTextColor = UIColor()
     var users: [User?] = []{
         didSet{
+            getUserSettings()
             let titleView = UITextView()
-
+            
             if users.count == 1 {
                 chatWithUser = users[0]!
                 titleView.text = chatWithUser.name!.components(separatedBy: " ")[0]
@@ -53,6 +58,52 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 
             }
     }
+    func getUserSettings() {
+        let ref = Database.database().reference().child("user-settings").child((Auth.auth().currentUser?.uid)!)
+        ref.observe(.value) { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                self.currentUserSettings.greeting = dictionary["Greeting"] as? String
+                self.currentUserSettings.theirColor = dictionary["TheirColor"] as? String
+                self.currentUserSettings.myColor = dictionary["YourColor"] as? String
+                
+                self.setColors()
+        }
+        }
+    }
+    
+    func setColors(){
+
+        switch currentUserSettings.myColor! {
+        case "Green":
+            myColor = UIColor.green
+            myTextColor = UIColor.black
+        case "Pink" :
+            myColor = UIColor.blue
+            myTextColor = UIColor.white
+        case "Purple" :
+            myColor = UIColor.purple
+            myTextColor = UIColor.white
+        default:
+            myColor = UIColor.orange
+            myTextColor = UIColor.black
+        }
+        
+        switch currentUserSettings.theirColor! {
+        case "Green":
+            theirColor = UIColor.green
+            theirTextColor = UIColor.black
+        case "Pink" :
+            theirColor = UIColor.blue
+            theirTextColor = UIColor.white
+        case "Purple" :
+            theirColor = UIColor.purple
+            theirTextColor = UIColor.white
+        default:
+            theirColor = UIColor.orange
+            theirTextColor = UIColor.black
+        }
+
+    }
    
     var chatWithUser = User()
 
@@ -85,9 +136,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             }
         })
         
-        
-        //        messageSend =
-    }
+            }
     
     override func viewDidLoad(){
         self.hidesBottomBarWhenPushed = true
@@ -569,8 +618,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
         //Outgoing message
         else if message.sendId == Auth.auth().currentUser?.uid {
-            cell.bubbleView.backgroundColor = UIColor.purple
-            cell.textView.textColor = UIColor.white
+            cell.bubbleView.backgroundColor = myColor
+            cell.textView.textColor = myTextColor
+
             cell.bubbleViewLA?.isActive = false
             cell.bubbleViewRA?.isActive = true
             cell.profileImage.isHidden = true
@@ -587,8 +637,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.bubbleViewCA?.isActive = false
 //            cell.removeGestureRecognizer(autoEvent)
 
-            cell.bubbleView.backgroundColor = UIColor.lightGray
-            cell.textView.textColor = UIColor.black
+            cell.bubbleView.backgroundColor = theirColor
+            cell.textView.textColor = theirTextColor
             cell.profileImage.isHidden = false
             cell.setTouchable(bool: false)
             cell.removeGestureRecognizer(autoSendMessageGesture)
