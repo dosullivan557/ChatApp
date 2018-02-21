@@ -98,8 +98,12 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    ///Called when the delete profile button is pressed.
     @objc func deletePressed(){
-        showDeleteAlert(title:"Deleting your account.", message: "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.")    }
+        showDeleteAlert(title:"Deleting your account.", message: "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.")
+        
+    }
+    ///Called when the delete profile is confirmed.
     func handleDelete(){
         Auth.auth().currentUser?.delete(completion: nil)
         let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
@@ -159,12 +163,15 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
 
         show(helpController, sender: self)
     }
+    
+    ///Called when the settings button is pressed.
     @objc func handleShowSettings(){
         let settingsView = SettingsView()
         settingsView.currentUser = self.user!
         settingsView.hidesBottomBarWhenPushed = true
         show(settingsView, sender: self)
     }
+    
     override func viewDidLoad() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "gear"), style: .plain, target: self, action: #selector(handleShowSettings))
