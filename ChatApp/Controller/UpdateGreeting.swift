@@ -30,6 +30,7 @@ class UpdateGreeting: UIViewController {
         return btn
     }()
     
+    ///Called when the save button is pressed. Updates the new data to the database.
     @objc func handleSave() {
         let values = ["Greeting" : textField.text!, "TheirColor" : "Pink", "YourColor" : "Green"]
         if let id = Auth.auth().currentUser?.uid{
@@ -50,9 +51,12 @@ class UpdateGreeting: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
+    ///Hides keyboard.
     @objc func hideKeyboard() {
         textField.endEditing(true)
     }
+    
+    ///Sets up views.
     func setupFields(){
         textField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         textField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
