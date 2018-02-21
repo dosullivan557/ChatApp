@@ -91,6 +91,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         return btn
     }()
     
+    ///Called when the save button is pressed.
     @objc func handleSave() {
         let values = ["Greeting" : settings?.greeting!, "TheirColor" : theirColor.text!, "YourColor" : myColor.text!]
         if let id = Auth.auth().currentUser?.uid{
@@ -99,7 +100,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
             ref.updateChildValues(values)
         }
     }
-    
+    ///Sets up pickers.
     func setupVariables(){
         let pickerView = UIPickerView()
         pickerView.delegate = self
@@ -120,7 +121,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         setupVariables()
         super.viewDidLoad()
     }
-    
+    ///Sets up fields.
     func setupFields() {
         myColor.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
         myColor.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
