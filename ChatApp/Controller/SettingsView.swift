@@ -61,7 +61,7 @@ class SettingsView: UITableViewController {
             show(GV, sender: self)
         }
         else {
-            print("2")
+//            print("2")
             let CP = ColourPickerController()
             CP.settings = currentUser.settings
             show(CP, sender: self)
