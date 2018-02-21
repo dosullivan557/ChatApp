@@ -58,6 +58,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 
             }
     }
+    
+    ///Downloads the settings for that user from the database, and sets them here.
     func getUserSettings() {
         let ref = Database.database().reference().child("user-settings").child((Auth.auth().currentUser?.uid)!)
         ref.observe(.value) { (DataSnapshot) in
@@ -71,6 +73,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
     }
     
+    ///Decides which colours are downloaded, and using them, it sets the colours as UIColours to global variables, and using them, it can set colours to the bubble chat's colours.
     func setColors(){
 
         switch currentUserSettings.myColor! {
@@ -123,25 +126,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }()
     
     let cellId = "cellId"
-    func getMessage() {
-        let ref = Database.database().reference().child("user-settings").child((Auth.auth().currentUser?.uid)!)
-        ref.observe(.value, with: { (DataSnapshot) in
-            if let dictionary = DataSnapshot.value as? [String: AnyObject] {
-                let settings = Settings()
-                settings.id = Auth.auth().currentUser?.uid
-                settings.greeting = dictionary["Greeting"] as? String
-                settings.theirColor = dictionary["TheirColor"] as? String
-                settings.myColor = dictionary["YourColor"] as? String
-                self.messageSend = settings.greeting!
-            }
-        })
-        
-            }
+    
+    
     
     override func viewDidLoad(){
         self.hidesBottomBarWhenPushed = true
         reloadCollectionView()
-        getMessage()
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor(patternImage: UIImage(named:"background")!)
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
@@ -245,6 +235,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
     }
     
+    //Called when the view is dismissed
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         reloadCollectionView()
@@ -528,11 +519,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     @objc func handleAutoEvent(){
-//        print(message.message)
-//        messageIsAboutEvent(message: message)
-//        print(time!)
-//        print(location!)
-//        print(desc!)
         let calendarView = CalendarController()
         calendarView.user = chatWithUser
 
@@ -580,6 +566,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         self.show(calendarView, sender: self)
     }
     var eventMessages = [Message]()
+    
+    
     //Setup each section in the collection view.
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
@@ -652,6 +640,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         return cell
     }
 
+    /**
+     Reads in a message, and decides whether it is about an event.
+     - Parameters:
+         - message: The message to test.
+     - Returns: Returns a true or false value to decide whether the message is about an event or not.
+     */
     func messageIsAboutEvent(message: Message) -> Bool {
         let words = message.message!.components(separatedBy: " ")
         var numberOfEventWords = Int()
@@ -707,6 +701,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
     }
     
+    ///Called when the the no messages button is pressed.
     @objc func handleAutoSend() {
 
         self.inputTextField.text = messageSend
