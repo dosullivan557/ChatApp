@@ -183,6 +183,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         setupPictureContainer()
         setupResetPasswordButton()
     }
+    ///Sets up password reset button.
     func setupResetPasswordButton(){
         resetButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         resetButton.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 35).isActive = true
@@ -407,6 +408,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         clearProfilePictureImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         clearProfilePictureImage.isHidden = true
     }
+    
+    
     ///Called when the segmented display is changed. This changes certain details in the page, such as hiding the name field for the register tab.
     @objc func handleLoginRegisterChange(){
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
