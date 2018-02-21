@@ -10,4 +10,11 @@ import UIKit
 import Firebase
 
 class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
+    
+    var settings : Settings? {
+        didSet {
+            myColor.text = settings?.myColor!
+            theirColor.text = settings?.theirColor!
+        }
+    }
 }
