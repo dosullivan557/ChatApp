@@ -78,9 +78,9 @@ class EventsController: UITableViewController {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
-     
+        - title: The title to set for the alert box.
+        - message: The message to set for the alert box.
+         - event: The event to delete.
      */
     
     func showDeleteAlertSure(title: String, message: String, index: IndexPath, event: Event) {
@@ -94,6 +94,12 @@ class EventsController: UITableViewController {
         }))
         self.present(alert, animated: true, completion: nil)
     }
+    
+    /**
+     Called when the user decides to send appologies for declining an event.
+     - Parameters:
+         - event: The event to send the appology for.
+     */
     func sendAppologies(event: Event){
         
         let id = NSUUID().uuidString
@@ -233,6 +239,8 @@ class EventsController: UITableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
+    ///Gets the current users information.
     func getCurrentUser(){
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
             if let dictionary = DataSnapshot.value as? [String: AnyObject]{
@@ -337,6 +345,8 @@ class EventsController: UITableViewController {
     
         return false
     }
+    
+    
     /**
      Gets all the users events.
      */
