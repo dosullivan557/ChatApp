@@ -442,6 +442,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         UIView.animate(withDuration: keyboardDuration!) {
             self.view.layoutIfNeeded()
         }
+        reloadCollectionView()
     }
     
     /**
