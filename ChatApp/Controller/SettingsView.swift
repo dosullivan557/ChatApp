@@ -10,9 +10,11 @@ import UIKit
 import Firebase
 
 class SettingsView: UITableViewController {
-    //constant variables.
+    ///Array for the settings.
     let settings = ["Greeting Message", "Colours"]
+    ///The reuse cell identifier for the table view.
     let cellId = "cellId"
+    ///The current user of the system.
     var currentUser = User()
     
     
