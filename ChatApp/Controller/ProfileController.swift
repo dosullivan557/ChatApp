@@ -8,6 +8,8 @@
 import UIKit
 import Firebase
 class ProfileController : UIViewController {
+    // MARK: - Constants
+    
     ///The profile image for the user.
     let profileImage : UIImageView = {
         let image = UIImageView()
@@ -18,17 +20,7 @@ class ProfileController : UIViewController {
         image.image = UIImage(named: "defaultPic")
         return image
     }()
-    ///The user for who this instance of profile controller is for.
-    var user : User?{
-        didSet{
-            if let cu = user {
-                print("huhuhuh")
-                print(cu.name!)
-                nameLabel.text = cu.name!
-                //                setupWithUser(user: cu)
-            }
-        }
-    }
+    
     ///Label for the users name.
     let nameLabel : UITextView = {
         let name = UITextView()
@@ -51,12 +43,21 @@ class ProfileController : UIViewController {
         return button
     }()
     
-    ///Opens the report controller.
-    @objc func handleReport(){
-        let reportController = ReportController()
-        reportController.user = user
-        show(reportController, sender: self)
+    // MARK: - Variables
+    
+    ///The user for who this instance of profile controller is for.
+    var user : User?{
+        didSet{
+            if let cu = user {
+                print("huhuhuh")
+                print(cu.name!)
+                nameLabel.text = cu.name!
+                //                setupWithUser(user: cu)
+            }
+        }
     }
+    
+    //MARK: - View initialisation
     override func viewDidLoad() {
         view.backgroundColor = UIColor.white
         view.addSubview(profileImage)
@@ -65,6 +66,8 @@ class ProfileController : UIViewController {
         setupWithUser(user: user!)
         setupFields()
     }
+    
+    //MARK: - Setup
     ///Sets up the field constraints.
     func setupFields(){
         profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -93,4 +96,14 @@ class ProfileController : UIViewController {
         }
     }
     
+    
+    //MARK: - Interaction
+    ///Opens the report controller.
+    @objc func handleReport(){
+        let reportController = ReportController()
+        reportController.user = user
+        show(reportController, sender: self)
+    }
+    
+
 }
