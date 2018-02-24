@@ -10,6 +10,15 @@ import UIKit
 import Firebase
 
 class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout{
+    // MARK: - Constants
+    
+    ///The settings of the current user.
+    let currentUserSettings = Settings()
+    ///Cell reuse identifier for collection view.
+    let cellId = "cellId"
+    
+    // MARK: - Variables
+    
     ///The list of messages for this chat.
     var messages = [Message]()
     ///The container views bottom anchor, made global so I can change it. This contains the text field for the user to type in as well as the send button.
@@ -18,8 +27,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var sanitiseWords = [String]()
     ///Text is added here for smart message features, such as the "Say Hi" button.
     var messageSend = String()
-    ///The settings of the current user.
-    let currentUserSettings = Settings()
+
     ///The colour that the user has chosen to use as the chat bubble colour for the currentUser.
     var myColor = UIColor()
     ///The text colour goes with the colour that the user has chosen for the currentUsers bubble colour.
@@ -50,12 +58,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             }
             else {
                 titleView.text = "Group"
-                //                titleView.isEditable = false
-                //                titleView.isUserInteractionEnabled = true
-                //                titleView.backgroundColor? = UIColor.clear
-                //                let tap = UITapGestureRecognizer(target: self, action: #selector(showGroupProfile))
-                //                titleView.addGestureRecognizer(tap)
-                //                observeGroupMessages()
+                //titleView.isEditable = false
+                //titleView.isUserInteractionEnabled = true
+                //titleView.backgroundColor? = UIColor.clear
+                //let tap = UITapGestureRecognizer(target: self, action: #selector(showGroupProfile))
+                //titleView.addGestureRecognizer(tap)
+                //observeGroupMessages()
             }
             
             
@@ -67,55 +75,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             
         }
     }
+    ///Time which is pulled from the message.
+    var time: String?
+    ///Location which is pulled from the message.
+    var location: String?
+    ///Description which is pulled from the message.
+    var desc: String?
     
-    ///Downloads the settings for that user from the database, and sets them here.
-    func getUserSettings() {
-        let ref = Database.database().reference().child("user-settings").child((Auth.auth().currentUser?.uid)!)
-        ref.observe(.value) { (DataSnapshot) in
-            if let dictionary = DataSnapshot.value as? [String: AnyObject] {
-                self.currentUserSettings.greeting = dictionary["Greeting"] as? String
-                self.currentUserSettings.theirColor = dictionary["TheirColor"] as? String
-                self.currentUserSettings.myColor = dictionary["YourColor"] as? String
-                
-                self.setColors()
-            }
-        }
-    }
-    
-    ///Decides which colours are downloaded, and using them, it sets the colours as UIColours to global variables, and using them, it can set colours to the bubble chat's colours.
-    func setColors(){
-        
-        switch currentUserSettings.myColor! {
-        case "Green":
-            myColor = UIColor.green
-            myTextColor = UIColor.black
-        case "Pink" :
-            myColor = UIColor.blue
-            myTextColor = UIColor.white
-        case "Purple" :
-            myColor = UIColor.purple
-            myTextColor = UIColor.white
-        default:
-            myColor = UIColor.orange
-            myTextColor = UIColor.black
-        }
-        
-        switch currentUserSettings.theirColor! {
-        case "Green":
-            theirColor = UIColor.green
-            theirTextColor = UIColor.black
-        case "Pink" :
-            theirColor = UIColor.blue
-            theirTextColor = UIColor.white
-        case "Purple" :
-            theirColor = UIColor.purple
-            theirTextColor = UIColor.white
-        default:
-            theirColor = UIColor.orange
-            theirTextColor = UIColor.black
-        }
-        
-    }
     ///The user that the current user is chatting to.
     var chatWithUser = User()
     
@@ -129,17 +95,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }()
     
     
-//    lazy var calenderButton: UIImageView = {
-//        let imageView = UIImageView()
-//
-//        return imageView
-//    }()
+   
+    var eventMessages = [Message]()
     
-    ///Cell reuse identifier for collection view.
-    let cellId = "cellId"
-    
-    
-    
+    // MARK: - View initialisation
+
     override func viewDidLoad(){
         self.hidesBottomBarWhenPushed = true
         reloadCollectionView()
@@ -161,91 +121,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             }
         }
     }
-    
-    //    @objc func showGroupProfile(){
-    //        print("123")
-    //    }
-    
-    /**
-     This function sets up the the words and adds them to a list of words.
-     */
-    func setupSanitiseWords() {
-        let file = Bundle.main.path(forResource: "badWords", ofType: "txt")
-        do {
-            var readString = try String(contentsOfFile: file!, encoding: String.Encoding.utf8)
-            sanitiseWords = readString.components(separatedBy: "\r\n")
-        } catch let error as NSError {
-            print("error   \(error)")
-            return
-        }
-    }
-    ///Shows the users profile by tapping the users name.
-    @objc func showUserProfile(){
-        let profileController = ProfileController()
-        profileController.user = chatWithUser
-        self.show(profileController, sender: self)
-    }
-    /**
-     This function sanitises a message. This function is called when the send button is pressed. It finds words in the message which could be a bad word, and replaces the word with characyers in the middle of the string with * characters.
-     - Parameters:
-         - Message: The message to sanitise.
-     - Returns: Returns a sanitised version of the message.
-     */
-    func sanitiseMessage(Message: String) -> String{
-        var sanitisedMessage = Message
-        var words = Message.components(separatedBy: " ")
-        for i in 0...(sanitiseWords.count-1) {
-            
-            for j in 0...(words.count - 1) {
-                if sanitiseWords[i].caseInsensitiveCompare(words[j]) == ComparisonResult.orderedSame {
-                    if(words[j] != ""){
-                        var badWord = words[j]
-                        var goodWord = String(describing: badWord.characters.first!)
-                        for k in 1...(words[j].characters.count - 1) {
-                            goodWord = goodWord + "*"
-                        }
-                        words[j] = goodWord + String(describing: badWord.characters.last!)
-                        
-                    }
-                }
-            }
-        }
-        sanitisedMessage = words.joined(separator: " ")
-        return sanitisedMessage
-    }
-    
-    ///Adds listener to the keyboards to show when it should hide and show.
-    func setupKeyboard(){
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    /**
-     Defines how to show the keyboard.
-     - Parameters:
-         - notification: Used to get the keyboard size so that the text field and send button will appear above the keyboard when it shows.
-     */
-    @objc func handleKeyboardWillShow(notification: Notification){
-        let keyboardFrame = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? CGRect
-        containerViewBA?.constant = -((keyboardFrame?.height)!)
-        let keyboardDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
-        UIView.animate(withDuration: keyboardDuration!) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    /**
-     Defines how to hide the keyboard.
-     - Parameters:
-         - notification: Used to get the keyboard size so that the text field and send button will appear at the bottom of the screen when the keyboard hides.
-     */
-    @objc func handleKeyboardWillHide(notification: Notification){
-        containerViewBA?.constant = 0
-        let keyboardDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
-        UIView.animate(withDuration: keyboardDuration!) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
     //Called when the view is dismissed
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -253,95 +128,15 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         NotificationCenter.default.removeObserver(self)
     }
     
+    //MARK: - Setup
+
     /**
-     When the plus button in the corner of the chatlog controller is pressed, then the calendarcontroller view will show, which is where the user can create an event.
+     Estimates the size of the bubble which will be needed for the message.
+     - Parameters:
+         - message: The message to use to estimate the size of the bubble container for that message.
      */
-    @objc func showCalendar(){
-        let calendarView = CalendarController()
-        calendarView.user = chatWithUser
-        self.show(calendarView, sender: self)
-    }
-    
-    ///Observes the messages for the chat with this particular user.
-    func observeMessages(){
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
-        
-        let ref = Database.database().reference().child("user-messages").child(uid).child((self.chatWithUser.id)!)
-        ref.observe(.childAdded, with: { (DataSnapshot) in
-            let messageId = DataSnapshot.key
-            let messagesRef = Database.database().reference().child("messages").child(messageId)
-            messagesRef.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-                guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
-                    return
-                }
-                let message = Message()
-                message.message = dictionary["text"] as? String
-                message.sendId = dictionary["SendId"] as? String
-                message.receiveId = dictionary["RecieveId"] as? String
-                message.timestamp = dictionary["TimeStamp"] as? NSNumber
-                message.decrypt(key: DataSnapshot.key)
-                self.messages.append(message)
-                self.messages.sort { (m1, m2) -> Bool in
-                    //                    print((Int)(m1.timestamp!))
-                    return m1.timestamp!.intValue < m2.timestamp!.intValue
-                }
-                self.reloadCollectionView()
-                
-            }, withCancel: nil)
-        })
-        
-    }
-    
-    //    func observeGroupMessages() {
-    //        guard let uid = Auth.auth().currentUser?.uid else {
-    //            return
-    //        }
-    //
-    //        let ref = Database.database().reference().child("Groups").child(uid).childByAutoId()
-    //        ref.observe(.childAdded, with: { (DataSnapshot) in
-    //            let messageId = DataSnapshot.key
-    //            let messagesRef = Database.database().reference().child("messages").child(messageId)
-    //            messagesRef.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-    //                guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
-    //                    return
-    //                }
-    //                let message = Message()
-    //                message.message = dictionary["text"] as? String
-    //                message.sendId = dictionary["SendId"] as? String
-    //                message.receiveId = dictionary["RecieveId"] as? String
-    //                message.timestamp = dictionary["TimeStamp"] as? NSNumber
-    //
-    //                self.messages.append(message)
-    //
-    //                DispatchQueue.main.async(execute: {
-    //                    self.collectionView?.reloadData()
-    //                })
-    //
-    //            }, withCancel: nil)
-    //        })
-    //    }
-    
-    
-    
-    ///Reloads the collectionView
-    func reloadCollectionView(){
-        
-        DispatchQueue.main.async(execute: {
-            self.hidesBottomBarWhenPushed = true
-            self.collectionView?.reloadData()
-        })
-    }
-    
-    ///Checks which send should be called.
-    @objc func handleCorrectSend() {
-        if users.count == 1 {
-            handleSend()
-        }
-        else {
-            handleGroupSend()
-        }
+    func estimatedBubble(message: String) -> CGRect {
+        return NSString(string: message).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
     ///Defines the textfield and submit button constraints.
@@ -391,23 +186,45 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         seperatorLine.heightAnchor.constraint(equalToConstant:0.5).isActive = true
         seperatorLine.widthAnchor.constraint(equalTo:containerView.widthAnchor).isActive = true
     }
-    //Defines the ssize of each section.
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var height: CGFloat = 80
-        if let text = messages[indexPath.item].message{
-            height = estimatedBubble(message: text).height + 10
+    
+    ///This function sets up the the words and adds them to a list of words
+    func setupSanitiseWords() {
+        let file = Bundle.main.path(forResource: "badWords", ofType: "txt")
+        do {
+            var readString = try String(contentsOfFile: file!, encoding: String.Encoding.utf8)
+            sanitiseWords = readString.components(separatedBy: "\r\n")
+        } catch let error as NSError {
+            print("error   \(error)")
+            return
         }
-        
-        return CGSize(width: view.frame.width, height: height)
     }
-    /**
-     Estimates the size of the bubble which will be needed for the message.
-     - Parameters:
-         - message: The message to use to estimate the size of the bubble container for that message.
-     */
-    func estimatedBubble(message: String) -> CGRect {
-        return NSString(string: message).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
+    
+    //MARK: - Firebase
+    
+    ///Downloads the settings for that user from the database, and sets them here.
+    func getUserSettings() {
+        let ref = Database.database().reference().child("user-settings").child((Auth.auth().currentUser?.uid)!)
+        ref.observe(.value) { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                self.currentUserSettings.greeting = dictionary["Greeting"] as? String
+                self.currentUserSettings.theirColor = dictionary["TheirColor"] as? String
+                self.currentUserSettings.myColor = dictionary["YourColor"] as? String
+                
+                self.setColors()
+            }
+        }
     }
+    ///Checks which send should be called.
+    @objc func handleCorrectSend() {
+        if users.count == 1 {
+            handleSend()
+        }
+        else {
+            handleGroupSend()
+        }
+    }
+    
+    
     
     
     ///This method is called when the send button is pressed.
@@ -500,11 +317,318 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
         self.inputTextField.text = ""
     }
+    
+    //MARK: - Settings
+    
+    ///Decides which colours are downloaded, and using them, it sets the colours as UIColours to global variables, and using them, it can set colours to the bubble chat's colours.
+    func setColors(){
+        
+        switch currentUserSettings.myColor! {
+        case "Green":
+            myColor = UIColor.green
+            myTextColor = UIColor.black
+        case "Pink" :
+            myColor = UIColor.blue
+            myTextColor = UIColor.white
+        case "Purple" :
+            myColor = UIColor.purple
+            myTextColor = UIColor.white
+        default:
+            myColor = UIColor.orange
+            myTextColor = UIColor.black
+        }
+        
+        switch currentUserSettings.theirColor! {
+        case "Green":
+            theirColor = UIColor.green
+            theirTextColor = UIColor.black
+        case "Pink" :
+            theirColor = UIColor.blue
+            theirTextColor = UIColor.white
+        case "Purple" :
+            theirColor = UIColor.purple
+            theirTextColor = UIColor.white
+        default:
+            theirColor = UIColor.orange
+            theirTextColor = UIColor.black
+        }
+        
+    }
+   
+    
+    //    @objc func showGroupProfile(){
+    //        print("123")
+    //    }
+    
+    
+    //MARK: - Interaction
+
+    ///Shows the users profile by tapping the users name.
+    @objc func showUserProfile(){
+        let profileController = ProfileController()
+        profileController.user = chatWithUser
+        self.show(profileController, sender: self)
+    }
+    
+    /**
+     When the plus button in the corner of the chatlog controller is pressed, then the calendarcontroller view will show, which is where the user can create an event.
+     */
+    @objc func showCalendar(){
+        let calendarView = CalendarController()
+        calendarView.user = chatWithUser
+        self.show(calendarView, sender: self)
+    }
+    
+    
+    //MARK: - Sanitise
+    
+    /**
+     This function sanitises a message. This function is called when the send button is pressed. It finds words in the message which could be a bad word, and replaces the word with characyers in the middle of the string with * characters.
+     - Parameters:
+         - Message: The message to sanitise.
+     - Returns: Returns a sanitised version of the message.
+     */
+    func sanitiseMessage(Message: String) -> String{
+        var sanitisedMessage = Message
+        var words = Message.components(separatedBy: " ")
+        for i in 0...(sanitiseWords.count-1) {
+            
+            for j in 0...(words.count - 1) {
+                if sanitiseWords[i].caseInsensitiveCompare(words[j]) == ComparisonResult.orderedSame {
+                    if(words[j] != ""){
+                        var badWord = words[j]
+                        var goodWord = String(describing: badWord.characters.first!)
+                        for k in 1...(words[j].characters.count - 1) {
+                            goodWord = goodWord + "*"
+                        }
+                        words[j] = goodWord + String(describing: badWord.characters.last!)
+                        
+                    }
+                }
+            }
+        }
+        sanitisedMessage = words.joined(separator: " ")
+        return sanitisedMessage
+    }
+    
+    //MARK: - Keyboard
+
+    ///Hide keyboard when screen is touched
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleSend()
+        self.view.endEditing(true)
+        return true
+    }
+    
+    ///Adds listener to the keyboards to show when it should hide and show.
+    func setupKeyboard(){
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    /**
+     Defines how to show the keyboard.
+     - Parameters:
+         - notification: Used to get the keyboard size so that the text field and send button will appear above the keyboard when it shows.
+     */
+    @objc func handleKeyboardWillShow(notification: Notification){
+        let keyboardFrame = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? CGRect
+        containerViewBA?.constant = -((keyboardFrame?.height)!)
+        let keyboardDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+        UIView.animate(withDuration: keyboardDuration!) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    /**
+     Defines how to hide the keyboard.
+     - Parameters:
+         - notification: Used to get the keyboard size so that the text field and send button will appear at the bottom of the screen when the keyboard hides.
+     */
+    @objc func handleKeyboardWillHide(notification: Notification){
+        containerViewBA?.constant = 0
+        let keyboardDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+        UIView.animate(withDuration: keyboardDuration!) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+   
+    
+    //MARK: - Firebase
+    
+    ///Observes the messages for the chat with this particular user.
+    func observeMessages(){
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let ref = Database.database().reference().child("user-messages").child(uid).child((self.chatWithUser.id)!)
+        ref.observe(.childAdded, with: { (DataSnapshot) in
+            let messageId = DataSnapshot.key
+            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            messagesRef.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+                guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
+                    return
+                }
+                let message = Message()
+                message.message = dictionary["text"] as? String
+                message.sendId = dictionary["SendId"] as? String
+                message.receiveId = dictionary["RecieveId"] as? String
+                message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                message.decrypt(key: DataSnapshot.key)
+                self.messages.append(message)
+                self.messages.sort { (m1, m2) -> Bool in
+                    //                    print((Int)(m1.timestamp!))
+                    return m1.timestamp!.intValue < m2.timestamp!.intValue
+                }
+                self.reloadCollectionView()
+                
+            }, withCancel: nil)
+        })
+        
+    }
+    
+    //    func observeGroupMessages() {
+    //        guard let uid = Auth.auth().currentUser?.uid else {
+    //            return
+    //        }
+    //
+    //        let ref = Database.database().reference().child("Groups").child(uid).childByAutoId()
+    //        ref.observe(.childAdded, with: { (DataSnapshot) in
+    //            let messageId = DataSnapshot.key
+    //            let messagesRef = Database.database().reference().child("messages").child(messageId)
+    //            messagesRef.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+    //                guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
+    //                    return
+    //                }
+    //                let message = Message()
+    //                message.message = dictionary["text"] as? String
+    //                message.sendId = dictionary["SendId"] as? String
+    //                message.receiveId = dictionary["RecieveId"] as? String
+    //                message.timestamp = dictionary["TimeStamp"] as? NSNumber
+    //
+    //                self.messages.append(message)
+    //
+    //                DispatchQueue.main.async(execute: {
+    //                    self.collectionView?.reloadData()
+    //                })
+    //
+    //            }, withCancel: nil)
+    //        })
+    //    }
+    
+    
+    //MARK: - CollectionView
+    
+    
+    //Setup each section in the collection view.
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
+        let message = messages[indexPath.item]
+        cell.textView.text = message.message
+        cell.bubbleWidth?.constant = estimatedBubble(message: message.message!).width + 25
+        let autoSendMessageGesture = UITapGestureRecognizer(target: self, action: #selector(handleAutoSend))
+        //        let autoEvent = UITapGestureRecognizer(target: self, action: #selector(handleAutoEvent(sender:)))
+        //About event
+        if messageIsAboutEvent(message: message) {
+            eventMessages.append(message)
+            cell.bubbleViewLA?.isActive = false
+            cell.bubbleViewRA?.isActive = false
+            cell.bubbleViewCA?.isActive = true
+            cell.textView.textColor = UIColor.black
+            cell.bubbleView.backgroundColor = UIColor.niceBlue
+            cell.profileImage.isHidden = true
+            cell.isUserInteractionEnabled = true
+            //cell.addGestureRecognizer(autoEvent)
+            
+            cell.removeGestureRecognizer(autoSendMessageGesture)
+            
+        }
+            //Send message
+        else if (message.sendId! == message.receiveId!){
+            cell.bubbleViewLA?.isActive = false
+            cell.bubbleViewRA?.isActive = false
+            cell.bubbleViewCA?.isActive = true
+            cell.textView.textColor = UIColor.black
+            cell.bubbleView.backgroundColor = UIColor.niceOrange
+            cell.profileImage.isHidden = true
+            cell.addGestureRecognizer(autoSendMessageGesture)
+            //cell.removeGestureRecognizer(autoEvent)
+            
+        }
+            //Outgoing message
+        else if message.sendId == Auth.auth().currentUser?.uid {
+            cell.bubbleView.backgroundColor = myColor
+            cell.textView.textColor = myTextColor
+            
+            cell.bubbleViewLA?.isActive = false
+            cell.bubbleViewRA?.isActive = true
+            cell.profileImage.isHidden = true
+            cell.bubbleViewCA?.isActive = false
+            cell.removeGestureRecognizer(autoSendMessageGesture)
+            cell.isUserInteractionEnabled = false
+            //cell.removeGestureRecognizer(autoEvent)
+            
+        }
+            //Incoming message
+        else if message.receiveId != message.sendId{
+            cell.bubbleViewRA?.isActive = false
+            cell.bubbleViewLA?.isActive = true
+            cell.bubbleViewCA?.isActive = false
+            //cell.removeGestureRecognizer(autoEvent)
+            
+            cell.bubbleView.backgroundColor = theirColor
+            cell.textView.textColor = theirTextColor
+            cell.profileImage.isHidden = false
+            cell.setTouchable(bool: false)
+            cell.removeGestureRecognizer(autoSendMessageGesture)
+            cell.isUserInteractionEnabled = false
+            
+            //load other person's image
+            if let profileImageUrl = self.chatWithUser.profileImageUrl {
+                cell.profileImage.loadImageUsingCache(urlString: profileImageUrl)
+            }
+        }
+        return cell
+    }
+    
+    ///Reloads the collectionView
+    func reloadCollectionView(){
+        DispatchQueue.main.async(execute: {
+            self.hidesBottomBarWhenPushed = true
+            self.collectionView?.reloadData()
+        })
+    }
+    
+   
+    
+   
+    //Defines the ssize of each section.
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        var height: CGFloat = 80
+        if let text = messages[indexPath.item].message{
+            height = estimatedBubble(message: text).height + 10
+        }
+        
+        return CGSize(width: view.frame.width, height: height)
+    }
+    
     //Defines how many sections that should be in the collection view.
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return messages.count
     }
+  
+
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+        _ = messageIsAboutEvent(message: message)
+        handleAutoEvent()
+    }
+    
+    //MARK: - Smart Features
     ///Called when there is no messages in a certain chat.
     func noMessages(){
         let message = Message()
@@ -515,20 +639,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         messages.append(message)
         reloadCollectionView()
     }
-    ///Time which is pulled from the message.
-    var time: String?
-    ///Location which is pulled from the message.
-    var location: String?
-    ///Description which is pulled from the message.
-    var desc: String?
-    
-    
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let message = messages[indexPath.row]
-        _ = messageIsAboutEvent(message: message)
-        handleAutoEvent()
-    }
-    
     ///Called when a event message is pressed. Fills in information about the event in the calendarcontroller.
     @objc func handleAutoEvent(){
         let calendarView = CalendarController()
@@ -578,81 +688,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         self.show(calendarView, sender: self)
     }
     
-    /// List of messages about events.
-    var eventMessages = [Message]()
+
     
-    
-    //Setup each section in the collection view.
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
-        let message = messages[indexPath.item]
-        cell.textView.text = message.message
-        cell.bubbleWidth?.constant = estimatedBubble(message: message.message!).width + 25
-        let autoSendMessageGesture = UITapGestureRecognizer(target: self, action: #selector(handleAutoSend))
-        //        let autoEvent = UITapGestureRecognizer(target: self, action: #selector(handleAutoEvent(sender:)))
-        //About event
-        if messageIsAboutEvent(message: message) {
-            eventMessages.append(message)
-            cell.bubbleViewLA?.isActive = false
-            cell.bubbleViewRA?.isActive = false
-            cell.bubbleViewCA?.isActive = true
-            cell.textView.textColor = UIColor.black
-            cell.bubbleView.backgroundColor = UIColor.niceBlue
-            cell.profileImage.isHidden = true
-            cell.isUserInteractionEnabled = true
-            //            cell.addGestureRecognizer(autoEvent)
-            
-            cell.removeGestureRecognizer(autoSendMessageGesture)
-            
-        }
-            //Send message
-        else if (message.sendId! == message.receiveId!){
-            cell.bubbleViewLA?.isActive = false
-            cell.bubbleViewRA?.isActive = false
-            cell.bubbleViewCA?.isActive = true
-            cell.textView.textColor = UIColor.black
-            cell.bubbleView.backgroundColor = UIColor.niceOrange
-            cell.profileImage.isHidden = true
-            cell.addGestureRecognizer(autoSendMessageGesture)
-            //            cell.removeGestureRecognizer(autoEvent)
-            
-        }
-            //Outgoing message
-        else if message.sendId == Auth.auth().currentUser?.uid {
-            cell.bubbleView.backgroundColor = myColor
-            cell.textView.textColor = myTextColor
-            
-            cell.bubbleViewLA?.isActive = false
-            cell.bubbleViewRA?.isActive = true
-            cell.profileImage.isHidden = true
-            cell.bubbleViewCA?.isActive = false
-            cell.removeGestureRecognizer(autoSendMessageGesture)
-            cell.isUserInteractionEnabled = false
-            //            cell.removeGestureRecognizer(autoEvent)
-            
-        }
-            //Incoming message
-        else if message.receiveId != message.sendId{
-            cell.bubbleViewRA?.isActive = false
-            cell.bubbleViewLA?.isActive = true
-            cell.bubbleViewCA?.isActive = false
-            //            cell.removeGestureRecognizer(autoEvent)
-            
-            cell.bubbleView.backgroundColor = theirColor
-            cell.textView.textColor = theirTextColor
-            cell.profileImage.isHidden = false
-            cell.setTouchable(bool: false)
-            cell.removeGestureRecognizer(autoSendMessageGesture)
-            cell.isUserInteractionEnabled = false
-            
-            //load other person's image
-            if let profileImageUrl = self.chatWithUser.profileImageUrl {
-                cell.profileImage.loadImageUsingCache(urlString: profileImageUrl)
-            }
-        }
-        return cell
-    }
+ 
     
     /**
      Reads in a message, and decides whether it is about an event.
@@ -726,13 +764,4 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         reloadCollectionView()
         
     }
-    
-    ///Hide keyboard when screen is touched
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        handleSend()
-        self.view.endEditing(true)
-        return true
-    }
-    
-    
 }
