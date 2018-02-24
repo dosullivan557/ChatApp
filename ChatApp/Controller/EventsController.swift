@@ -37,10 +37,15 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 class EventsController: UITableViewController {
     
     // MARK: - Properties
-    let cellEId = "cellEId"
     
+    
+    ///The reuse cell identifier for the table view.
+    let cellEId = "cellEId"
+    ///List of all the events.
     var events = [Event]()
+    ///Global timer to make ensure that the TableView is only refreshed once to prevent flickering when there are loads of cells to load.
     var timer: Timer?
+    ///The current user.
     var currentUser = User() {
         didSet {
             setupNavBarWithUser(currentUser)
@@ -61,7 +66,6 @@ class EventsController: UITableViewController {
     
     
     //Defines the current user of the system, and passes it to another method to setup the navigation bar
-    
     override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
         let deleteEvent = events[editActionsForRowAt.row]
         let decline = UITableViewRowAction(style: .normal, title: "Decline") { action, index in
@@ -83,7 +87,7 @@ class EventsController: UITableViewController {
     /**
      This is called when the decline event button is pressed. It removes the event from the cell, and then updates the database to say that it was declined.
      - Parameters:
-     - index: The index of the table view to remove.
+         - index: The index of the table view to remove.
      
      */
     func declineFunc(index: IndexPath, event: Event){
@@ -103,9 +107,9 @@ class EventsController: UITableViewController {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
-     - event: The event to delete.
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+         - event: The event to delete.
      */
     
     func showDeleteAlertSure(title: String, message: String, index: IndexPath, event: Event) {
@@ -123,7 +127,7 @@ class EventsController: UITableViewController {
     /**
      Called when the user decides to send appologies for declining an event.
      - Parameters:
-     - event: The event to send the appology for.
+         - event: The event to send the appology for.
      */
     func sendAppologies(event: Event){
         
@@ -162,7 +166,7 @@ class EventsController: UITableViewController {
     /**
      This is called when the accept event button is pressed. It gets access to the calendar, and then adds it in. Once it has been accepted, it removes it from the table view.
      - Parameters:
-     - index: The index of the table view to add.
+         - index: The index of the table view to add.
      */
     func acceptFunc(index: IndexPath){
         let currentEvent = events[index.row]
@@ -208,8 +212,8 @@ class EventsController: UITableViewController {
     /**
      Update the information in the database to say whether it has been accepted or declined.
      - Parameters:
-     - IndexPath: The index of the tableCell which is to be accepted.
-     - bool: The value to update the accepted value of that event to.
+         - IndexPath: The index of the tableCell which is to be accepted.
+         - bool: The value to update the accepted value of that event to.
      */
     func updateDatabase(IndexPath: IndexPath, bool: Bool){
         let event = events[IndexPath.row]
@@ -220,10 +224,11 @@ class EventsController: UITableViewController {
         
         ref.updateChildValues(values)
     }
+    
     /**
      Uploads any errors to the database for examination.
      - Parameters:
-     - error: The error code which is called.
+         - error: The error code which is called.
      */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
@@ -235,8 +240,8 @@ class EventsController: UITableViewController {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
      
      */
     
@@ -251,7 +256,7 @@ class EventsController: UITableViewController {
     /**
      Gets passed the current user of the system, and then sets up the navigation bar with that users information.
      - Parameters:
-     - user: The current user.
+         - user: The current user.
      */
     func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
@@ -331,7 +336,7 @@ class EventsController: UITableViewController {
     /**
      Checks whether there is a conflicting event in the users calendar.
      - Parameters:
-     - newEvent: The event to check from.
+         - newEvent: The event to check from.
      - Returns: a boolean value to see if there is any conflicts.
      */
     func eventConflict(newEvent: Event) -> Bool {
@@ -373,9 +378,7 @@ class EventsController: UITableViewController {
     }
     
     
-    /**
-     Gets all the users events.
-     */
+    ///Gets all the users events.
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
