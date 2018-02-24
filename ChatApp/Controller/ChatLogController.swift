@@ -40,6 +40,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var users: [User?] = []{
         didSet{
             getUserSettings()
+//            print(currentUserSettings.toString())
             let titleView = UITextView()
             
             if users.count == 1 {
@@ -51,6 +52,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 let tap = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
                 
                 titleView.addGestureRecognizer(tap)
+                
                 observeMessages()
                 
                 
@@ -210,6 +212,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 self.currentUserSettings.theirColor = dictionary["TheirColor"] as? String
                 self.currentUserSettings.myColor = dictionary["YourColor"] as? String
                 
+                print("My Colour: \(self.currentUserSettings.myColor)")
+                print("Their Colour: \(self.currentUserSettings.theirColor)")
+                print("Greeting: \(self.currentUserSettings.greeting)")
                 self.setColors()
             }
         }
@@ -487,6 +492,26 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         })
         
     }
+    func observeUserSettings() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+            
+        }
+        let ref = Database.database().reference().child("user-settings").child(uid)
+        ref.observe(.value) { (DataSnapshot) in
+            guard let dictionary = DataSnapshot.value as? [String: AnyObject] else {
+                return
+            }
+            let settings = Settings()
+            settings.greeting = dictionary["Greeting"] as? String
+            settings.myColor = dictionary["YourColor"] as? String
+            settings.theirColor = dictionary["TheirColor"] as? String
+//            self.currentUserSettings = settings
+ 
+        }
+        
+        
+    }
     
     //    func observeGroupMessages() {
     //        guard let uid = Auth.auth().currentUser?.uid else {
@@ -755,11 +780,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     ///Called when the the no messages button is pressed.
     @objc func handleAutoSend() {
-        
-        self.inputTextField.text = messageSend
+        print(currentUserSettings.greeting!)
+
+        self.inputTextField.text = currentUserSettings.greeting!
         print(messages[0].message!)
         messages.removeAll()
-        
         self.handleSend()
         reloadCollectionView()
         
