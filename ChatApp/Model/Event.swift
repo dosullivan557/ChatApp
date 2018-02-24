@@ -11,13 +11,21 @@ import Firebase
 import MapKit
 ///Object which represents an event.
 class Event: NSObject {
+    ///The id of the event.
     var id: String?
+    ///The title of the event.
     var title: String?
+    ///The event description.
     var desc: String?
+    ///The user id of the host of the event.
     var host: String?
+    ///The user id of the person who was invited to the event.
     var invitee: String?
+    ///The start time of the event.
     var startTime: NSNumber?
+    ///The finish time of the event.
     var finishTime: NSNumber?
+    ///The location of the event: Given as a list of NSString, containing the latitude, longitude and name.
     var location = [NSString?]()
     
     /**
