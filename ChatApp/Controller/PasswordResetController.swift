@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 class PasswordResetController: UIViewController, UITextFieldDelegate {
-    
+    ///Title view.
     let titleMain: UITextView = {
         let title = UITextView()
         title.text = "Reset Password"
@@ -23,6 +23,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         return title
     }()
     
+    ///Email textfield.
     let emailField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
@@ -35,7 +36,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
     
     
     
-    
+    ///Reset button.
     let resetButton: UIButton = {
         let button = UIButton()
         button.setTitle("Reset Password", for: .normal)
@@ -45,6 +46,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
+    ///Cancel button.
     let cancelButton: UIButton = {
         let button = UIButton()
         button.setTitle("Cancel", for: .normal)
@@ -53,7 +55,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    ///Keyboard hides when return key is pressed.
+    //Keyboard hides when return key is pressed.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return true
@@ -78,7 +80,6 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         view.addSubview(cancelButton)
         setupItems()
         
-        //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         
         view.addGestureRecognizer(tap)
@@ -131,7 +132,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
     /**
      Is called to verify the whether the email is valid locally before sending it to Firebase. Uses a regular expression to check the email typed in abides by the conventions.
      - Parameters:
-     - testStr: The string to test.
+         - testStr: The string to test.
      - Returns: A boolean value to say whether the email is valid.
      */
     func isValidEmail(testStr:String) -> Bool {
@@ -144,8 +145,8 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
      
      */
     
