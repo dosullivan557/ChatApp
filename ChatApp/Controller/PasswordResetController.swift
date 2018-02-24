@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 class PasswordResetController: UIViewController, UITextFieldDelegate {
+    // MARK: - Constants
     ///Title view.
     let titleMain: UITextView = {
         let title = UITextView()
@@ -55,21 +56,8 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    //Keyboard hides when return key is pressed.
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return true
-    }
-    
-    ///Dismisses keyboard when called.
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
-    
-    ///Called when the cancel button is pressed.
-    @objc func handleCancel(){
-        dismiss(animated: true, completion: nil)
-    }
+
+    //MARK: - View initialisation
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +73,8 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         view.addGestureRecognizer(tap)
         
     }
+    
+    //MARK: - Setup
     
     ///Sets up the views constraints.
     func setupItems(){
@@ -110,6 +100,26 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         resetButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
     }
     
+    //MARK: - Keyboard
+    
+    //Keyboard hides when return key is pressed.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
+    
+    ///Dismisses keyboard when called.
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    //MARK: - Interaction
+    
+    ///Called when the cancel button is pressed.
+    @objc func handleCancel(){
+        dismiss(animated: true, completion: nil)
+    }
+    
     /// Handles the password reset by using Firebase Authentications method to send an email to reset the password.
     @objc func handlePasswordReset(){
         if let email = emailField.text {
@@ -129,6 +139,11 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    
+
+    
+    //MARK: - Validation
+  
     /**
      Is called to verify the whether the email is valid locally before sending it to Firebase. Uses a regular expression to check the email typed in abides by the conventions.
      - Parameters:
@@ -141,6 +156,9 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: testStr)
     }
+    
+
+    //MARK: - Alert
     
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
