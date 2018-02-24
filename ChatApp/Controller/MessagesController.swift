@@ -9,7 +9,8 @@
 import UIKit
 import Firebase
 
-//issue where the comparators weren't working, and these two functions were the fix to it
+//MARK: - Comparables
+//issue where the comparators weren't working.
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -31,11 +32,17 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
+//MARK: - Class declaration
 ///The tableview of all messages.
 class MessagesController: UITableViewController {
+    // MARK: - Constants
+
     ///The reuse identifier for the table cell.
     let cellId = "cellId"
     
+    
+    // MARK: - Variables
+
     ///Global timer - used to stop the table view refreshing unnecessarily.
     var timer: Timer?
     ///List of messages downloaded from the database.
@@ -45,24 +52,8 @@ class MessagesController: UITableViewController {
     ///A user value for the current user.
     var user = User()
     
+    // MARK: - View initialisation
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        let message = messages[indexPath.row]
-        
-        if editingStyle == .delete {
-            self.messages.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            guard let chatId = message.chatWithId() else {
-                return
-            }
-            
-            if let currentUid = Auth.auth().currentUser?.uid {
-                let ref = Database.database().reference().child("user-messages").child(currentUid).child(chatId)
-                ref.removeValue()
-                messagesDictionary.removeValue(forKey: chatId)
-            }
-        }
-    } 
     override func viewDidAppear(_ animated: Bool) {
         print("appeared")
         if Auth.auth().currentUser?.uid == nil {
@@ -89,132 +80,8 @@ class MessagesController: UITableViewController {
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
     }
-    ///Shows alert to check whether the user definitely wants to log out. If so, It will handle the logout, otherwise, it will do nothing.
-    @objc func checkLogout() {
-        let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
-        
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-            self.handleLogout()
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-        }
-        ))
-        self.present(alert, animated: true, completion: nil)
-    }
     
-    ///Checks the database for the messages for the current user. All this gets added into a dictionary of the user's Id, and then sorts the values into time order.
-    func observeUserMessages() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
-        
-        let ref = Database.database().reference().child("user-messages").child(uid)
-        ref.observe(.childAdded, with: { (DataSnapshot) in
-            let newRef = ref.child(DataSnapshot.key)
-            newRef.observe(.childAdded, with: { (snapshot) in
-                let messageId = snapshot.key
-                let messagesReference = Database.database().reference().child("messages").child(messageId)
-                
-                messagesReference.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-                    if let dictionary = DataSnapshot.value as? [String: AnyObject] {
-                        let message = Message()
-                        message.message = dictionary["text"] as? String
-                        message.timestamp = dictionary["TimeStamp"] as? NSNumber
-                        message.receiveId = dictionary["RecieveId"] as? String
-                        message.sendId = dictionary["SendId"] as? String
-                        message.decrypt(key: DataSnapshot.key)
-                        if let chatId = message.chatWithId() {
-                            self.messagesDictionary[chatId] = message
-                            
-                            self.messages = Array(self.messagesDictionary.values)
-                            self.messages.sort(by: { (message1, message2) -> Bool in
-                                
-                                return message1.timestamp?.int32Value > message2.timestamp?.int32Value
-                            })
-                        }
-                        //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
-                        self.timer?.invalidate()
-                        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
-                    }
-                    
-                }, withCancel: nil)
-            })
-            
-        }, withCancel: nil)
-    }
-    
-    ///Reloads the table view using the main thread.
-    @objc func handleReload() {
-        DispatchQueue.main.async(execute: {
-            self.tableView.reloadData()
-        })
-    }
-    
-    //Gives the number of rows in the table view.
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages.count
-    }
-    //Specifies each element in the table view.
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
-        
-        let message = messages[indexPath.row]
-        cell.message = message
-        
-        return cell
-    }
-    
-    //Defines the height of each table cell.
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 72
-    }
-    
-    ///Defines how to open a new message controller when given an input.
-    @objc func handleNewMessage() {
-        let newMessageController = NewMessageController()
-        newMessageController.messagesController = self
-        let navController = UINavigationController(rootViewController: newMessageController)
-        present(navController, animated: true, completion: nil)
-    }
-    
-    /**
-    Checks whether the user is logged in; if so, then fill in the information of the view, otherwise logout. This function is called when the app is first loaded.
-     - Returns: Returns a boolean value representing whether the user is currently logged in.
-     */
-    func checkIfUserIsLoggedIn() -> Bool{
-        if Auth.auth().currentUser?.uid == nil {
-            perform(#selector(handleLogout), with: nil, afterDelay: 0)
-            return false
-        } else {
-            fetchUser()
-            return true
-        }
-    }
-    //Called when a tablecell is selected.
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let message = messages[indexPath.row]
-        
-        guard let chatId = message.chatWithId() else {
-            return
-        }
-        let ref = Database.database().reference().child("users").child(chatId)
-        ref.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-            guard let dictionary = DataSnapshot.value as? [String: AnyObject] else {
-                return
-            }
-            
-            self.user.email = dictionary["email"] as? String
-            self.user.name = dictionary["name"] as? String
-            self.user.id = chatId
-            self.user.profileImageUrl = dictionary["profileImageUrl"] as? String
-            var chatWithUser = [User]()
-            chatWithUser.append(self.user)
-            self.showChatControllerForUser(chatWithUser)
-        }
-            ,withCancel: nil)
-    }
+    // MARK: -  Setup
     
     ///Defines the current user of the system, and passes it to [setupNavBarWithUser(_ user: User)]( )) to setup the navigation bar for the particular user.
     func fetchUser() {
@@ -257,7 +124,7 @@ class MessagesController: UITableViewController {
     /**
      Reads in the current user of the system which has been passed through from the [fetchUser()]() method. From here, it resets information such as the messages array and the messages dictionary, reloads the table to show the empty table, and then calls [observeUserMessages()]() to observe all the users messages. As well as this, everything is added into the navigation bar and positioned correctly.
      - Parameters:
-         - user: Reads in the current user of the system, and will use this user object to set all the information in the navigation bar.
+     - user: Reads in the current user of the system, and will use this user object to set all the information in the navigation bar.
      */
     func setupNavBarWithUser(_ user: User) {
         messages.removeAll()
@@ -307,6 +174,85 @@ class MessagesController: UITableViewController {
         self.navigationItem.titleView = titleView
         
     }
+    
+    
+    
+    
+    // MARK: - TableView
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+        
+        if editingStyle == .delete {
+            self.messages.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            guard let chatId = message.chatWithId() else {
+                return
+            }
+            
+            if let currentUid = Auth.auth().currentUser?.uid {
+                let ref = Database.database().reference().child("user-messages").child(currentUid).child(chatId)
+                ref.removeValue()
+                messagesDictionary.removeValue(forKey: chatId)
+            }
+        }
+    }
+    
+    ///Reloads the table view using the main thread.
+    @objc func handleReload() {
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
+        })
+    }
+    
+    //Gives the number of rows in the table view.
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+    //Specifies each element in the table view.
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
+        
+        let message = messages[indexPath.row]
+        cell.message = message
+        
+        return cell
+    }
+    
+    //Defines the height of each table cell.
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
+    }
+    //Called when a tablecell is selected.
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+        
+        guard let chatId = message.chatWithId() else {
+            return
+        }
+        let ref = Database.database().reference().child("users").child(chatId)
+        ref.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+            guard let dictionary = DataSnapshot.value as? [String: AnyObject] else {
+                return
+            }
+            
+            self.user.email = dictionary["email"] as? String
+            self.user.name = dictionary["name"] as? String
+            self.user.id = chatId
+            self.user.profileImageUrl = dictionary["profileImageUrl"] as? String
+            var chatWithUser = [User]()
+            chatWithUser.append(self.user)
+            self.showChatControllerForUser(chatWithUser)
+        }
+            ,withCancel: nil)
+    }
+    
+ 
+    
+    // MARK: - Interaction
+    
+    
+    
     /**
      Opens a chat log with an array of users, which is passed in.
      - Parameters:
@@ -319,6 +265,90 @@ class MessagesController: UITableViewController {
         navigationController?.pushViewController(chatLogController, animated: true)
     }
 
+    
+    ///Shows alert to check whether the user definitely wants to log out. If so, It will handle the logout, otherwise, it will do nothing.
+    @objc func checkLogout() {
+        let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+            self.handleLogout()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    ///Defines how to open a new message controller when given an input.
+    @objc func handleNewMessage() {
+        let newMessageController = NewMessageController()
+        newMessageController.messagesController = self
+        let navController = UINavigationController(rootViewController: newMessageController)
+        present(navController, animated: true, completion: nil)
+    }
+    
+    
+    //MARK: - Firebase
+    
+    ///Checks the database for the messages for the current user. All this gets added into a dictionary of the user's Id, and then sorts the values into time order.
+    func observeUserMessages() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let ref = Database.database().reference().child("user-messages").child(uid)
+        ref.observe(.childAdded, with: { (DataSnapshot) in
+            let newRef = ref.child(DataSnapshot.key)
+            newRef.observe(.childAdded, with: { (snapshot) in
+                let messageId = snapshot.key
+                let messagesReference = Database.database().reference().child("messages").child(messageId)
+                
+                messagesReference.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+                    if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                        let message = Message()
+                        message.message = dictionary["text"] as? String
+                        message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                        message.receiveId = dictionary["RecieveId"] as? String
+                        message.sendId = dictionary["SendId"] as? String
+                        message.decrypt(key: DataSnapshot.key)
+                        if let chatId = message.chatWithId() {
+                            self.messagesDictionary[chatId] = message
+                            
+                            self.messages = Array(self.messagesDictionary.values)
+                            self.messages.sort(by: { (message1, message2) -> Bool in
+                                
+                                return message1.timestamp?.int32Value > message2.timestamp?.int32Value
+                            })
+                        }
+                        //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
+                        self.timer?.invalidate()
+                        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+                    }
+                    
+                }, withCancel: nil)
+            })
+            
+        }, withCancel: nil)
+    }
+    
+
+    
+  
+    /**
+    Checks whether the user is logged in; if so, then fill in the information of the view, otherwise logout. This function is called when the app is first loaded.
+     - Returns: Returns a boolean value representing whether the user is currently logged in.
+     */
+    func checkIfUserIsLoggedIn() -> Bool{
+        if Auth.auth().currentUser?.uid == nil {
+            perform(#selector(handleLogout), with: nil, afterDelay: 0)
+            return false
+        } else {
+            fetchUser()
+            return true
+        }
+    }
     
     
     ///This function is called if there is no user logged into the system or if the user wants to logout.
