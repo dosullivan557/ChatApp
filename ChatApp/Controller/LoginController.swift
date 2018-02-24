@@ -10,9 +10,7 @@ import UIKit
 import Firebase
 
 class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
-    ///An instance of messagesController that called this instance of the view controller so when the submit is pressed, certain information can be set up already.
-    var messagesController: MessagesController?
+    // MARK: - Constants
     
     ///Container for text fields and seperaters.
     let inputsContainerView : UIView={
@@ -33,6 +31,59 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         return view
     }()
     
+    ///Name seperator.
+    let nameSeperatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 239, g: 239, b: 239)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    ///Email seperator.
+    let emailSeperatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 239, g: 239, b: 239)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    ///Register page logo image.
+    let logo: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "Icon-App-29x29")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    ///Segmented display.
+    let loginRegisterSegmentedControl: UISegmentedControl = {
+        let sc = UISegmentedControl(items: ["Login", "Register"])
+        sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white], for: UIControlState.selected)
+        sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
+        sc.translatesAutoresizingMaskIntoConstraints = false
+        sc.tintColor = UIColor.niceBlue
+        sc.selectedSegmentIndex = 1
+        sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
+        return sc
+    }()
+    
+    ///Clear image button.
+    let clearProfilePictureImage: UIButton = {
+        let button = UIButton()
+        button.setTitle("Clear Image", for: .normal)
+        button.addTarget(self, action: #selector(handleClearImage), for: .touchUpInside)
+        button.setTitleColor(UIColor.niceBlue, for: .normal)
+        button.layer.cornerRadius = 5
+        button.layer.masksToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    // MARK: - Variables
+    
+    ///An instance of messagesController that called this instance of the view controller so when the submit is pressed, certain information can be set up already.
+    var messagesController: MessagesController?
     
     ///Register Button.
     lazy var loginRegisterButton: UIButton = {
@@ -59,13 +110,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         tf.delegate = self
         return tf
     }()
-    ///Name seperator.
-    let nameSeperatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(r: 239, g: 239, b: 239)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+   
     ///Email TextField.
     lazy var emailTextField : UITextField = {
         let tf = UITextField()
@@ -76,13 +121,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         tf.delegate = self
         return tf
     }()
-    ///Email seperator.
-    let emailSeperatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(r: 239, g: 239, b: 239)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+   
     ///Password TextField.
     lazy var passwordTextField : UITextField = {
         let tf = UITextField()
@@ -93,14 +132,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         return tf
     }()
     
-    ///Register page logo image.
-    let logo: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "Icon-App-29x29")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+  
     ///Upload profileImage.
     lazy var profileImageUpload: UIImageView = {
         let imageView = UIImageView()
@@ -114,29 +146,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         imageView.layer.masksToBounds = true
         return imageView
     }()
-    ///Segmented display.
-    let loginRegisterSegmentedControl: UISegmentedControl = {
-        let sc = UISegmentedControl(items: ["Login", "Register"])
-        sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white], for: UIControlState.selected)
-        sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
-        sc.translatesAutoresizingMaskIntoConstraints = false
-        sc.tintColor = UIColor.niceBlue
-        sc.selectedSegmentIndex = 1
-        sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
-        return sc
-    }()
-    
-    ///Clear image button.
-    let clearProfilePictureImage: UIButton = {
-        let button = UIButton()
-        button.setTitle("Clear Image", for: .normal)
-        button.addTarget(self, action: #selector(handleClearImage), for: .touchUpInside)
-        button.setTitleColor(UIColor.niceBlue, for: .normal)
-        button.layer.cornerRadius = 5
-        button.layer.masksToBounds = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+ 
     ///Height anchor for picture container.
     var pictureContainerHeightAnchor: NSLayoutConstraint?
     ///Height anchor for input container.
@@ -159,6 +169,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         return button
     }()
     
+    // MARK: - View initialisation
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.niceOrange
@@ -182,17 +194,15 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         setupPictureContainer()
         setupResetPasswordButton()
     }
+    
+    
+    //MARK: - Setup
     ///Sets up password reset button.
     func setupResetPasswordButton(){
         resetButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         resetButton.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 35).isActive = true
     }
     
-    ///Shows the view for restting a users password.
-    @objc func handlePasswordReset(){
-        let vc = PasswordResetController()
-        show(vc, sender: self)
-    }
     ///Setup the picture container, which contains the image uploader and the clear image button.
     func setupPictureContainer(){
         pictureContainer.topAnchor.constraint(equalTo: loginRegisterSegmentedControl.bottomAnchor, constant: 10).isActive = true
@@ -291,6 +301,16 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         logo.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
     
+    
+    ///Setup the clear image constraints.
+    func setupClearImage(){
+        clearProfilePictureImage.topAnchor.constraint(equalTo: profileImageUpload.bottomAnchor, constant: 10).isActive = true
+        clearProfilePictureImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        clearProfilePictureImage.isHidden = true
+    }
+    
+    //MARK: - Keyboard
+    
     ///Sets preference for colouring.
     func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .lightContent
@@ -314,248 +334,11 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         return true
     }
     
-    
-    ///Checks whether the segmented display is equal to login or register, and calls either the [handleLogin()]() or [handleRegister]().
-    @objc func handleLoginRegister(){
-        if(loginRegisterSegmentedControl.selectedSegmentIndex == 0 ){
-            handleLogin()
-        }
-        else{
-            self.handleRegister()
-        }
-    }
-    
-    ///Handles a login of a user.
-    @objc func handleLogin(){
-        
-        guard let email = emailTextField.text,  let password = passwordTextField.text else {
-            showAlert(title: "Invalid data", message: "Invalid email or Password")
-            return
-        }
-        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
-            if error != nil {
-                self.firebaseAuth(error: error!)
-                return
-            }
-            
-            self.messagesController?.fetchUser()
-            self.dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    /**
-     All possible errors for logging in or registering that could be thrown by firebase are passed into here and shows an alert box which notifies the user of the error. An example of how to use it correctly is shown below.
-     
-         if error != nil{
-             self.firebaseAuth(error: error!)
-             return
-         }
-     
-     - Parameters:
-         - error: The error code which has been returned.
-     */
-    func firebaseAuth(error: Error){
-        if let errCode = AuthErrorCode(rawValue: error._code) {
-            if loginRegisterSegmentedControl.selectedSegmentIndex == 1 {
-                if nameTextField.text?.count == 0 {
-                    self.showAlert(title: "Invalid Name", message: "Please enter your name and try again!")
-                    return
-                }
-            }
-            if emailTextField.text?.count == 0{
-                self.showAlert(title: "Invalid Email", message: "Please enter a valid email address and try again!")
-                return
-            }
-            
-            if passwordTextField.text?.count == 0 {
-                self.showAlert(title: "Empty Password Field", message: "Please enter a valid password and try again.")
-                return
-            }
-            
-            switch errCode {
-            case AuthErrorCode.invalidEmail:
-                self.showAlert(title: "Invalid Email", message: "Please insert a valid email address, and try again!")
-                return
-            case AuthErrorCode.emailAlreadyInUse:
-                self.showAlert(title: "Email Already In Use", message: "Email address is already in use, please insert a different one, or login!")
-                return
-                
-            case AuthErrorCode.weakPassword:
-                self.showAlert(title: "Weak Password", message: "Please insert a more secure password and try again.")
-                return
-                
-            case AuthErrorCode.userNotFound:
-                self.showAlert(title: "User Does Not Exist", message: "The user with the email \"\(emailTextField.text!)\" does not exist, Please register for an account!")
-                return
-                
-            case AuthErrorCode.wrongPassword:
-                self.showAlert(title: "Wrong Password", message: "Please check the password and try again.")
-                return
-            default:
-                self.showAlert(title: "Oops", message: "There was an error, please try again later!")
-                return
-            }
-        }
-    }
-    ///Clears the a profile image that has been added, and replaces it with the defaultPic.
-    @objc func handleClearImage(){
-        profileImageUpload.image = UIImage(named: "defaultPic")
-        clearProfilePictureImage.isHidden = true
-        
-    }
-    ///Setup the clear image constraints.
-    func setupClearImage(){
-        clearProfilePictureImage.topAnchor.constraint(equalTo: profileImageUpload.bottomAnchor, constant: 10).isActive = true
-        clearProfilePictureImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        clearProfilePictureImage.isHidden = true
-    }
-    
-    
-    ///Called when the segmented display is changed. This changes certain details in the page, such as hiding the name field for the register tab.
-    @objc func handleLoginRegisterChange(){
-        let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
-        loginRegisterButton.setTitle(title, for: .normal)
-        
-        //change height of InputContainerView
-        inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 100: 150
-        //change heightof nameTextField
-        nameTextFieldHeightAnchor?.isActive = false
-        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 1/3)
-        nameTextFieldHeightAnchor?.isActive = true
-        
-        //change height of emailTextField
-        emailTextFieldHeightAnchor?.isActive = false
-        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 1/2: 1/3)
-        emailTextFieldHeightAnchor?.isActive = true
-        
-        //change height of passwordTextField
-        passwordTextFieldHeightAnchor?.isActive = false
-        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 1/2: 1/3)
-        passwordTextFieldHeightAnchor?.isActive = true
-        
-        //hide upload image and clear image data
-        pictureContainerHeightAnchor?.isActive = false
-        pictureContainerHeightAnchor = pictureContainer.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 1)
-        
-        
-        pictureContainerHeightAnchor?.isActive = true
-        
-        nameTextField.text = ""
-        emailTextField.text = ""
-        passwordTextField.text = ""
-        profileImageUpload.image = UIImage(named: "defaultPic")
-        
-        resetButton.alpha = (loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1 : 0)
-        
-        handleClearImage()
-        
-    }
-    
-    
-    ///Image picker. Shown when the profile image view is tapped.
-    @objc func handleSelectProfileImageView(){
-        let picker = UIImagePickerController()
-        picker.delegate = (self as? UIImagePickerControllerDelegate as! UIImagePickerControllerDelegate & UINavigationControllerDelegate)
-        picker.allowsEditing = true
-        
-        present(picker, animated: true, completion: nil)
-        
-    }
-    
-    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
-    /**
-     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
-     - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
-     */
-    
-    func showAlert(title: String, message: String) {
-        var alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert = createAlertButton(title: title, alert: alert)
-        
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    //Adds the relevant buttons to the alert box.
-    /**
-     Adds the relevant buttons to the alert box.
-     - Parameters:
-         - title: The title of the alert, so I can use it to determine what the meaning of the alert is, and therefore add in the relevant buttons.
-         - alert: The alert box to add the buttons to.
-     - Returns: The alert box with the relevant buttons added.
-     */
-    
-    func createAlertButton(title: String, alert: UIAlertController) -> UIAlertController {
-        if title.contains("Invalid") {
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
-                alert.dismiss(animated: true, completion: nil)
-            }))
-        }
-        else if title.contains("Profile"){
-            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
-                alert.dismiss(animated: true, completion: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "No, Let me!", style: UIAlertActionStyle.default, handler: { (x) in
-                alert.dismiss(animated: true, completion: {
-                    self.handleSelectProfileImageView()
-                })
-                
-            }))
-        }
-        else {
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
-                alert.dismiss(animated: true, completion: nil)
-            }
-            ))
-        }
-        
-        return alert
-    }
-    
-    //Choose image from image picker.
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        var selectedImageFP: UIImage?
-        if let editedImage = info["UIImagePickerControllerEditedImage"]{
-            selectedImageFP = editedImage as? UIImage
-        }
-        else if let originalImage = info["UIImagePickerControllerOriginalImage"]{
-            selectedImageFP = originalImage as? UIImage
-        }
-        if let selectedImage = selectedImageFP {
-            profileImageUpload.image = selectedImage
-        }
-        clearProfilePictureImage.isHidden = false
-        
-        dismiss(animated: true, completion: nil)
-    }
-    
-    
-    //Cancel button for the image picker.
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("cancelled")
-        dismiss(animated: true, completion: nil)
-    }
-    /**
-     Shows alert if you haven't got an upload image. If the user doesn't wish to upload one, then they can say no, otherwise they get a change to change their mind and add one.
-     - Returns: A boolean to use as a flag to get the users response. This determines whether to continue the registering or to stop and allow the user to upload one.
-     */
-    func showImageUploadAlert() -> Bool{
-        let alert = UIAlertController(title: "No profile image", message: "Please upload a profile picture to help people recognise who they are speaking to.", preferredStyle: UIAlertControllerStyle.alert)
-        
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-            self.handleSelectProfileImageView()
-        }
-        ))
-        self.present(alert, animated: true, completion: nil)
-        return true
-    }
-    
+    //MARK: - Validation
     /**
      Is called to verify the whether the password is valid before sending it to Firebase.
      - Parameters:
-         - testStr: The string to test.
+     - testStr: The string to test.
      - Returns: A boolean value to say whether the password is valid.
      */
     func isValidPassword(testStr: String) -> Bool{
@@ -566,7 +349,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      Is called to verify the whether the email is valid locally before sending it to Firebase. Uses a regular expression to check the email typed in abides by the conventions.
      - Parameters:
-         - testStr: The string to test.
+     - testStr: The string to test.
      - Returns: A boolean value to say whether the email is valid.
      */
     func isValidEmail(testStr:String) -> Bool {
@@ -574,6 +357,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: testStr)
     }
+    
+    //MARK: - Interaction
     
     /**
      Handles the registration of the user. Checks the information is valid locally, and then checks it against Firebase Authentication to authenticate it there as well.
@@ -645,11 +430,202 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     }
     
     
+    ///Image picker. Shown when the profile image view is tapped.
+    @objc func handleSelectProfileImageView(){
+        let picker = UIImagePickerController()
+        picker.delegate = (self as? UIImagePickerControllerDelegate as! UIImagePickerControllerDelegate & UINavigationControllerDelegate)
+        picker.allowsEditing = true
+        
+        present(picker, animated: true, completion: nil)
+        
+    }
+    
+    ///Clears the a profile image that has been added, and replaces it with the defaultPic.
+    @objc func handleClearImage(){
+        profileImageUpload.image = UIImage(named: "defaultPic")
+        clearProfilePictureImage.isHidden = true
+        
+    }
+    ///Called when the segmented display is changed. This changes certain details in the page, such as hiding the name field for the register tab.
+    @objc func handleLoginRegisterChange(){
+        let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
+        loginRegisterButton.setTitle(title, for: .normal)
+        
+        //change height of InputContainerView
+        inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 100: 150
+        //change heightof nameTextField
+        nameTextFieldHeightAnchor?.isActive = false
+        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 1/3)
+        nameTextFieldHeightAnchor?.isActive = true
+        
+        //change height of emailTextField
+        emailTextFieldHeightAnchor?.isActive = false
+        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 1/2: 1/3)
+        emailTextFieldHeightAnchor?.isActive = true
+        
+        //change height of passwordTextField
+        passwordTextFieldHeightAnchor?.isActive = false
+        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 1/2: 1/3)
+        passwordTextFieldHeightAnchor?.isActive = true
+        
+        //hide upload image and clear image data
+        pictureContainerHeightAnchor?.isActive = false
+        pictureContainerHeightAnchor = pictureContainer.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 1)
+        
+        
+        pictureContainerHeightAnchor?.isActive = true
+        
+        nameTextField.text = ""
+        emailTextField.text = ""
+        passwordTextField.text = ""
+        profileImageUpload.image = UIImage(named: "defaultPic")
+        
+        resetButton.alpha = (loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1 : 0)
+        
+        handleClearImage()
+        
+    }
+    
+    
+    ///Shows the view for restting a users password.
+    @objc func handlePasswordReset(){
+        let vc = PasswordResetController()
+        show(vc, sender: self)
+    }
+  
+    ///Checks whether the segmented display is equal to login or register, and calls either the [handleLogin()]() or [handleRegister]().
+    @objc func handleLoginRegister(){
+        if(loginRegisterSegmentedControl.selectedSegmentIndex == 0 ){
+            handleLogin()
+        }
+        else{
+            self.handleRegister()
+        }
+    }
+    
+    ///Handles a login of a user.
+    @objc func handleLogin(){
+        
+        guard let email = emailTextField.text,  let password = passwordTextField.text else {
+            showAlert(title: "Invalid data", message: "Invalid email or Password")
+            return
+        }
+        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+            if error != nil {
+                self.firebaseAuth(error: error!)
+                return
+            }
+            
+            self.messagesController?.fetchUser()
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    
+    
+    //MARK: - ImagePicker
+    
+    //Choose image from image picker.
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        var selectedImageFP: UIImage?
+        if let editedImage = info["UIImagePickerControllerEditedImage"]{
+            selectedImageFP = editedImage as? UIImage
+        }
+        else if let originalImage = info["UIImagePickerControllerOriginalImage"]{
+            selectedImageFP = originalImage as? UIImage
+        }
+        if let selectedImage = selectedImageFP {
+            profileImageUpload.image = selectedImage
+        }
+        clearProfilePictureImage.isHidden = false
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    //Cancel button for the image picker.
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        print("cancelled")
+        dismiss(animated: true, completion: nil)
+    }
+  
+    
+    //MARK: - Alert
+    
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+     */
+    
+    func showAlert(title: String, message: String) {
+        var alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert = createAlertButton(title: title, alert: alert)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    /**
+     Adds the relevant buttons to the alert box.
+     - Parameters:
+         - title: The title of the alert, so I can use it to determine what the meaning of the alert is, and therefore add in the relevant buttons.
+         - alert: The alert box to add the buttons to.
+     - Returns: The alert box with the relevant buttons added.
+     */
+    
+    func createAlertButton(title: String, alert: UIAlertController) -> UIAlertController {
+        if title.contains("Invalid") {
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
+                alert.dismiss(animated: true, completion: nil)
+            }))
+        }
+        else if title.contains("Profile"){
+            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+                alert.dismiss(animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "No, Let me!", style: UIAlertActionStyle.default, handler: { (x) in
+                alert.dismiss(animated: true, completion: {
+                    self.handleSelectProfileImageView()
+                })
+                
+            }))
+        }
+        else {
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
+                alert.dismiss(animated: true, completion: nil)
+            }
+            ))
+        }
+        
+        return alert
+    }
+    
+    /**
+     Shows alert if you haven't got an upload image. If the user doesn't wish to upload one, then they can say no, otherwise they get a change to change their mind and add one.
+     - Returns: A boolean to use as a flag to get the users response. This determines whether to continue the registering or to stop and allow the user to upload one.
+     */
+    func showImageUploadAlert() -> Bool{
+        let alert = UIAlertController(title: "No profile image", message: "Please upload a profile picture to help people recognise who they are speaking to.", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+            self.handleSelectProfileImageView()
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+        return true
+    }
+
+   
+    //MARK: - Firebase
+    
     /**
      Registers the user into the database upon registering.
      - Parameters:
-         - uid: The unique identifier for the user.
-         - values: A dictionary of `[String: AnyObject]` to upload to the database. This contains all of the information to upload.
+     - uid: The unique identifier for the user.
+     - values: A dictionary of `[String: AnyObject]` to upload to the database. This contains all of the information to upload.
      */
     private func registerUserIntoDatabaseWithUID(uid: String, values: [String: AnyObject]){
         //save info
@@ -671,4 +647,62 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         })
     }
     
+    
+    /**
+     All possible errors for logging in or registering that could be thrown by firebase are passed into here and shows an alert box which notifies the user of the error. An example of how to use it correctly is shown below.
+     
+     if error != nil{
+     self.firebaseAuth(error: error!)
+     return
+     }
+     
+     - Parameters:
+     - error: The error code which has been returned.
+     */
+    func firebaseAuth(error: Error){
+        if let errCode = AuthErrorCode(rawValue: error._code) {
+            if loginRegisterSegmentedControl.selectedSegmentIndex == 1 {
+                if nameTextField.text?.count == 0 {
+                    self.showAlert(title: "Invalid Name", message: "Please enter your name and try again!")
+                    return
+                }
+            }
+            if emailTextField.text?.count == 0{
+                self.showAlert(title: "Invalid Email", message: "Please enter a valid email address and try again!")
+                return
+            }
+            
+            if passwordTextField.text?.count == 0 {
+                self.showAlert(title: "Empty Password Field", message: "Please enter a valid password and try again.")
+                return
+            }
+            
+            switch errCode {
+            case AuthErrorCode.invalidEmail:
+                self.showAlert(title: "Invalid Email", message: "Please insert a valid email address, and try again!")
+                return
+            case AuthErrorCode.emailAlreadyInUse:
+                self.showAlert(title: "Email Already In Use", message: "Email address is already in use, please insert a different one, or login!")
+                return
+                
+            case AuthErrorCode.weakPassword:
+                self.showAlert(title: "Weak Password", message: "Please insert a more secure password and try again.")
+                return
+                
+            case AuthErrorCode.userNotFound:
+                self.showAlert(title: "User Does Not Exist", message: "The user with the email \"\(emailTextField.text!)\" does not exist, Please register for an account!")
+                return
+                
+            case AuthErrorCode.wrongPassword:
+                self.showAlert(title: "Wrong Password", message: "Please check the password and try again.")
+                return
+            default:
+                self.showAlert(title: "Oops", message: "There was an error, please try again later!")
+                return
+            }
+        }
+    }
+    
+    
+   
 }
