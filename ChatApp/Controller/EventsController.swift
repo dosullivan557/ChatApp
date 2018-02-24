@@ -36,11 +36,14 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 class EventsController: UITableViewController {
     
-    // MARK: - Properties
+    // MARK: - Constants
     
     
     ///The reuse cell identifier for the table view.
     let cellEId = "cellEId"
+    
+    // MARK: - Variables
+
     ///List of all the events.
     var events = [Event]()
     ///Global timer to make ensure that the TableView is only refreshed once to prevent flickering when there are loads of cells to load.
@@ -55,15 +58,85 @@ class EventsController: UITableViewController {
         }
     }
     
+    //MARK: - View initialisation
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if let id = currentUser.id {
+            if id == Auth.auth().currentUser?.uid {
+                print("Same user")
+            }
+            else {
+                print("Different")
+                events.removeAll()
+                handleReload()
+                getCurrentUser()
+                setupNavBarWithUser(currentUser)
+                observeUserEvents()
+            }
+        }
+        else {
+            print("error")
+        }
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(EventCell.self, forCellReuseIdentifier: cellEId)
-        //        observeUserEvents()
         setupNavBarWithUser(currentUser)
-        //        self.hidesBottomBarWhenPushed = true
+    }
+    
+    //MARK: - Setup
+    
+    /**
+     Gets passed the current user of the system, and then sets up the navigation bar with that users information.
+     - Parameters:
+     - user: The current user.
+     */
+    func setupNavBarWithUser(_ user: User?) {
+        tableView.reloadData()
+        
+        self.navigationItem.title = (currentUser.name! + "'s Events")
+        
+    }
+    
+    //MARK: - TableView
+    
+    ///Reloads the table.
+    @objc func handleReload(){
+        DispatchQueue.main.async() {
+            self.tableView.reloadData()
+        }
+    }
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellEId", for: indexPath) as! EventCell
+        cell.event = events[indexPath.row]
+        cell.textLabel?.text = events[indexPath.row].title
+        return cell
     }
     
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let event = events[indexPath.row]
+        //pass event through
+        let eventController = EventController()
+        eventController.event = event
+        eventController.hidesBottomBarWhenPushed = true
+        
+        show(eventController, sender: self)
+    }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return events.count
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
     
     //Defines the current user of the system, and passes it to another method to setup the navigation bar
     override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
@@ -84,6 +157,8 @@ class EventsController: UITableViewController {
         return [accept, decline]
     }
     
+    //MARK: - Interaction
+    
     /**
      This is called when the decline event button is pressed. It removes the event from the cell, and then updates the database to say that it was declined.
      - Parameters:
@@ -99,70 +174,8 @@ class EventsController: UITableViewController {
         }
         showDeleteAlertSure(title: "You have declined this event", message: "You have declined the event with this user, would you like to send your appologies?", index: index, event: event)
         self.handleReload()
-        
-        
     }
     
-    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
-    /**
-     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
-     - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
-         - event: The event to delete.
-     */
-    
-    func showDeleteAlertSure(title: String, message: String, index: IndexPath, event: Event) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
-            self.sendAppologies(event: event)
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    /**
-     Called when the user decides to send appologies for declining an event.
-     - Parameters:
-         - event: The event to send the appology for.
-     */
-    func sendAppologies(event: Event){
-        
-        let id = NSUUID().uuidString
-        let ref = Database.database().reference().child("messages")
-        let childRef = ref.child(id)
-        let recieveId = event.eventWithId()
-        let sendId = Auth.auth().currentUser?.uid
-        
-        let message = Message()
-        message.message = "I am sorry but I cannot make the event \(event.title!). We will have to organise something very soon!"
-        message.receiveId = event.eventWithId()!
-        message.sendId = Auth.auth().currentUser!.uid
-        message.timestamp = Int(Date().timeIntervalSince1970) as NSNumber
-        
-        
-        message.encrypt(key: id)
-        let values = ["text": message.message!, "RecieveId": message.receiveId!, "SendId": message.sendId!, "TimeStamp": message.timestamp!] as [String : Any]
-        
-        childRef.updateChildValues(values) { (error, ref) in
-            if error != nil {
-                print(error ?? "")
-                return
-            }
-            
-            let userMessagesRef = Database.database().reference().child("user-messages").child(sendId!).child(recieveId!)
-            
-            let messageId = childRef.key
-            userMessagesRef.updateChildValues([messageId: 1])
-            
-            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId!).child(sendId!)
-            recipientUserMessagesRef.updateChildValues([messageId: 1])
-        }
-        self.showAlert(title: "Event Declined", message: "This event has been removed.")
-    }
     /**
      This is called when the accept event button is pressed. It gets access to the calendar, and then adds it in. Once it has been accepted, it removes it from the table view.
      - Parameters:
@@ -209,32 +222,9 @@ class EventsController: UITableViewController {
         }
     }
     
-    /**
-     Update the information in the database to say whether it has been accepted or declined.
-     - Parameters:
-         - IndexPath: The index of the tableCell which is to be accepted.
-         - bool: The value to update the accepted value of that event to.
-     */
-    func updateDatabase(IndexPath: IndexPath, bool: Bool){
-        let event = events[IndexPath.row]
-        
-        let ref = Database.database().reference().child("events").child(event.id!)
-        
-        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : bool] as [String : Any]
-        
-        ref.updateChildValues(values)
-    }
     
-    /**
-     Uploads any errors to the database for examination.
-     - Parameters:
-         - error: The error code which is called.
-     */
-    func postError(error: Error){
-        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
-        let values = ["Error Description": error.localizedDescription]
-        ref.updateChildValues(values as [String: AnyObject])
-    }
+    //MARK: - Alert
+    
     
     //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
     /**
@@ -253,85 +243,29 @@ class EventsController: UITableViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
     /**
-     Gets passed the current user of the system, and then sets up the navigation bar with that users information.
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-         - user: The current user.
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+         - event: The event to delete.
      */
-    func setupNavBarWithUser(_ user: User?) {
-        tableView.reloadData()
-        
-        self.navigationItem.title = (currentUser.name! + "'s Events")
-        
-    }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return events.count
+    
+    func showDeleteAlertSure(title: String, message: String, index: IndexPath, event: Event) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+            self.sendAppologies(event: event)
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
+    //MARK: - Smart feature
     
-    ///Gets the current users information.
-    func getCurrentUser(){
-        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
-            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
-                let user = User()
-                user.name = dictionary["name"] as? String
-                user.email = dictionary["email"] as? String
-                user.profileImageUrl = dictionary["profileImageUrl"] as? String
-                user.id = DataSnapshot.key
-                self.currentUser = user
-            }
-        }, withCancel: nil)
-        
-        
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        if let id = currentUser.id {
-            if id == Auth.auth().currentUser?.uid {
-                print("Same user")
-            }
-            else {
-                print("Different")
-                events.removeAll()
-                handleReload()
-                getCurrentUser()
-                setupNavBarWithUser(currentUser)
-                observeUserEvents()
-            }
-        }
-        else {
-            print("error")
-        }
-        
-    }
-    ///Reloads the table.
-    @objc func handleReload(){
-        DispatchQueue.main.async() {
-            self.tableView.reloadData()
-        }
-    }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellEId", for: indexPath) as! EventCell
-        cell.event = events[indexPath.row]
-        cell.textLabel?.text = events[indexPath.row].title
-        return cell
-    }
-    
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let event = events[indexPath.row]
-        //pass event through
-        let eventController = EventController()
-        eventController.event = event
-        eventController.hidesBottomBarWhenPushed = true
-        
-        show(eventController, sender: self)
-    }
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 72
-    }
     
     /**
      Checks whether there is a conflicting event in the users calendar.
@@ -340,9 +274,7 @@ class EventsController: UITableViewController {
      - Returns: a boolean value to see if there is any conflicts.
      */
     func eventConflict(newEvent: Event) -> Bool {
-        var titles : [String] = []
-        var startDates : [NSDate] = []
-        var endDates : [NSDate] = []
+
         var loadedEvents = [Event]()
         let eventStore = EKEventStore()
         let calendars = eventStore.calendars(for: .event)
@@ -354,7 +286,7 @@ class EventsController: UITableViewController {
             
             let predicate = eventStore.predicateForEvents(withStart: oneMonthAgo as Date, end: oneMonthAfter as Date, calendars: [calendar])
             
-            var events = eventStore.events(matching: predicate)
+            let events = eventStore.events(matching: predicate)
             
             for event in events {
                 let eventToAdd = Event()
@@ -377,6 +309,75 @@ class EventsController: UITableViewController {
         return false
     }
     
+    
+    /**
+     Called when the user decides to send appologies for declining an event.
+     - Parameters:
+         - event: The event to send the appology for.
+     */
+    func sendAppologies(event: Event){
+        
+        let id = NSUUID().uuidString
+        let ref = Database.database().reference().child("messages")
+        let childRef = ref.child(id)
+        let recieveId = event.eventWithId()
+        let sendId = Auth.auth().currentUser?.uid
+        
+        let message = Message()
+        message.message = "I am sorry but I cannot make the event \(event.title!). We will have to organise something very soon!"
+        message.receiveId = event.eventWithId()!
+        message.sendId = Auth.auth().currentUser!.uid
+        message.timestamp = Int(Date().timeIntervalSince1970) as NSNumber
+        
+        
+        message.encrypt(key: id)
+        let values = ["text": message.message!, "RecieveId": message.receiveId!, "SendId": message.sendId!, "TimeStamp": message.timestamp!] as [String : Any]
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error ?? "")
+                return
+            }
+            
+            let userMessagesRef = Database.database().reference().child("user-messages").child(sendId!).child(recieveId!)
+            
+            let messageId = childRef.key
+            userMessagesRef.updateChildValues([messageId: 1])
+            
+            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId!).child(sendId!)
+            recipientUserMessagesRef.updateChildValues([messageId: 1])
+        }
+        self.showAlert(title: "Event Declined", message: "This event has been removed.")
+    }
+    
+    //MARK: - Firebase
+    
+    /**
+     Update the information in the database to say whether it has been accepted or declined.
+     - Parameters:
+         - IndexPath: The index of the tableCell which is to be accepted.
+         - bool: The value to update the accepted value of that event to.
+     */
+    func updateDatabase(IndexPath: IndexPath, bool: Bool){
+        let event = events[IndexPath.row]
+        
+        let ref = Database.database().reference().child("events").child(event.id!)
+        
+        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : bool] as [String : Any]
+        
+        ref.updateChildValues(values)
+    }
+
+    /**
+     Uploads any errors to the database for examination.
+     - Parameters:
+         - error: The error code which is called.
+     */
+    func postError(error: Error){
+        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
+        let values = ["Error Description": error.localizedDescription]
+        ref.updateChildValues(values as [String: AnyObject])
+    }
     
     ///Gets all the users events.
     func observeUserEvents() {
@@ -418,6 +419,22 @@ class EventsController: UITableViewController {
             })
         }, withCancel: nil)
     }
+    
+    ///Gets the current users information.
+    func getCurrentUser(){
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
+                let user = User()
+                user.name = dictionary["name"] as? String
+                user.email = dictionary["email"] as? String
+                user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                user.id = DataSnapshot.key
+                self.currentUser = user
+            }
+        }, withCancel: nil)
+        
+        
+    }
+ 
+ 
 }
-
-
