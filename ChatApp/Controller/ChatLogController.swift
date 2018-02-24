@@ -623,7 +623,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         DispatchQueue.main.async(execute: {
             self.hidesBottomBarWhenPushed = true
             self.collectionView?.reloadData()
+            if(self.messages.count>1){
+                let lastItemIndex = NSIndexPath(item: self.messages.count - 1, section: 0)
+                self.collectionView?.scrollToItem(at: lastItemIndex as IndexPath, at: .bottom, animated: true)
+            }
         })
+
     }
     
    
