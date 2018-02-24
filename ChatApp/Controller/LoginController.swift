@@ -32,7 +32,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         view.layer.masksToBounds = true
         return view
     }()
-
+    
     
     //register Button
     lazy var loginRegisterButton: UIButton = {
@@ -45,7 +45,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         button.layer.masksToBounds = true
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
-
+        
         return button
     }()
     
@@ -122,7 +122,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         sc.translatesAutoresizingMaskIntoConstraints = false
         sc.tintColor = UIColor.niceBlue
         
-//        sc.backgroundColor = UIColor.niceBlue
+        //        sc.backgroundColor = UIColor.niceBlue
         sc.selectedSegmentIndex = 1
         sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
         return sc
@@ -314,7 +314,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         return true
     }
     
-   
+    
     ///Checks whether the segmented display is equal to login or register, and calls either the [handleLogin()]() or [handleRegister]().
     @objc func handleLoginRegister(){
         if(loginRegisterSegmentedControl.selectedSegmentIndex == 0 ){
@@ -342,16 +342,16 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             self.dismiss(animated: true, completion: nil)
         }
     }
-
+    
     /**
      All possible errors for logging in or registering that could be thrown by firebase are passed into here and shows an alert box which notifies the user of the error. An example of how to use it correctly is shown below.
      
-                if error != nil{
-                     self.firebaseAuth(error: error!)
-                     return
-                 }
+     if error != nil{
+     self.firebaseAuth(error: error!)
+     return
+     }
      - Parameters:
-         - error: The error code which has been returned.
+     - error: The error code which has been returned.
      */
     func firebaseAuth(error: Error){
         if let errCode = AuthErrorCode(rawValue: error._code) {
@@ -371,28 +371,28 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
                 return
             }
             
-        switch errCode {
-        case AuthErrorCode.invalidEmail:
-            self.showAlert(title: "Invalid Email", message: "Please insert a valid email address, and try again!")
-            return
-        case AuthErrorCode.emailAlreadyInUse:
-            self.showAlert(title: "Email Already In Use", message: "Email address is already in use, please insert a different one, or login!")
-            return
-            
-        case AuthErrorCode.weakPassword:
-            self.showAlert(title: "Weak Password", message: "Please insert a more secure password and try again.")
-            return
-            
-        case AuthErrorCode.userNotFound:
-            self.showAlert(title: "User Does Not Exist", message: "The user with the email \"\(emailTextField.text!)\" does not exist, Please register for an account!")
-            return
-            
-        case AuthErrorCode.wrongPassword:
-            self.showAlert(title: "Wrong Password", message: "Please check the password and try again.")
-            return
-        default:
-            self.showAlert(title: "Oops", message: "There was an error, please try again later!")
-            return
+            switch errCode {
+            case AuthErrorCode.invalidEmail:
+                self.showAlert(title: "Invalid Email", message: "Please insert a valid email address, and try again!")
+                return
+            case AuthErrorCode.emailAlreadyInUse:
+                self.showAlert(title: "Email Already In Use", message: "Email address is already in use, please insert a different one, or login!")
+                return
+                
+            case AuthErrorCode.weakPassword:
+                self.showAlert(title: "Weak Password", message: "Please insert a more secure password and try again.")
+                return
+                
+            case AuthErrorCode.userNotFound:
+                self.showAlert(title: "User Does Not Exist", message: "The user with the email \"\(emailTextField.text!)\" does not exist, Please register for an account!")
+                return
+                
+            case AuthErrorCode.wrongPassword:
+                self.showAlert(title: "Wrong Password", message: "Please check the password and try again.")
+                return
+            default:
+                self.showAlert(title: "Oops", message: "There was an error, please try again later!")
+                return
             }
         }
     }
@@ -436,14 +436,14 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         pictureContainerHeightAnchor?.isActive = false
         pictureContainerHeightAnchor = pictureContainer.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 1)
         
-    
+        
         pictureContainerHeightAnchor?.isActive = true
         
         nameTextField.text = ""
         emailTextField.text = ""
         passwordTextField.text = ""
         profileImageUpload.image = UIImage(named: "defaultPic")
-
+        
         resetButton.alpha = (loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1 : 0)
         
         handleClearImage()
@@ -460,14 +460,14 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         present(picker, animated: true, completion: nil)
         
     }
-
+    
     //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
-
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
+     
      */
     
     func showAlert(title: String, message: String) {
@@ -481,11 +481,11 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      Adds the relevant buttons to the alert box.
      - Parameters:
-         - title: The title of the alert, so I can use it to determine what the meaning of the alert is, and therefore add in the relevant buttons.
-         - alert: The alert box to add the buttons to.
-      - Returns: The alert box with the relevant buttons added.
+     - title: The title of the alert, so I can use it to determine what the meaning of the alert is, and therefore add in the relevant buttons.
+     - alert: The alert box to add the buttons to.
+     - Returns: The alert box with the relevant buttons added.
      */
-
+    
     func createAlertButton(title: String, alert: UIAlertController) -> UIAlertController {
         if title.contains("Invalid") {
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
@@ -542,7 +542,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
      */
     func showImageUploadAlert() -> Bool{
         let alert = UIAlertController(title: "No profile image", message: "Please upload a profile picture to help people recognise who they are speaking to.", preferredStyle: UIAlertControllerStyle.alert)
-
+        
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
             self.handleSelectProfileImageView()
@@ -555,7 +555,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      Is called to verify the whether the password is valid before sending it to Firebase.
      - Parameters:
-         - testStr: The string to test.
+     - testStr: The string to test.
      - Returns: A boolean value to say whether the password is valid.
      */
     func isValidPassword(testStr: String) -> Bool{
@@ -566,8 +566,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      Is called to verify the whether the email is valid locally before sending it to Firebase. Uses a regular expression to check the email typed in abides by the conventions.
      - Parameters:
-         - testStr: The string to test.
-         - Returns: A boolean value to say whether the email is valid.
+     - testStr: The string to test.
+     - Returns: A boolean value to say whether the email is valid.
      */
     func isValidEmail(testStr:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
@@ -604,7 +604,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         }
         
         if self.profileImageUpload.image == UIImage(named: "defaultPic") {
-             let bool = self.showImageUploadAlert()
+            let bool = self.showImageUploadAlert()
             print(bool)
             if bool==true {
                 return

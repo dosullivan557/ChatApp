@@ -41,7 +41,7 @@ class SettingsView: UITableViewController {
     }
     ///Specifies each element in the table view.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         cell.textLabel!.text = settings[indexPath.row]
         if indexPath.row == 0 {
@@ -61,11 +61,11 @@ class SettingsView: UITableViewController {
             show(GV, sender: self)
         }
         else {
-//            print("2")
+            //            print("2")
             let CP = ColourPickerController()
             CP.settings = currentUser.settings
             show(CP, sender: self)
         }
     }
-  
+    
 }

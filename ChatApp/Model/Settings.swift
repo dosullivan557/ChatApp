@@ -18,7 +18,7 @@ class Settings: NSObject {
     
     /**
      Gets the string of the event including all of its information. Used for development.
-         - Returns: The string containing all of the information.
+     - Returns: The string containing all of the information.
      */
     func toString() -> String {
         return ("id: \(id!), greeting: \(greeting!), myColor: \(myColor!), theirColor: \(theirColor!)")

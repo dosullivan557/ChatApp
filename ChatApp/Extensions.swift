@@ -30,9 +30,9 @@ extension UIColor {
 extension UIImageView {
     
     /**
-      Loads the user's image from cache, and if it cannot find it there, it will download it from the database. Once it is downloaded, it will set the image.
-      - Parameters:
-           - urlString: The url of the users profile picture to load, whih is stored inside of the user object.
+     Loads the user's image from cache, and if it cannot find it there, it will download it from the database. Once it is downloaded, it will set the image.
+     - Parameters:
+     - urlString: The url of the users profile picture to load, whih is stored inside of the user object.
      */
     func loadImageUsingCache(urlString: String?){
         self.image = nil
@@ -56,7 +56,7 @@ extension UIImageView {
                         self.image = downloadedImage
                         imageCache.setObject(downloadedImage, forKey: urlString as AnyObject)
                     }
-        
+                    
                 }
             }).resume()
         }
@@ -81,7 +81,7 @@ extension String {
     
     func stringToChars(String: String) -> [Character] {
         var chars = [Character]()
-      
+        
         for char in String {
             chars.append(char)
         }
@@ -91,7 +91,7 @@ extension String {
         return NSRange(location: 0, length: utf16.count)
     }
     
-
+    
 }
 
 extension Character {
@@ -120,5 +120,5 @@ extension Date {
     var noon: Date {
         return Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: self)!
     }
-
+    
 }

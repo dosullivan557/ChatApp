@@ -47,7 +47,7 @@ class UpdateGreeting: UIViewController {
         textField.text = settings?.greeting!
         setupFields()
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-
+        
         view.addGestureRecognizer(tap)
     }
     
@@ -69,5 +69,5 @@ class UpdateGreeting: UIViewController {
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
-
+    
 }

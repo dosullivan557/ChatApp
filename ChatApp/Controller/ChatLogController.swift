@@ -36,27 +36,27 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 titleView.addGestureRecognizer(tap)
                 observeMessages()
                 
-
-
+                
+                
             }
             else {
                 titleView.text = "Group"
-//                titleView.isEditable = false
-//                titleView.isUserInteractionEnabled = true
-//                titleView.backgroundColor? = UIColor.clear
-//                let tap = UITapGestureRecognizer(target: self, action: #selector(showGroupProfile))
-//                titleView.addGestureRecognizer(tap)
-//                observeGroupMessages()
+                //                titleView.isEditable = false
+                //                titleView.isUserInteractionEnabled = true
+                //                titleView.backgroundColor? = UIColor.clear
+                //                let tap = UITapGestureRecognizer(target: self, action: #selector(showGroupProfile))
+                //                titleView.addGestureRecognizer(tap)
+                //                observeGroupMessages()
             }
-
-
+            
+            
             let calendarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showCalendar))
             calendarButton.image = UIImage(named: "CalendarIcon")
             calendarButton.title = ""
             navigationItem.rightBarButtonItem = calendarButton
             navigationItem.titleView = titleView
-
-            }
+            
+        }
     }
     
     ///Downloads the settings for that user from the database, and sets them here.
@@ -69,13 +69,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 self.currentUserSettings.myColor = dictionary["YourColor"] as? String
                 
                 self.setColors()
-        }
+            }
         }
     }
     
     ///Decides which colours are downloaded, and using them, it sets the colours as UIColours to global variables, and using them, it can set colours to the bubble chat's colours.
     func setColors(){
-
+        
         switch currentUserSettings.myColor! {
         case "Green":
             myColor = UIColor.green
@@ -105,11 +105,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             theirColor = UIColor.orange
             theirTextColor = UIColor.black
         }
-
+        
     }
-   
+    
     var chatWithUser = User()
-
+    
     lazy var inputTextField: UITextField = {
         let inputTextField = UITextField()
         inputTextField.placeholder = "Type Message..."
@@ -117,7 +117,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         inputTextField.delegate = self
         return inputTextField
     }()
-
+    
     
     lazy var calenderButton: UIImageView = {
         let imageView = UIImageView()
@@ -138,12 +138,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.alwaysBounceVertical = true
         collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
-
+        
         setupSanitiseWords()
         setupInputComponents()
         setupKeyboard()
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-
+            
             print(self.messages.count)
             if self.messages.count == 0 {
                 self.noMessages()
@@ -151,9 +151,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
     }
     
-//    @objc func showGroupProfile(){
-//        print("123")
-//    }
+    //    @objc func showGroupProfile(){
+    //        print("123")
+    //    }
     
     /**
      This function sets up the the words and adds them to a list of words.
@@ -177,14 +177,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     /**
      This function sanitises a message. This function is called when the send button is pressed. It finds words in the message which could be a bad word, and replaces the word with characyers in the middle of the string with * characters.
      - Parameters:
-         - Message: The message to sanitise.
+     - Message: The message to sanitise.
      - Returns: Returns a sanitised version of the message.
      */
     func sanitiseMessage(Message: String) -> String{
         var sanitisedMessage = Message
         var words = Message.components(separatedBy: " ")
         for i in 0...(sanitiseWords.count-1) {
-
+            
             for j in 0...(words.count - 1) {
                 if sanitiseWords[i].caseInsensitiveCompare(words[j]) == ComparisonResult.orderedSame {
                     if(words[j] != ""){
@@ -194,10 +194,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                             goodWord = goodWord + "*"
                         }
                         words[j] = goodWord + String(describing: badWord.characters.last!)
-
+                        
+                    }
                 }
             }
-        }
         }
         sanitisedMessage = words.joined(separator: " ")
         return sanitisedMessage
@@ -211,7 +211,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     /**
      Defines how to show the keyboard.
      - Parameters:
-         - notification: Used to get the keyboard size so that the text field and send button will appear above the keyboard when it shows.
+     - notification: Used to get the keyboard size so that the text field and send button will appear above the keyboard when it shows.
      */
     @objc func handleKeyboardWillShow(notification: Notification){
         let keyboardFrame = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? CGRect
@@ -225,7 +225,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     /**
      Defines how to hide the keyboard.
      - Parameters:
-         - notification: Used to get the keyboard size so that the text field and send button will appear at the bottom of the screen when the keyboard hides.
+     - notification: Used to get the keyboard size so that the text field and send button will appear at the bottom of the screen when the keyboard hides.
      */
     @objc func handleKeyboardWillHide(notification: Notification){
         containerViewBA?.constant = 0
@@ -275,50 +275,50 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 message.decrypt(key: DataSnapshot.key)
                 self.messages.append(message)
                 self.messages.sort { (m1, m2) -> Bool in
-//                    print((Int)(m1.timestamp!))
+                    //                    print((Int)(m1.timestamp!))
                     return m1.timestamp!.intValue < m2.timestamp!.intValue
                 }
-                    self.reloadCollectionView()
+                self.reloadCollectionView()
                 
             }, withCancel: nil)
         })
-
+        
     }
-//    func observeGroupMessages() {
-//        guard let uid = Auth.auth().currentUser?.uid else {
-//            return
-//        }
-//
-//        let ref = Database.database().reference().child("Groups").child(uid).childByAutoId()
-//        ref.observe(.childAdded, with: { (DataSnapshot) in
-//            let messageId = DataSnapshot.key
-//            let messagesRef = Database.database().reference().child("messages").child(messageId)
-//            messagesRef.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-//                guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
-//                    return
-//                }
-//                let message = Message()
-//                message.message = dictionary["text"] as? String
-//                message.sendId = dictionary["SendId"] as? String
-//                message.receiveId = dictionary["RecieveId"] as? String
-//                message.timestamp = dictionary["TimeStamp"] as? NSNumber
-//
-//                self.messages.append(message)
-//
-//                DispatchQueue.main.async(execute: {
-//                    self.collectionView?.reloadData()
-//                })
-//
-//            }, withCancel: nil)
-//        })
-//    }
+    //    func observeGroupMessages() {
+    //        guard let uid = Auth.auth().currentUser?.uid else {
+    //            return
+    //        }
+    //
+    //        let ref = Database.database().reference().child("Groups").child(uid).childByAutoId()
+    //        ref.observe(.childAdded, with: { (DataSnapshot) in
+    //            let messageId = DataSnapshot.key
+    //            let messagesRef = Database.database().reference().child("messages").child(messageId)
+    //            messagesRef.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+    //                guard let dictionary = DataSnapshot.value as? [String: AnyObject] else{
+    //                    return
+    //                }
+    //                let message = Message()
+    //                message.message = dictionary["text"] as? String
+    //                message.sendId = dictionary["SendId"] as? String
+    //                message.receiveId = dictionary["RecieveId"] as? String
+    //                message.timestamp = dictionary["TimeStamp"] as? NSNumber
+    //
+    //                self.messages.append(message)
+    //
+    //                DispatchQueue.main.async(execute: {
+    //                    self.collectionView?.reloadData()
+    //                })
+    //
+    //            }, withCancel: nil)
+    //        })
+    //    }
     
     
     /**
      Reloads the collectionView
      */
     func reloadCollectionView(){
-
+        
         DispatchQueue.main.async(execute: {
             self.hidesBottomBarWhenPushed = true
             self.collectionView?.reloadData()
@@ -333,7 +333,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             handleGroupSend()
         }
     }
-
+    
     ///Defines the textfield and submit button constraints.
     func setupInputComponents(){
         let containerView = UIView()
@@ -391,48 +391,48 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         return CGSize(width: view.frame.width, height: height)
     }
     /**
-    Estimates the size of the bubble which will be needed for the message.
+     Estimates the size of the bubble which will be needed for the message.
      - Parameters:
-         - text: The message to use to estimate the size of the bubble container for that message.
+     - text: The message to use to estimate the size of the bubble container for that message.
      */
     func estimatedBubble(message: String) -> CGRect {
         return NSString(string: message).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
     
-//    //This method is called when the send button is pressed.
+    //    //This method is called when the send button is pressed.
     @objc func handleGroupSend() {
-//
-//        if inputTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-//            inputTextField.text = ""
-//            print("Cannot send empty messages")
-//            return
-//        }
-//
-//        let ref = Database.database().reference().child("messages")
-//        let childRef = ref.childByAutoId()
-//        let recieveId = "1"
-//        let sendId = Auth.auth().currentUser!.uid
-//        let timestamp = Int(Date().timeIntervalSince1970)
-//
-//
-//        let values = ["text": inputTextField.text!, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
-//
-//        childRef.updateChildValues(values) { (error, ref) in
-//            if error != nil {
-//                print(error ?? "")
-//                return
-//            }
-//            for i in 1...self.users.count {
-//                let userMessagesRef = Database.database().reference().child("user-messages").child(sendId).child((self.users[i-1]?.id)!)
-//            let messageId = childRef.key
-//            userMessagesRef.updateChildValues([messageId: 1])
-//
-//                let recipientUserMessagesRef = Database.database().reference().child("user-messages").child((self.users[i-1]?.id)!).child(sendId)
-//            recipientUserMessagesRef.updateChildValues([messageId: 1])
-//            }
-//        }
-//        self.inputTextField.text = ""
+        //
+        //        if inputTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+        //            inputTextField.text = ""
+        //            print("Cannot send empty messages")
+        //            return
+        //        }
+        //
+        //        let ref = Database.database().reference().child("messages")
+        //        let childRef = ref.childByAutoId()
+        //        let recieveId = "1"
+        //        let sendId = Auth.auth().currentUser!.uid
+        //        let timestamp = Int(Date().timeIntervalSince1970)
+        //
+        //
+        //        let values = ["text": inputTextField.text!, "RecieveId": recieveId, "SendId": sendId, "TimeStamp": timestamp] as [String : Any]
+        //
+        //        childRef.updateChildValues(values) { (error, ref) in
+        //            if error != nil {
+        //                print(error ?? "")
+        //                return
+        //            }
+        //            for i in 1...self.users.count {
+        //                let userMessagesRef = Database.database().reference().child("user-messages").child(sendId).child((self.users[i-1]?.id)!)
+        //            let messageId = childRef.key
+        //            userMessagesRef.updateChildValues([messageId: 1])
+        //
+        //                let recipientUserMessagesRef = Database.database().reference().child("user-messages").child((self.users[i-1]?.id)!).child(sendId)
+        //            recipientUserMessagesRef.updateChildValues([messageId: 1])
+        //            }
+        //        }
+        //        self.inputTextField.text = ""
     }
     
     
@@ -440,7 +440,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     /**
      This method is called when the send button is pressed. It verifies that the message isn't empty, and then updates the database with the new message.
-    */
+     */
     @objc func handleSend() {
         
         if inputTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
@@ -469,9 +469,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         message.timestamp = timestamp as NSNumber
         message.message?.append(" ")
         
-       message.encrypt(key: id)
+        message.encrypt(key: id)
         
-//       message.message = message.message?.encodeEmoji
+        //       message.message = message.message?.encodeEmoji
         
         let values = ["text": message.message, "RecieveId": message.receiveId, "SendId": message.sendId, "TimeStamp": message.timestamp] as [String : Any]
         
@@ -493,10 +493,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     //Defines how many sections that should be in the collection view.
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-
+        
         return messages.count
     }
-
+    
     func noMessages(){
         let message = Message()
         message.message = "Say Heyy"
@@ -513,7 +513,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
-     
+        
         messageIsAboutEvent(message: message)
         handleAutoEvent()
     }
@@ -521,7 +521,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     @objc func handleAutoEvent(){
         let calendarView = CalendarController()
         calendarView.user = chatWithUser
-
+        
         if let rTime = time {
             var thing = rTime.components(separatedBy: ":")
             var adjust = 0
@@ -570,13 +570,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     //Setup each section in the collection view.
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         let message = messages[indexPath.item]
         cell.textView.text = message.message
         cell.bubbleWidth?.constant = estimatedBubble(message: message.message!).width + 25
         let autoSendMessageGesture = UITapGestureRecognizer(target: self, action: #selector(handleAutoSend))
-//        let autoEvent = UITapGestureRecognizer(target: self, action: #selector(handleAutoEvent(sender:)))
+        //        let autoEvent = UITapGestureRecognizer(target: self, action: #selector(handleAutoEvent(sender:)))
         //About event
         if messageIsAboutEvent(message: message) {
             eventMessages.append(message)
@@ -587,12 +587,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.bubbleView.backgroundColor = UIColor.niceBlue
             cell.profileImage.isHidden = true
             cell.isUserInteractionEnabled = true
-//            cell.addGestureRecognizer(autoEvent)
-
+            //            cell.addGestureRecognizer(autoEvent)
+            
             cell.removeGestureRecognizer(autoSendMessageGesture)
-
+            
         }
-        //Send message
+            //Send message
         else if (message.sendId! == message.receiveId!){
             cell.bubbleViewLA?.isActive = false
             cell.bubbleViewRA?.isActive = false
@@ -601,30 +601,30 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             cell.bubbleView.backgroundColor = UIColor.niceOrange
             cell.profileImage.isHidden = true
             cell.addGestureRecognizer(autoSendMessageGesture)
-//            cell.removeGestureRecognizer(autoEvent)
-
+            //            cell.removeGestureRecognizer(autoEvent)
+            
         }
-        //Outgoing message
+            //Outgoing message
         else if message.sendId == Auth.auth().currentUser?.uid {
             cell.bubbleView.backgroundColor = myColor
             cell.textView.textColor = myTextColor
-
+            
             cell.bubbleViewLA?.isActive = false
             cell.bubbleViewRA?.isActive = true
             cell.profileImage.isHidden = true
             cell.bubbleViewCA?.isActive = false
             cell.removeGestureRecognizer(autoSendMessageGesture)
             cell.isUserInteractionEnabled = false
-//            cell.removeGestureRecognizer(autoEvent)
-
+            //            cell.removeGestureRecognizer(autoEvent)
+            
         }
-        //Incoming message
+            //Incoming message
         else if message.receiveId != message.sendId{
             cell.bubbleViewRA?.isActive = false
             cell.bubbleViewLA?.isActive = true
             cell.bubbleViewCA?.isActive = false
-//            cell.removeGestureRecognizer(autoEvent)
-
+            //            cell.removeGestureRecognizer(autoEvent)
+            
             cell.bubbleView.backgroundColor = theirColor
             cell.textView.textColor = theirTextColor
             cell.profileImage.isHidden = false
@@ -639,11 +639,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
         return cell
     }
-
+    
     /**
      Reads in a message, and decides whether it is about an event.
      - Parameters:
-         - message: The message to test.
+     - message: The message to test.
      - Returns: Returns a true or false value to decide whether the message is about an event or not.
      */
     func messageIsAboutEvent(message: Message) -> Bool {
@@ -663,27 +663,27 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             foundMeetAt = true
         }
         for word in words {
-//            print("test: \(String(describing: timeTest?.firstMatch(in: word, options: NSRegularExpression.MatchingOptions.withTransparentBounds, range: word.nsrange))!)")
+            //            print("test: \(String(describing: timeTest?.firstMatch(in: word, options: NSRegularExpression.MatchingOptions.withTransparentBounds, range: word.nsrange))!)")
             counter += 1
-//            print(word)
+            //            print(word)
             
             let test = timeTest?.firstMatch(in: word, options: NSRegularExpression.MatchingOptions.withTransparentBounds, range: word.nsrange)
-//            print("test: \(test)")
+            //            print("test: \(test)")
             if (test != nil){
                 numberOfEventWords += 1
                 self.time = word
             }
-//            print("test: \(test)")
+                //            print("test: \(test)")
             else if locationWords.contains(word.lowercased()) {
-               
+                
                 if word == "at" {
                     if max > counter+1 {
-
+                        
                         if (((words[counter+1].stringToChars(String: words[counter+1]))[0] >= "a") && ((words[counter+1].stringToChars(String: words[counter+1])[0]) <= "z")) {
                             print("location")
                             self.location = words[counter+1]
                         }
-
+                            
                         else {
                             print("IDK")
                         }
@@ -703,14 +703,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     ///Called when the the no messages button is pressed.
     @objc func handleAutoSend() {
-
+        
         self.inputTextField.text = messageSend
         print(messages[0].message!)
         messages.removeAll()
-
+        
         self.handleSend()
         reloadCollectionView()
-
+        
     }
     
     ///Hide keyboard when screen is touched

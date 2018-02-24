@@ -17,11 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             updateUser()
             tb.currentUser = currentUser
             window?.rootViewController = tb
-
+            
         }
     }
     let tb = MyTabBar()
-
+    
     func updateUser() {
         if let id = Auth.auth().currentUser?.uid {
             Database.database().reference().child("users").child(id).observeSingleEvent(of: .value, with: { (snapshot) in

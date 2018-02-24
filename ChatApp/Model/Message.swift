@@ -25,23 +25,23 @@ class Message: NSObject {
     }
     
     /**
-        Method that returns your chatting partner's ID, so you can check which user is the correct user.
+     Method that returns your chatting partner's ID, so you can check which user is the correct user.
      
      
      - Returns: The userId of the user you are chatting with.
-    */
+     */
     func chatWithId() -> String? {
-    if sendId == Auth.auth().currentUser?.uid {
-        return receiveId
-    }
-    else {
-        return sendId
+        if sendId == Auth.auth().currentUser?.uid {
+            return receiveId
+        }
+        else {
+            return sendId
         }
     }
     /**
      Creates a string to use as the key. Removes all of the special characters and numbers from the string which is read in, and returns just the characters.
      - Parameters:
-        - key: The Key for the encryption - MessageId.
+     - key: The Key for the encryption - MessageId.
      - Returns: Returns the correct key to use.
      */
     fileprivate func getKey(key: String) -> String{
@@ -58,7 +58,7 @@ class Message: NSObject {
     /**
      Gets a string and returns a list of all of its characters.
      - Parameters:
-         - text: The text to convert.
+     - text: The text to convert.
      - Returns: Returns the list of characters.
      */
     func stringToList(text: String) -> [Character] {
@@ -72,8 +72,8 @@ class Message: NSObject {
     /**
      Encrypts the message text.
      - Parameters:
-         - key: The key to use.
-    */
+     - key: The key to use.
+     */
     func encrypt(key: String) {
         let newKey = getKey(key: key.lowercased())
         var enc = ""
@@ -83,7 +83,7 @@ class Message: NSObject {
         let zChar = stringToList(text: "z")[0].asciiValue
         let capZChar = stringToList(text: "Z")[0].asciiValue
         let capAChar = stringToList(text: "A")[0].asciiValue
-
+        
         print(stringToList(text: message!))
         for char in (stringToList(text: message!)) {
             guard let character = char.asciiValue else {
@@ -119,7 +119,7 @@ class Message: NSObject {
     /**
      Decrypts the message text.
      - Parameters:
-         - key: The key to use.
+     - key: The key to use.
      */
     func decrypt(key: String) {
         let newKey = getKey(key: key.lowercased())
@@ -161,10 +161,10 @@ class Message: NSObject {
                 dec += char.charToString()
                 print(dec)
                 print("ADMOAIFDN AOEINFAEIJ NFAEIJ ")
-//                continue
+                //                continue
             }
-
+            
+        }
+        
     }
-    
-}
 }

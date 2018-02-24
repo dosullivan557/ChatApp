@@ -11,7 +11,7 @@ import Firebase
 /// My TabBar for MessagesController
 class MyTabBar: UITabBarController {
     var tabList = [UIViewController]()
-
+    
     var currentUser = User() {
         didSet {
             self.passUsersThrough(user: self.currentUser)
@@ -23,15 +23,15 @@ class MyTabBar: UITabBarController {
     let myProfileController = MyProfileController()
     
     override func viewDidLoad() {
-
         
-
+        
+        
         createElements(view: messagesController, title: "Messages", imageName: "Messages")
         createElements(view: eventController, title: "Events", imageName: "CalendarIcon")
         createElements(view: myProfileController, title: "Profile", imageName: "profile")
         
         viewControllers = tabList
-
+        
     }
     override func viewDidAppear(_ animated: Bool) {
         let delegate = UIApplication.shared.delegate as? AppDelegate
@@ -62,14 +62,14 @@ class MyTabBar: UITabBarController {
                     }
                 })
                 self.passUsersThrough(user: user)
-
+                
             }
         }, withCancel: nil)
     }
     /**
-      Passes the current user into the tabs so it can set them up.
-      - Parameters:
-          - user: The current user to be passed to its views so they can be setup.
+     Passes the current user into the tabs so it can set them up.
+     - Parameters:
+     - user: The current user to be passed to its views so they can be setup.
      */
     func passUsersThrough(user: User) {
         self.messagesController.user = user
@@ -77,12 +77,12 @@ class MyTabBar: UITabBarController {
         self.myProfileController.user = user
     }
     /**
-      Creates a tab element, and adds it to the current tabbar.
-    
+     Creates a tab element, and adds it to the current tabbar.
+     
      - Parameters:
-         - view: The view to add.
-         - title: The title of the tab bar element to add.
-         - imageName: The name of the image to set as the tab bar item's image.
+     - view: The view to add.
+     - title: The title of the tab bar element to add.
+     - imageName: The name of the image to set as the tab bar item's image.
      */
     func createElements(view: UIViewController,title: String, imageName: String) {
         let view = view

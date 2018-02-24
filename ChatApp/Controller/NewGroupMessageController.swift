@@ -19,28 +19,28 @@ class NewGroupMessageController: UITableViewController {
     var selectedUsers = [User]()
     var timer: Timer?
     var messagesController = MessagesController()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         navigationItem.rightBarButtonItem = nil
-//        fetchUser()
+        //        fetchUser()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
     }
-//    func addGroupToDataBase() {
-//        let ref = Database.database().reference().child("Groups").childByAutoId()
-//        ref.updateChildValues("Group Name": "GroupName", "People" : )
-//    }
-
-
+    //    func addGroupToDataBase() {
+    //        let ref = Database.database().reference().child("Groups").childByAutoId()
+    //        ref.updateChildValues("Group Name": "GroupName", "People" : )
+    //    }
+    
+    
     @objc func handleCreateGroup() {
         
         
-            dismiss(animated: true)
-
-            
-            self.messagesController.showChatControllerForUser(selectedUsers)
+        dismiss(animated: true)
+        
+        
+        self.messagesController.showChatControllerForUser(selectedUsers)
         
     }
     @objc func handleCancel(){
@@ -51,7 +51,7 @@ class NewGroupMessageController: UITableViewController {
         
         return AllUsers.count
     }
-
+    
     //Reloads the tableview.
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
@@ -73,12 +73,12 @@ class NewGroupMessageController: UITableViewController {
         return cell!
         
     }
-
+    
     //Defines the height of each cell.
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 65
     }
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let cell = tableView.cellForRow(at: indexPath)
@@ -88,14 +88,14 @@ class NewGroupMessageController: UITableViewController {
             cell!.accessoryType = UITableViewCellAccessoryType.checkmark
             selectedUsers.append(AllUsers[indexPath.row])
             navigationItem.rightBarButtonItem = UIBarButtonItem(title:"Create Group", style: .plain, target: self, action: #selector(handleCreateGroup))
-
+            
         }
         else
         {
             cell!.accessoryType = UITableViewCellAccessoryType.none
             print(indexPath.row)
             if(selectedUsers.contains(AllUsers[indexPath.row])){
-            for i in 0...selectedUsers.count{
+                for i in 0...selectedUsers.count{
                     if selectedUsers[i] == AllUsers[indexPath.row] {
                         selectedUsers.remove(at: i)
                         if selectedUsers.count == 0 {
@@ -105,7 +105,7 @@ class NewGroupMessageController: UITableViewController {
                     }
                 }
             }
-
+            
             print(selectedUsers.count)
         }
     }

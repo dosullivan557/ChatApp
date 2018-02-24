@@ -66,7 +66,7 @@ class MyEventsController: UITableViewController {
     /**
      Uploads any errors to the database for examination.
      - Parameters:
-         - error: The error code which is called.
+     - error: The error code which is called.
      */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
@@ -77,8 +77,8 @@ class MyEventsController: UITableViewController {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
      
      */
     
@@ -92,8 +92,8 @@ class MyEventsController: UITableViewController {
     /**
      Gets passed the current user of the system, and then sets up the navigation bar with that users information.
      - Parameters:
-        - user: The current user of the application.
-    */
+     - user: The current user of the application.
+     */
     func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
         
@@ -111,16 +111,16 @@ class MyEventsController: UITableViewController {
     
     //Not needed?
     override func viewDidAppear(_ animated: Bool) {
-            if  currentUser.id == Auth.auth().currentUser?.uid {
-                print("Same user")
-                return
-            }
-            else {
-                print("Different")
-                events.removeAll()
-                setupNavBarWithUser(currentUser)
-                observeUserEvents()
-                handleReload()
+        if  currentUser.id == Auth.auth().currentUser?.uid {
+            print("Same user")
+            return
+        }
+        else {
+            print("Different")
+            events.removeAll()
+            setupNavBarWithUser(currentUser)
+            observeUserEvents()
+            handleReload()
         }
     }
     
@@ -147,9 +147,9 @@ class MyEventsController: UITableViewController {
     }
     
     /**
-      If the event has been accepted by the other user, it adds the event to their calendar.
+     If the event has been accepted by the other user, it adds the event to their calendar.
      - Parameters:
-         - eventToAdd: The event to add to the calendar.
+     - eventToAdd: The event to add to the calendar.
      */
     func addEventToCalendar(eventToAdd: Event) {
         let eventStore: EKEventStore = EKEventStore()

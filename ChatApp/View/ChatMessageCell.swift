@@ -29,7 +29,7 @@ class ChatMessageCell: UICollectionViewCell {
     }()
     
     let profileImage: UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultPic")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 16
@@ -37,7 +37,7 @@ class ChatMessageCell: UICollectionViewCell {
         return imageView
     }()
     /*
-      These NSLayoutConstraints are made global so I can change them when I want to. It is used once I determine who sent a certain message. If the currently logged in user sent the message, I can change the right anchor, and if it is another user, I can change left anchor. As well as this, when I estimate the width of the container which will be needed to hold the message, I can change the width anchor of the bubbleView to say how wide it should be.
+     These NSLayoutConstraints are made global so I can change them when I want to. It is used once I determine who sent a certain message. If the currently logged in user sent the message, I can change the right anchor, and if it is another user, I can change left anchor. As well as this, when I estimate the width of the container which will be needed to hold the message, I can change the width anchor of the bubbleView to say how wide it should be.
      */
     var bubbleWidth: NSLayoutConstraint?
     var bubbleViewRA : NSLayoutConstraint?

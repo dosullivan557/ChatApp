@@ -34,7 +34,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
     var user: User? {
         didSet{
-
+            
             navigationItem.title = "Event with " + ((user?.name)!.components(separatedBy: " "))[0]
         }
     }
@@ -42,12 +42,12 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     var fDate : Date?
     var closest = MKMapItem()
     let mapView = MKMapView()
-
+    
     
     let defaultHeight = CGFloat(30)
     let labelHeight = CGFloat(40)
     let spacing = CGFloat(10)
-
+    
     let titleField : UITextField = {
         let title = UITextField()
         title.placeholder = "Enter Title"
@@ -268,7 +268,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     /**
      Validates the information provided in the fields.
      - Returns: The boolean value to symbolise whether the values are valid or not.
-    */
+     */
     func validate() -> Bool {
         if (titleField.text?.count)! < 5 {
             showAlert(title: "Invalid Title", message: "Please enter a valid title. (Minimum of 5 characters).")
@@ -289,7 +289,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         if((sDate?.timeIntervalSince1970 as NSNumber?)?.int32Value > (fDate?.timeIntervalSince1970 as NSNumber?)?.int32Value){
             showAlert(title: "Invalid Dates.", message: "Your Start date is after your end date. Please enter valid dates and try again.")
             return false
-
+            
         }
         
         return true
@@ -299,8 +299,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
      
      */
     
@@ -311,7 +311,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }))
         self.present(alert, animated: true, completion: nil)
     }
-
+    
     /**
      Called when the submit button is pressed. Adds all the information into an object, and uploads it to the database.
      */
@@ -337,37 +337,37 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             array.append(self.closest.placemark.coordinate.latitude.description as NSString)
             array.append(self.closest.placemark.coordinate.longitude.description as NSString)
             array.append(self.closest.placemark.title! as NSString)
-
+            
             event.location = array
             
             let myRef = Database.database().reference().child("events").child(event.id!)
             let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : "", "Location": event.location] as [String : Any]
             
-                myRef.updateChildValues(values) { (error, ref) in
-                    if error != nil {
-                        self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
-                        self.postError(error: error!)
-                        return
-                    }
-                    self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
-
-                    let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
-                    
-                    let messageId = myRef.key
-                    userEventRef.updateChildValues([messageId: 1])
-                    
-                    let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
-                    recipientUserEventRef.updateChildValues([messageId: 1])
-                
+            myRef.updateChildValues(values) { (error, ref) in
+                if error != nil {
+                    self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
+                    self.postError(error: error!)
+                    return
                 }
+                self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+                
+                let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
+                
+                let messageId = myRef.key
+                userEventRef.updateChildValues([messageId: 1])
+                
+                let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
+                recipientUserEventRef.updateChildValues([messageId: 1])
+                
             }
         }
+    }
     
-
+    
     /**
      Uploads any errors to the database for examination.
      - Parameters:
-         - error: The error code which is called.
+     - error: The error code which is called.
      */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
@@ -376,18 +376,18 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     }
     
     /**
-    Converts the time from a datepicker to seconds.
-    */
+     Converts the time from a datepicker to seconds.
+     */
     func dateToSecs() -> Int {
         return Int(datePicker.date.timeIntervalSince1970)
     }
-
+    
     
     /**
      When the done button in the toolbar is pressed, it checks which datefield is being edited, and then forces the finish of that, which will hide the picker.
      */
     @objc func donePicker(){
-
+        
         if dateFieldS.isEditing {
             dateFieldS.endEditing(true)
         }
@@ -396,10 +396,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }
     }
     
-
+    
     
     /**
-        This method checks for permissions, and if it doesn't have them, it will not do anything, otherwise, it will get the current users location, and search for a place with the name which is given which is close to the location. If it cannot find any, it will search over a larger area, and then gets the location. Once it finds locations, it will sort through them and find the closest one, and then it sets the variable closest to it.
+     This method checks for permissions, and if it doesn't have them, it will not do anything, otherwise, it will get the current users location, and search for a place with the name which is given which is close to the location. If it cannot find any, it will search over a larger area, and then gets the location. Once it finds locations, it will sort through them and find the closest one, and then it sets the variable closest to it.
      */
     func findLocation() {
         let locationManager = CLLocationManager()
@@ -418,15 +418,15 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         
         
         let currentLocation = locationManager.location
-
+        
         
         let searchBarText = locationField.text
         let request = MKLocalSearchRequest()
         request.region = mapView.region
         request.naturalLanguageQuery = searchBarText
-
+        
         let search = MKLocalSearch(request: request)
-
+        
         search.start { response, error in
             guard let response = response else {
                 print("ERROR!")
@@ -434,26 +434,26 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             }
             let currentCoordinates = currentLocation?.coordinate
             self.closest = response.mapItems[0]
-//            print("Start value :\(self.closest)")
+            //            print("Start value :\(self.closest)")
             print(response.mapItems.count)
             if response.mapItems.count > 1 {
-            for i in 1...(response.mapItems.count - 1){
-                print("Checking another")
-                let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
-                let destLat = Double(response.mapItems[i].placemark.coordinate.latitude)
-                let currentLong = Double((currentCoordinates?.longitude)!)
-                let currentLat = Double((currentCoordinates?.latitude)!)
-                let currentClosestLong = Double(self.closest.placemark.coordinate.longitude)
-                let currentClosestLat = Double(self.closest.placemark.coordinate.latitude)
- 
-                if (destLong.distance(to: currentLong) + destLat.distance(to: currentLat)) < ((currentClosestLat.distance(to: currentLat) + currentClosestLong.distance(to: currentLong))){
-                    print("Found closer: \(self.closest.placemark.coordinate)")
+                for i in 1...(response.mapItems.count - 1){
+                    print("Checking another")
+                    let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
+                    let destLat = Double(response.mapItems[i].placemark.coordinate.latitude)
+                    let currentLong = Double((currentCoordinates?.longitude)!)
+                    let currentLat = Double((currentCoordinates?.latitude)!)
+                    let currentClosestLong = Double(self.closest.placemark.coordinate.longitude)
+                    let currentClosestLat = Double(self.closest.placemark.coordinate.latitude)
                     
-                    self.closest = response.mapItems[i]
+                    if (destLong.distance(to: currentLong) + destLat.distance(to: currentLat)) < ((currentClosestLat.distance(to: currentLat) + currentClosestLong.distance(to: currentLong))){
+                        print("Found closer: \(self.closest.placemark.coordinate)")
+                        
+                        self.closest = response.mapItems[i]
+                    }
                 }
-            }
-            print("Finished searching. Closeset is: \(self.closest)")
-        
+                print("Finished searching. Closeset is: \(self.closest)")
+                
             }
             else {
                 let newRequest = MKLocalSearchRequest()
@@ -470,20 +470,20 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                     self.closest = response.mapItems[0]
                     //            print("Start value :\(self.closest)")
                     print(response.mapItems.count)
-                        for i in 1...(response.mapItems.count - 1){
-                            print("Checking another")
-                            let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
-                            let destLat = Double(response.mapItems[i].placemark.coordinate.latitude)
-                            let currentLong = Double((currentCoordinates?.longitude)!)
-                            let currentLat = Double((currentCoordinates?.latitude)!)
-                            let currentClosestLong = Double(self.closest.placemark.coordinate.longitude)
-                            let currentClosestLat = Double(self.closest.placemark.coordinate.latitude)
+                    for i in 1...(response.mapItems.count - 1){
+                        print("Checking another")
+                        let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
+                        let destLat = Double(response.mapItems[i].placemark.coordinate.latitude)
+                        let currentLong = Double((currentCoordinates?.longitude)!)
+                        let currentLat = Double((currentCoordinates?.latitude)!)
+                        let currentClosestLong = Double(self.closest.placemark.coordinate.longitude)
+                        let currentClosestLat = Double(self.closest.placemark.coordinate.latitude)
+                        
+                        if (destLong.distance(to: currentLong) + destLat.distance(to: currentLat)) < ((currentClosestLat.distance(to: currentLat) + currentClosestLong.distance(to: currentLong))){
+                            print("Found closer: \(self.closest.placemark.coordinate)")
                             
-                            if (destLong.distance(to: currentLong) + destLat.distance(to: currentLat)) < ((currentClosestLat.distance(to: currentLat) + currentClosestLong.distance(to: currentLong))){
-                                print("Found closer: \(self.closest.placemark.coordinate)")
-                                
-                                self.closest = response.mapItems[i]
-                            }
+                            self.closest = response.mapItems[i]
+                        }
                     }
                 }
             }

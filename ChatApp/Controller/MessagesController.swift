@@ -45,14 +45,14 @@ class MessagesController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
-
+        
         if editingStyle == .delete {
             self.messages.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             guard let chatId = message.chatWithId() else {
                 return
             }
-
+            
             if let currentUid = Auth.auth().currentUser?.uid {
                 let ref = Database.database().reference().child("user-messages").child(currentUid).child(chatId)
                 ref.removeValue()
@@ -71,11 +71,11 @@ class MessagesController: UITableViewController {
             setupNavBarWithUser(user)
         }
     }
-  
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hidesBottomBarWhenPushed = false
-
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
         
         let image = UIImage(named: "newMessage")
@@ -102,7 +102,7 @@ class MessagesController: UITableViewController {
     }
     
     /**
-    Checks the database for the messages for the current user. All this gets added into a dictionary of the user's Id, and then sorts the values into time order.
+     Checks the database for the messages for the current user. All this gets added into a dictionary of the user's Id, and then sorts the values into time order.
      */
     func observeUserMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -113,32 +113,32 @@ class MessagesController: UITableViewController {
         ref.observe(.childAdded, with: { (DataSnapshot) in
             let newRef = ref.child(DataSnapshot.key)
             newRef.observe(.childAdded, with: { (snapshot) in
-            let messageId = snapshot.key
-            let messagesReference = Database.database().reference().child("messages").child(messageId)
-            
-            messagesReference.observeSingleEvent(of: .value, with: { (DataSnapshot) in
-                if let dictionary = DataSnapshot.value as? [String: AnyObject] {
-                    let message = Message()
-                    message.message = dictionary["text"] as? String
-                    message.timestamp = dictionary["TimeStamp"] as? NSNumber
-                    message.receiveId = dictionary["RecieveId"] as? String
-                    message.sendId = dictionary["SendId"] as? String
-                    message.decrypt(key: DataSnapshot.key)
-                    if let chatId = message.chatWithId() {
-                        self.messagesDictionary[chatId] = message
-                        
-                        self.messages = Array(self.messagesDictionary.values)
-                        self.messages.sort(by: { (message1, message2) -> Bool in
-                            
-                            return message1.timestamp?.int32Value > message2.timestamp?.int32Value
-                        })
-                    }
-                    //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
-                    self.timer?.invalidate()
-                    self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
-                }
+                let messageId = snapshot.key
+                let messagesReference = Database.database().reference().child("messages").child(messageId)
                 
-            }, withCancel: nil)
+                messagesReference.observeSingleEvent(of: .value, with: { (DataSnapshot) in
+                    if let dictionary = DataSnapshot.value as? [String: AnyObject] {
+                        let message = Message()
+                        message.message = dictionary["text"] as? String
+                        message.timestamp = dictionary["TimeStamp"] as? NSNumber
+                        message.receiveId = dictionary["RecieveId"] as? String
+                        message.sendId = dictionary["SendId"] as? String
+                        message.decrypt(key: DataSnapshot.key)
+                        if let chatId = message.chatWithId() {
+                            self.messagesDictionary[chatId] = message
+                            
+                            self.messages = Array(self.messagesDictionary.values)
+                            self.messages.sort(by: { (message1, message2) -> Bool in
+                                
+                                return message1.timestamp?.int32Value > message2.timestamp?.int32Value
+                            })
+                        }
+                        //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
+                        self.timer?.invalidate()
+                        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+                    }
+                    
+                }, withCancel: nil)
             })
             
         }, withCancel: nil)
@@ -210,8 +210,8 @@ class MessagesController: UITableViewController {
     
     /**
      Defines the current user of the system, and passes it to [setupNavBarWithUser(_ user: User)]( )) to setup the navigation bar for the particular user.
-
-      */
+     
+     */
     func fetchUser() {
         guard let uid = Auth.auth().currentUser?.uid else {
             //for some reason uid = nil
@@ -233,10 +233,10 @@ class MessagesController: UITableViewController {
                 settingsRef.observe(.value, with: { (DataSnapshot) in
                     if let dictionary = DataSnapshot.value as? [String: AnyObject] {
                         
-                    user.settings?.id = user.id
-                    user.settings?.greeting = dictionary["Greeting"] as? String
-                    user.settings?.theirColor = dictionary["TheirColor"] as? String
-                    user.settings?.myColor = dictionary["YourColor"] as? String
+                        user.settings?.id = user.id
+                        user.settings?.greeting = dictionary["Greeting"] as? String
+                        user.settings?.theirColor = dictionary["TheirColor"] as? String
+                        user.settings?.myColor = dictionary["YourColor"] as? String
                     }
                 })
                 
@@ -252,7 +252,7 @@ class MessagesController: UITableViewController {
     /**
      Reads in the current user of the system which has been passed through from the [fetchUser()]() method. From here, it resets information such as the messages array and the messages dictionary, reloads the table to show the empty table, and then calls [observeUserMessages()]() to observe all the users messages. As well as this, everything is added into the navigation bar and positioned correctly.
      - Parameters:
-         - user: Reads in the current user of the system, and will use this user object to set all the information in the navigation bar.
+     - user: Reads in the current user of the system, and will use this user object to set all the information in the navigation bar.
      */
     func setupNavBarWithUser(_ user: User) {
         messages.removeAll()
@@ -305,7 +305,7 @@ class MessagesController: UITableViewController {
     /**
      Opens a chat log with an array of users, which is passed in.
      - Parameters:
-         - user: The list of users that are being read in, and will be used to setup a chatlog controller.
+     - user: The list of users that are being read in, and will be used to setup a chatlog controller.
      */
     func showChatControllerForUser(_ user: [User]) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
@@ -315,12 +315,12 @@ class MessagesController: UITableViewController {
     }
     
     //Opens a chat log with a user which is passed in.
-//    func showChatControllerForGroup(_ users: [User]) {
-//        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-//        chatLogController.users = users
-//        chatLogController.hidesBottomBarWhenPushed = true
-//        navigationController?.pushViewController(chatLogController, animated: true)
-//    }
+    //    func showChatControllerForGroup(_ users: [User]) {
+    //        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+    //        chatLogController.users = users
+    //        chatLogController.hidesBottomBarWhenPushed = true
+    //        navigationController?.pushViewController(chatLogController, animated: true)
+    //    }
     
     
     

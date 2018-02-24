@@ -11,7 +11,32 @@ import UIKit
 import Firebase
 import EventKit
 
+
+//issue where the comparators weren't working, and these two functions were the fix to it
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
+    }
+}
+
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l > r
+    default:
+        return rhs < lhs
+    }
+}
+
 class EventsController: UITableViewController {
+    
+    // MARK: - Properties
     let cellEId = "cellEId"
     
     var events = [Event]()
@@ -28,7 +53,7 @@ class EventsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(EventCell.self, forCellReuseIdentifier: cellEId)
-//        observeUserEvents()
+        //        observeUserEvents()
         setupNavBarWithUser(currentUser)
         //        self.hidesBottomBarWhenPushed = true
     }
@@ -46,8 +71,8 @@ class EventsController: UITableViewController {
         decline.backgroundColor = UIColor(r: 206, g: 27, b: 0)
         
         let accept = UITableViewRowAction(style: .normal, title: "Accept") { action, index in
-
-        print("accept button tapped")
+            
+            print("accept button tapped")
             self.acceptFunc(index: index)
         }
         accept.backgroundColor = UIColor(r: 0, g: 168, b: 48)
@@ -58,8 +83,8 @@ class EventsController: UITableViewController {
     /**
      This is called when the decline event button is pressed. It removes the event from the cell, and then updates the database to say that it was declined.
      - Parameters:
-         - index: The index of the table view to remove.
-
+     - index: The index of the table view to remove.
+     
      */
     func declineFunc(index: IndexPath, event: Event){
         print("Decline")
@@ -70,7 +95,7 @@ class EventsController: UITableViewController {
         }
         showDeleteAlertSure(title: "You have declined this event", message: "You have declined the event with this user, would you like to send your appologies?", index: index, event: event)
         self.handleReload()
-   
+        
         
     }
     
@@ -78,9 +103,9 @@ class EventsController: UITableViewController {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-        - title: The title to set for the alert box.
-        - message: The message to set for the alert box.
-         - event: The event to delete.
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
+     - event: The event to delete.
      */
     
     func showDeleteAlertSure(title: String, message: String, index: IndexPath, event: Event) {
@@ -98,7 +123,7 @@ class EventsController: UITableViewController {
     /**
      Called when the user decides to send appologies for declining an event.
      - Parameters:
-         - event: The event to send the appology for.
+     - event: The event to send the appology for.
      */
     func sendAppologies(event: Event){
         
@@ -132,48 +157,50 @@ class EventsController: UITableViewController {
             let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId!).child(sendId!)
             recipientUserMessagesRef.updateChildValues([messageId: 1])
         }
-             self.showAlert(title: "Event Declined", message: "This event has been removed.")
+        self.showAlert(title: "Event Declined", message: "This event has been removed.")
     }
     /**
      This is called when the accept event button is pressed. It gets access to the calendar, and then adds it in. Once it has been accepted, it removes it from the table view.
      - Parameters:
-         - index: The index of the table view to add.
+     - index: The index of the table view to add.
      */
     func acceptFunc(index: IndexPath){
         let currentEvent = events[index.row]
         let eventStore: EKEventStore = EKEventStore()
-        eventStore.requestAccess(to: .event) { (bool, error) in
-            if (bool) && (error == nil) {
-                print("granted \(bool)")
-                let event:EKEvent = EKEvent(eventStore: eventStore)
-                event.title = currentEvent.title
-                event.startDate = Date(timeIntervalSince1970: currentEvent.startTime as! TimeInterval)
-                event.endDate = Date(timeIntervalSince1970: currentEvent.finishTime as! TimeInterval)
-                event.notes = currentEvent.desc
-                event.calendar = eventStore.defaultCalendarForNewEvents
-                event.location = currentEvent.location[2] as String?
-//                event.addAlarm(EKAlarm(relativeOffset: ((currentEvent.startTime!)) as! TimeInterval))
-//                event.addAlarm(EKAlarm(relativeOffset: (currentEvent.startTime as! TimeInterval) - (3600 as TimeInterval)))
-
-                do {
-                    try eventStore.save(event, span: .thisEvent)
-                } catch let error as NSError {
+        if eventConflict(newEvent: events[index.row]){
+            eventStore.requestAccess(to: .event) { (bool, error) in
+                if (bool) && (error == nil) {
+                    print("granted \(bool)")
+                    let event:EKEvent = EKEvent(eventStore: eventStore)
+                    event.title = currentEvent.title
+                    event.startDate = Date(timeIntervalSince1970: currentEvent.startTime as! TimeInterval)
+                    event.endDate = Date(timeIntervalSince1970: currentEvent.finishTime as! TimeInterval)
+                    event.notes = currentEvent.desc
+                    event.calendar = eventStore.defaultCalendarForNewEvents
+                    event.location = currentEvent.location[2] as String?
+                    //                event.addAlarm(EKAlarm(relativeOffset: ((currentEvent.startTime!)) as! TimeInterval))
+                    //                event.addAlarm(EKAlarm(relativeOffset: (currentEvent.startTime as! TimeInterval) - (3600 as TimeInterval)))
+                    
+                    do {
+                        try eventStore.save(event, span: .thisEvent)
+                    } catch let error as NSError {
+                        self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
+                        self.postError(error: error)
+                        return
+                    }
+                    self.updateDatabase(IndexPath: index, bool: true)
+                    self.events.remove(at: index.row)
+                    DispatchQueue.main.async() {
+                        self.tableView.deleteRows(at: [index], with: .fade)
+                    }
+                    self.handleReload()
+                    self.showAlert(title: "Event Accepted", message: "Event has been confirmed, and is now in your calendar. We will remind you an hour before the event, as well as at the planned meeting time!.")
+                }
+                else {
                     self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
-                    self.postError(error: error)
+                    self.postError(error: error!)
                     return
                 }
-                self.updateDatabase(IndexPath: index, bool: true)
-                self.events.remove(at: index.row)
-                DispatchQueue.main.async() {
-                    self.tableView.deleteRows(at: [index], with: .fade)
-                }
-                self.handleReload()
-                self.showAlert(title: "Event Accepted", message: "Event has been confirmed, and is now in your calendar. We will remind you an hour before the event, as well as at the planned meeting time!.")
-            }
-            else {
-                self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
-                self.postError(error: error!)
-                return
             }
         }
     }
@@ -181,8 +208,8 @@ class EventsController: UITableViewController {
     /**
      Update the information in the database to say whether it has been accepted or declined.
      - Parameters:
-         - IndexPath: The index of the tableCell which is to be accepted.
-         - bool: The value to update the accepted value of that event to.
+     - IndexPath: The index of the tableCell which is to be accepted.
+     - bool: The value to update the accepted value of that event to.
      */
     func updateDatabase(IndexPath: IndexPath, bool: Bool){
         let event = events[IndexPath.row]
@@ -196,7 +223,7 @@ class EventsController: UITableViewController {
     /**
      Uploads any errors to the database for examination.
      - Parameters:
-         - error: The error code which is called.
+     - error: The error code which is called.
      */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
@@ -208,8 +235,8 @@ class EventsController: UITableViewController {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
      
      */
     
@@ -224,8 +251,8 @@ class EventsController: UITableViewController {
     /**
      Gets passed the current user of the system, and then sets up the navigation bar with that users information.
      - Parameters:
-         - user: The current user.
-    */
+     - user: The current user.
+     */
     func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
         
@@ -304,45 +331,44 @@ class EventsController: UITableViewController {
     /**
      Checks whether there is a conflicting event in the users calendar.
      - Parameters:
-         - newEvent: The event to check from.
+     - newEvent: The event to check from.
      - Returns: a boolean value to see if there is any conflicts.
      */
     func eventConflict(newEvent: Event) -> Bool {
+        var titles : [String] = []
+        var startDates : [NSDate] = []
+        var endDates : [NSDate] = []
+        var loadedEvents = [Event]()
         let eventStore = EKEventStore()
         let calendars = eventStore.calendars(for: .event)
-    
+        
         for calendar in calendars {
             
-            var events = eventStore.events(matching: NSPredicate.init(block: {_,_ in return true}))
-//
-//            print("number of events in calander: \(events.count)")
-//                for event in events {
-//                    titles.append(event.title)
-//                    startDates.append(event.startDate)
-//                    endDates.append(event.endDate)
-//                }
-//
-            events.sort(by: { (event1, event2) -> Bool in
-                return event1.startDate.timeIntervalSince1970 < event2.startDate.timeIntervalSince1970
-            })
-
-            if let currentEventST = newEvent.startTime?.doubleValue, let currentEventET = newEvent.finishTime?.doubleValue{
-                for event in events {
-                    let eventStartTime = event.startDate.timeIntervalSince1970 as Double
-                    let eventEndTime = event.endDate.timeIntervalSince1970 as Double
-                    if ((currentEventST < eventStartTime) && (currentEventST < eventEndTime) && (currentEventET > eventStartTime) && (currentEventET < eventEndTime)) {
-                        print("huh")
-                    }
-                }
+            let oneMonthAgo = NSDate(timeIntervalSinceNow: -30*24*3600)
+            let oneMonthAfter = NSDate(timeIntervalSinceNow: +30*24*3600)
+            
+            let predicate = eventStore.predicateForEvents(withStart: oneMonthAgo as Date, end: oneMonthAfter as Date, calendars: [calendar])
+            
+            var events = eventStore.events(matching: predicate)
+            
+            for event in events {
+                let eventToAdd = Event()
+                eventToAdd.title = event.title
+                eventToAdd.startTime = event.startDate.timeIntervalSince1970 as NSNumber
+                eventToAdd.finishTime = event.endDate.timeIntervalSince1970 as NSNumber
+                loadedEvents.append(eventToAdd)
                 
             }
             
-            
-            
-            
         }
-    
-    
+        print("Size: \(loadedEvents.count)")
+        
+        for event in loadedEvents {
+            print(event.title)
+            if newEvent.startTime?.doubleValue > event.startTime?.doubleValue && newEvent.startTime?.doubleValue < event.finishTime?.doubleValue && newEvent.finishTime?.doubleValue < event.finishTime?.doubleValue && newEvent.finishTime?.doubleValue > event.startTime?.doubleValue {
+                print("HUH")
+            }
+        }
         return false
     }
     

@@ -24,7 +24,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
             dateFieldS.text = dateFormatter.string(from: startTimestampDate)
             dateFieldF.text = dateFormatter.string(from: finishTimestampDate)
             fetchUser()
-
+            
         }
     }
     var user = User()
@@ -43,7 +43,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         mv.translatesAutoresizingMaskIntoConstraints = false
         return mv
     }()
-
+    
     let descriptionBox: UITextView = {
         let view = UITextView()
         view.isEditable = false
@@ -51,7 +51,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = false
         view.font = UIFont(name: "arial", size: 10)
-
+        
         view.textColor = UIColor.black
         return view
     }()
@@ -102,14 +102,14 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         field.layer.borderWidth = 1
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "arial", size: 10)
-
+        
         return field
     }()
     
     let eventWith: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-
+        
         return view
     }()
     
@@ -169,7 +169,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
-//        view.backgroundColor = UIColor.purple
+        //        view.backgroundColor = UIColor.purple
         return view
     }()
     
@@ -178,7 +178,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         image.image = UIImage(named: "transit")
         return image
     }()
-
+    
     let transitField : UITextView = {
         let field = UITextView()
         field.allowsEditingTextAttributes = false
@@ -190,7 +190,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "arial", size: 10)
         field.textAlignment = .center
-
+        
         return field
     }()
     
@@ -239,11 +239,11 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
         return renderer
     }
-   
+    
     override func viewDidLoad() {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(openMapForPlace))
-
+        
         super.viewDidLoad()
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         self.hidesBottomBarWhenPushed = true
@@ -255,7 +255,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         view.addSubview(dateFieldF)
         eventWith.addSubview(picview)
         eventWith.addSubview(nameLabel)
-
+        
         
         estimateBox.addSubview(walkingIcon)
         estimateBox.addSubview(walkingField)
@@ -266,7 +266,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         estimateBox.addSubview(drivingArea)
         view.addSubview(mapView)
         drivingArea.addGestureRecognizer(tap)
-
+        
         
         mapView.delegate = self
         mapView.showsPointsOfInterest = true
@@ -311,7 +311,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         }
         view.addSubview(estimateBox)
         fillInEstimates(request: directionRequest)
-
+        
         setupEstimateBox()
         setupContainer()
         view.addSubview(eventWith)
@@ -322,7 +322,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
      - Parameters:
      - request: The MKDirectionsRequest which is to be used to get the route.
      */
-
+    
     func fillInEstimates(request: MKDirectionsRequest) {
         request.transportType = .walking
         
@@ -368,7 +368,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
     /**
      Converts a time interval into a string.
      - Parameter:
-         - interval: TimeInterval to convert.
+     - interval: TimeInterval to convert.
      - Return: Returns the formate
      */
     func stringFromTimeInterval(interval: TimeInterval) -> String {
@@ -390,7 +390,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         picview.widthAnchor.constraint(equalToConstant: 50).isActive = true
         picview.centerXAnchor.constraint(equalTo: eventWith.centerXAnchor).isActive = true
         picview.topAnchor.constraint(equalTo: eventWith.topAnchor).isActive = true
-    
+        
         nameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         nameLabel.widthAnchor.constraint(equalTo: eventWith.widthAnchor, constant: -30).isActive = true
         nameLabel.centerXAnchor.constraint(equalTo: eventWith.centerXAnchor).isActive = true
@@ -401,27 +401,27 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
     ///Called when the driving icon is pressed.
     @objc func openMapForPlace() {
         
-//        let latitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
-//        let longitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
-//
-//        let regionDistance:CLLocationDistance = 10000
-//        let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
-//        let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)
-//        let options = [
-//            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
-//            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
-//        ]
-//        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
-//        let mapItem = MKMapItem(placemark: placemark)
-//        mapItem.name = "Place Name"
-//        mapItem.openInMaps(launchOptions: options)
+        //        let latitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
+        //        let longitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
+        //
+        //        let regionDistance:CLLocationDistance = 10000
+        //        let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
+        //        let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)
+        //        let options = [
+        //            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
+        //            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
+        //        ]
+        //        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
+        //        let mapItem = MKMapItem(placemark: placemark)
+        //        mapItem.name = "Place Name"
+        //        mapItem.openInMaps(launchOptions: options)
         
         let coordinate = CLLocationCoordinate2DMake((event?.location[0]?.doubleValue)!,(event?.location[1]?.doubleValue)!)
         let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
         mapItem.name = event?.location[2]! as String?
         mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving])
     }
-///Sets up view constraints.
+    ///Sets up view constraints.
     func setupEstimateBox(){
         walkingIcon.topAnchor.constraint(equalTo: estimateBox.topAnchor).isActive = true
         walkingIcon.centerXAnchor.constraint(equalTo: walkingField.centerXAnchor).isActive = true
@@ -459,8 +459,8 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         transitField.widthAnchor.constraint(equalToConstant: fieldWidth).isActive = true
         transitField.bottomAnchor.constraint(equalTo: estimateBox.bottomAnchor).isActive = true
     }
-
-///Sets up the view constraints
+    
+    ///Sets up the view constraints
     func setupFields(){
         descriptionBox.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         descriptionBox.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -503,8 +503,8 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         eventWith.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
     }
-
     
-
-
+    
+    
+    
 }

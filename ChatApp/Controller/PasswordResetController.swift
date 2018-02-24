@@ -33,8 +33,8 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         return tf
     }()
     
-
-
+    
+    
     
     let resetButton: UIButton = {
         let button = UIButton()
@@ -87,7 +87,7 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
     
     ///Sets up the views constraints.
     func setupItems(){
-
+        
         cancelButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
         cancelButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
         cancelButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
@@ -113,15 +113,15 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
     @objc func handlePasswordReset(){
         if let email = emailField.text {
             if isValidEmail(testStr: email) {
-            Auth.auth().sendPasswordReset(withEmail: email, completion: { (Error) in
-                if Error != nil {
-                    self.showAlert(title: "Invalid Email", message: (Error?.localizedDescription)! + " Please Enter a valid Email")
-                }
-                else {
-                    self.showAlert(title: "Email has been sent", message: "An email has been sent with instructions to reset your password.")
-                }
-            })
-        }
+                Auth.auth().sendPasswordReset(withEmail: email, completion: { (Error) in
+                    if Error != nil {
+                        self.showAlert(title: "Invalid Email", message: (Error?.localizedDescription)! + " Please Enter a valid Email")
+                    }
+                    else {
+                        self.showAlert(title: "Email has been sent", message: "An email has been sent with instructions to reset your password.")
+                    }
+                })
+            }
         }
         else {
             showAlert(title: "Invalid Email", message: "Please enter a valid Email Address")
@@ -144,8 +144,8 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
      
      */
     
@@ -157,6 +157,6 @@ class PasswordResetController: UIViewController, UITextFieldDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
-
-
+    
+    
 }

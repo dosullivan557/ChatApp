@@ -23,7 +23,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     
     let overlay : UIView = {
         let view = UIView()
-//        view.backgroundColor = UIColor.clear
+        //        view.backgroundColor = UIColor.clear
         view.alpha = 0.5
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -108,7 +108,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         Auth.auth().currentUser?.delete(completion: nil)
         let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
         ref.removeValue()
-
+        
         handleLogout()
     }
     
@@ -117,15 +117,15 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
      This function is called if there is no user logged into the system or if the user wants to logout.
      */
     @objc func handleLogout() {
-
+        
         do {
             try Auth.auth().signOut()
         } catch let logoutError{
             print(logoutError)
         }
         
-            tabBarController?.selectedIndex = 0
-
+        tabBarController?.selectedIndex = 0
+        
     }
     
     
@@ -152,15 +152,15 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     @objc func handleMyEvents(){
         let myEventController = MyEventsController()
         myEventController.currentUser = user!
-//        self.navigationController?.isNavigationBarHidden = false
+        //        self.navigationController?.isNavigationBarHidden = false
         show(myEventController, sender: self)
     }
     ///Opens the help controller.
     @objc func handleHelp() {
         let helpController = HelpController()
         helpController.hidesBottomBarWhenPushed = true
-//        self.navigationController?.isNavigationBarHidden = false
-
+        //        self.navigationController?.isNavigationBarHidden = false
+        
         show(helpController, sender: self)
     }
     
@@ -185,7 +185,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         view.addSubview(helpButton)
         view.addSubview(myEventsButton)
         view.addSubview(deleteProfileButton)
-//        self.navigationController?.isNavigationBarHidden = true
+        //        self.navigationController?.isNavigationBarHidden = true
         setupFields()
         setupOverlay()
         getUser()
@@ -284,9 +284,9 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     func deleteImageFromDatabase() {
         let optionalVal = user?.profileImageUrl?.components(separatedBy: "%2F")[1].prefix(40)
         if let imageName = optionalVal {
-        let storageRef = Storage.storage().reference().child("profileImages").child(String(describing: imageName))
-        print(String(describing: imageName))
-        storageRef.delete { (Error) in
+            let storageRef = Storage.storage().reference().child("profileImages").child(String(describing: imageName))
+            print(String(describing: imageName))
+            storageRef.delete { (Error) in
                 if let error = Error {
                     // Uh-oh, an error occurred!
                     print(error)
@@ -312,7 +312,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
                     self.updateValuesInDatabase(values: values)
                     let delegate = UIApplication.shared.delegate as? AppDelegate
                     delegate?.updateUser()
-
+                    
                 }
             })
             
@@ -322,7 +322,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     /**
      Updates the users information in the database.
      - Parameters:
-         - values: The values to update.
+     - values: The values to update.
      */
     func updateValuesInDatabase(values: [String: AnyObject]) {
         if let id = Auth.auth().currentUser?.uid{
@@ -332,12 +332,12 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         }
         else {
             print("Error")
-
+            
         }
         dismiss(animated: true, completion: nil)
-
+        
     }
-
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var selectedImageFP: UIImage?
         if let editedImage = info["UIImagePickerControllerEditedImage"]{
@@ -359,12 +359,12 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         print("cancelled")
         dismiss(animated: true, completion: nil)
     }
-
+    
     
     /**
-    Sets up the page with the user's information.
+     Sets up the page with the user's information.
      - Parameters:
-         - user: The current users information.
+     - user: The current users information.
      */
     func setupWithUser(user: User){
         if let profileImageUrl = user.profileImageUrl {
@@ -375,14 +375,14 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     }
     
     override func viewDidAppear(_ animated: Bool) {
-//        if user?.id == nil {
-//            viewDidLoad()
-//        }
-//        else {
-//            self.setupWithUser(user: user!)
-//        }
-
-//        self.navigationController?.isNavigationBarHidden = true
-
+        //        if user?.id == nil {
+        //            viewDidLoad()
+        //        }
+        //        else {
+        //            self.setupWithUser(user: user!)
+        //        }
+        
+        //        self.navigationController?.isNavigationBarHidden = true
+        
     }
 }

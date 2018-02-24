@@ -8,7 +8,7 @@
 import UIKit
 import Firebase
 class NewMessageController: UITableViewController {
-//    Constants.
+    //    Constants.
     let cellId = "cellId"
     //Variables
     var users = [User]()
@@ -18,19 +18,19 @@ class NewMessageController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group", style: .plain,target: self, action: #selector(handleGroup))
+        //        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group", style: .plain,target: self, action: #selector(handleGroup))
         fetchUser()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
     }
     
     
-//    @objc func handleGroup () {
-//        let group = NewGroupMessageController()
-//        group.AllUsers = users
-//        group.messagesController = messagesController
-//        show(group, sender: self)
-//    }
+    //    @objc func handleGroup () {
+    //        let group = NewGroupMessageController()
+    //        group.AllUsers = users
+    //        group.messagesController = messagesController
+    //        show(group, sender: self)
+    //    }
     
     ///Cancel Button being pressed.
     @objc func handleCancel(){
@@ -51,16 +51,16 @@ class NewMessageController: UITableViewController {
                 user.id = DataSnapshot.key
                 if user.id != Auth.auth().currentUser?.uid {
                     
-                self.users.append(user)
-                
-                self.users.sort(by: { (u1, u2) -> Bool in
-                    return u1.name! < u2.name!
-                })
-                self.timer?.invalidate()
-                self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+                    self.users.append(user)
+                    
+                    self.users.sort(by: { (u1, u2) -> Bool in
+                        return u1.name! < u2.name!
+                    })
+                    self.timer?.invalidate()
+                    self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+                }
             }
-            }
-
+            
         }, withCancel: nil)
         
         
@@ -88,7 +88,7 @@ class NewMessageController: UITableViewController {
     }
     //Defines what happens when a cell is pressed.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+        
         dismiss(animated: true)
         var usersToChatWith = [User]()
         usersToChatWith.append(self.users[indexPath.row])

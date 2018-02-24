@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 ///Table cell implementation so can edit the layout of each cell. This has been used for users in NewChatLogController and MessagesController.
 class UserCell: UITableViewCell {
-
+    
     var message: Message? {
         didSet {
             setupNameAndProfileImage()
@@ -63,14 +63,14 @@ class UserCell: UITableViewCell {
                         timeLabel.text =  ""
                     }
                 }
-            else if (seconds < Double(Date().timeIntervalSince1970) - 86400) {
+                else if (seconds < Double(Date().timeIntervalSince1970) - 86400) {
                     let timestampDate = Date(timeIntervalSince1970: seconds)
                     
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "h:mm a"
                     timeLabel.text = ("Yesterday: " + dateFormatter.string(from: timestampDate))
                 }
-                //from today
+                    //from today
                 else {
                     let timestampDate = Date(timeIntervalSince1970: seconds)
                     
@@ -78,13 +78,13 @@ class UserCell: UITableViewCell {
                     dateFormatter.dateFormat = "h:mm a"
                     timeLabel.text = dateFormatter.string(from: timestampDate)
                 }
-
+                
             }
             
             
         }
     }
-
+    
     ///UIImageView for the profile image of the user.
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -106,7 +106,7 @@ class UserCell: UITableViewCell {
     
     
     /**
-      This function gets the users profile image, and sets it in the cell.
+     This function gets the users profile image, and sets it in the cell.
      */
     fileprivate func setupNameAndProfileImage() {
         
@@ -126,9 +126,9 @@ class UserCell: UITableViewCell {
             }, withCancel: nil)
         }
     }
-
+    
     /**
-      Defines how the textLabel should be positioned inside of the cells
+     Defines how the textLabel should be positioned inside of the cells
      */
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -137,10 +137,10 @@ class UserCell: UITableViewCell {
         
         detailTextLabel?.frame = CGRect(x: 64, y: detailTextLabel!.frame.origin.y + 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
     }
-
-
+    
+    
     /**
-      Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
+     Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
      */
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
@@ -163,9 +163,9 @@ class UserCell: UITableViewCell {
         timeLabel.topAnchor.constraint(equalTo:self.topAnchor, constant: 18).isActive = true
         
         //time label bottom
-//        timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        //        timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         
-//        timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        //        timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
         timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: textLabel!.heightAnchor).isActive = true
     }

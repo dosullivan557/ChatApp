@@ -12,7 +12,7 @@ import Firebase
 class EventCell: UITableViewCell {
     
     /*
-      When the event is set for the cell, set this information using the variable's data.
+     When the event is set for the cell, set this information using the variable's data.
      */
     var event: Event? {
         didSet {
@@ -35,10 +35,10 @@ class EventCell: UITableViewCell {
         return imageView
     }()
     
-
+    
     /**
      Sets up the image and name of the user for the event.
-    */
+     */
     func setupNameAndProfileImage() {
         if let eventWithId = event?.eventWithId() {
             let ref = Database.database().reference().child("users").child(eventWithId)

@@ -117,7 +117,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         setupFields()
         myColor.inputAccessoryView = tb
         theirColor.inputAccessoryView = tb
-
+        
         setupVariables()
         super.viewDidLoad()
     }

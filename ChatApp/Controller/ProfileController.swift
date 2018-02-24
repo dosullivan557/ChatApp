@@ -24,7 +24,7 @@ class ProfileController : UIViewController {
                 print("huhuhuh")
                 print(cu.name!)
                 nameLabel.text = cu.name!
-//                setupWithUser(user: cu)
+                //                setupWithUser(user: cu)
             }
         }
     }
@@ -79,7 +79,7 @@ class ProfileController : UIViewController {
         reportButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         reportButton.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
     }
-
+    
     
     ///Sets up the profile controller with the user.
     func setupWithUser(user: User){
@@ -89,5 +89,5 @@ class ProfileController : UIViewController {
             nameLabel.text = user.name!
         }
     }
-
+    
 }

@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 class ReportController: UIViewController, UITextFieldDelegate {
-
+    
     
     var user : User? {
         didSet {
@@ -58,7 +58,7 @@ class ReportController: UIViewController, UITextFieldDelegate {
             return
         }
         let values = ["UserReported": user?.id!, "Reporter": id, "Comment": textField.text!] as [String : Any]
-
+        
         let ref = Database.database().reference().child("Reports").child((user?.id)!).child(id)
         ref.updateChildValues(values, withCompletionBlock: { (err, ref) in
             if  err != nil {
@@ -115,8 +115,8 @@ class ReportController: UIViewController, UITextFieldDelegate {
         
         
     }
-
-
+    
+    
     
 }
 
