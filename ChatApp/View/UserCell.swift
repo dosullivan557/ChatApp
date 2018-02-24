@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 ///Table cell implementation so can edit the layout of each cell. This has been used for users in NewChatLogController and MessagesController.
 class UserCell: UITableViewCell {
-    
+    ///The message to display
     var message: Message? {
         didSet {
             setupNameAndProfileImage()
@@ -105,9 +105,7 @@ class UserCell: UITableViewCell {
     }()
     
     
-    /**
-     This function gets the users profile image, and sets it in the cell.
-     */
+    ///This function gets the users profile image, and sets it in the cell.
     fileprivate func setupNameAndProfileImage() {
         
         if let id = message?.chatWithId() {
@@ -127,9 +125,7 @@ class UserCell: UITableViewCell {
         }
     }
     
-    /**
-     Defines how the textLabel should be positioned inside of the cells
-     */
+    ///Defines how the textLabel should be positioned inside of the cells
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -139,9 +135,7 @@ class UserCell: UITableViewCell {
     }
     
     
-    /**
-     Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
-     */
+     ///Defines where everything should be layed out in the cell, including the profileImageView and the timeLabel.
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
