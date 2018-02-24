@@ -12,6 +12,7 @@ import MapKit
 import CoreLocation
 
 class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+    ///The event that this information is for.
     var event : Event? {
         didSet {
             self.navigationItem.title = event?.title
@@ -27,23 +28,33 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
             
         }
     }
+    ///The user who the event is with.
     var user = User()
+    ///Height for text fields.
     let fieldWidth = CGFloat(80)
+    ///Height for images.
     let imageWidth = CGFloat(25)
+    ///Default height for elements.
     let defaultHeight = CGFloat(30)
+    ///Default height for labels.
     let labelHeight = CGFloat(40)
+    ///Larger space for bigger elements.
     let spaces = CGFloat(25)
+    ///Default spacing between elements.
     let spacing = CGFloat(10)
+    ///Location manager to get permissions to access location.
     let locationManager = CLLocationManager()
+    ///Coordinates for the destination of the event.
     let destinationCoordinates =  CLLocationCoordinate2D()
     
-    
+    ///Mapview to show route.
     let mapView : MKMapView = {
         let mv = MKMapView()
         mv.translatesAutoresizingMaskIntoConstraints = false
         return mv
     }()
     
+    ///Description box.
     let descriptionBox: UITextView = {
         let view = UITextView()
         view.isEditable = false
@@ -55,7 +66,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         view.textColor = UIColor.black
         return view
     }()
-    
+    ///Start label.
     let labelStart :UITextView = {
         let label = UITextView()
         label.text = "Start Date"
@@ -68,6 +79,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return label
     }()
     
+    ///Finish label.
     let labelFinish :UITextView = {
         let label = UITextView()
         label.text = "End Date"
@@ -79,6 +91,8 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
+    
+    ///Date start text view.
     let dateFieldS : UITextView = {
         let field = UITextView()
         field.allowsEditingTextAttributes = false
@@ -92,6 +106,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return field
     }()
     
+    ///Date finish text view.
     let dateFieldF : UITextView = {
         let field = UITextView()
         field.allowsEditingTextAttributes = false
@@ -106,6 +121,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return field
     }()
     
+    ///Event with container box.
     let eventWith: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -113,12 +129,14 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return view
     }()
     
+    ///Estimate container box.
     let estimateBox: UIView =  {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
+    ///Walking icon.
     let walkingIcon : UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -126,6 +144,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return image
     }()
     
+    ///The textfield for walking.
     let walkingField : UITextView = {
         let field = UITextView()
         field.allowsEditingTextAttributes = false
@@ -141,7 +160,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return field
     }()
     
-    
+    ///Driving icon.
     let drivingIcon : UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -149,6 +168,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return image
     }()
     
+    ///The textfield for driving.
     let drivingField : UITextView = {
         let field = UITextView()
         field.allowsEditingTextAttributes = false
@@ -164,7 +184,8 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         field.textAlignment = .center
         return field
     }()
-    
+
+    ///The tapable area for opening maps.
     let drivingArea : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -172,13 +193,16 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         //        view.backgroundColor = UIColor.purple
         return view
     }()
-    
-    let transitIcon : UIImageView = {        let image = UIImageView()
+
+    ///The icon for transit.
+    let transitIcon : UIImageView = {
+        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(named: "transit")
         return image
     }()
     
+    ///The textfield for transit.
     let transitField : UITextView = {
         let field = UITextView()
         field.allowsEditingTextAttributes = false
@@ -193,7 +217,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
         return field
     }()
-    
+    ///Profile image of who the event is with.
     let picview: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named:"defaultPic")
@@ -202,6 +226,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         view.layer.masksToBounds = true
         return view
     }()
+    ///The name of who the event is with.
     let nameLabel: UITextView = {
         let field = UITextView()
         field.allowsEditingTextAttributes = false
@@ -320,7 +345,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
     /**
      Estimates the time for the each method of transport, and then sets the time in the relevant textField.
      - Parameters:
-     - request: The MKDirectionsRequest which is to be used to get the route.
+         - request: The MKDirectionsRequest which is to be used to get the route.
      */
     
     func fillInEstimates(request: MKDirectionsRequest) {
@@ -368,7 +393,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
     /**
      Converts a time interval into a string.
      - Parameter:
-     - interval: TimeInterval to convert.
+         - interval: TimeInterval to convert.
      - Return: Returns the formate
      */
     func stringFromTimeInterval(interval: TimeInterval) -> String {
@@ -400,22 +425,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
     
     ///Called when the driving icon is pressed.
     @objc func openMapForPlace() {
-        
-        //        let latitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
-        //        let longitude: CLLocationDegrees = (event?.location[0]?.doubleValue)!
-        //
-        //        let regionDistance:CLLocationDistance = 10000
-        //        let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
-        //        let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)
-        //        let options = [
-        //            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
-        //            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
-        //        ]
-        //        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
-        //        let mapItem = MKMapItem(placemark: placemark)
-        //        mapItem.name = "Place Name"
-        //        mapItem.openInMaps(launchOptions: options)
-        
+
         let coordinate = CLLocationCoordinate2DMake((event?.location[0]?.doubleValue)!,(event?.location[1]?.doubleValue)!)
         let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
         mapItem.name = event?.location[2]! as String?
