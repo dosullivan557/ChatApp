@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
-    
+    ///The current users settings.
     var settings : Settings? {
         didSet {
             myColor.text = settings?.myColor!
@@ -21,7 +21,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         return 1
     }
     
-    
+    ///The textfield used for the current users colour.
     let myColor : UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
@@ -29,15 +29,16 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         return tf
     }()
     
+    ///The textfield used for the other users colour.
     let theirColor : UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.backgroundColor = UIColor.white
         return tf
     }()
-    
+    ///The array used to populate the picker view.
     let colorDropdown = ["Green", "Pink", "Purple"]
-    
+    ///The toolbar added to the pickerview.
     let tb : UIToolbar = {
         let toolBar = UIToolbar()
         toolBar.barStyle = UIBarStyle.default
@@ -82,7 +83,8 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         }
     }
     
-    let button : UIButton = {
+    ///The save button.
+    let saveButton : UIButton = {
         let btn = UIButton()
         btn.setTitle("Save", for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -113,7 +115,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         view.backgroundColor = UIColor.niceOrange
         view.addSubview(myColor)
         view.addSubview(theirColor)
-        view.addSubview(button)
+        view.addSubview(saveButton)
         setupFields()
         myColor.inputAccessoryView = tb
         theirColor.inputAccessoryView = tb
@@ -133,10 +135,10 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         theirColor.heightAnchor.constraint(equalToConstant: 50).isActive = true
         theirColor.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-        button.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        button.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        saveButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        saveButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
     }
     
