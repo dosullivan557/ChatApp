@@ -10,9 +10,7 @@ import UIKit
 import Firebase
 
 class UpdateGreeting: UIViewController {
-    
-    ///The users settings.
-    var settings : Settings?
+    // MARK: - Constants
     
     ///Greeting text field.
     let greetingTextField : UITextField = {
@@ -34,15 +32,7 @@ class UpdateGreeting: UIViewController {
         return btn
     }()
     
-    ///Called when the save button is pressed. Updates the new data to the database.
-    @objc func handleSave() {
-        let values = ["Greeting" : greetingTextField.text!, "TheirColor" : "Pink", "YourColor" : "Green"]
-        if let id = Auth.auth().currentUser?.uid{
-            print(values)
-            let ref = Database.database().reference().child("user-settings").child(id)
-            ref.updateChildValues(values)
-        }
-    }
+    //MARK: - View initialisation
     override func viewDidLoad() {
         view.backgroundColor = UIColor.niceOrange
         super.viewDidLoad()
@@ -55,10 +45,7 @@ class UpdateGreeting: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
-    ///Hides keyboard.
-    @objc func hideKeyboard() {
-        greetingTextField.endEditing(true)
-    }
+    //MARK: - Setup
     
     ///Sets up views.
     func setupFields(){
@@ -74,4 +61,27 @@ class UpdateGreeting: UIViewController {
     }
     
     
+    
+    // MARK: - Variables
+    ///The users settings.
+    var settings : Settings?
+    
+    //MARK: - Firebase
+    ///Called when the save button is pressed. Updates the new data to the database.
+    @objc func handleSave() {
+        let values = ["Greeting" : greetingTextField.text!, "TheirColor" : "Pink", "YourColor" : "Green"]
+        if let id = Auth.auth().currentUser?.uid{
+            print(values)
+            let ref = Database.database().reference().child("user-settings").child(id)
+            ref.updateChildValues(values)
+        }
+    }
+  
+    
+    //MARK: - Keyboard
+    ///Hides keyboard.
+    @objc func hideKeyboard() {
+        greetingTextField.endEditing(true)
+    }
+ 
 }
