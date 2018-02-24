@@ -10,16 +10,25 @@ import UIKit
 import Firebase
 
 class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout{
-    //Variables.
+    ///The list of messages for this chat.
     var messages = [Message]()
+    ///The container views bottom anchor, made global so I can change it. This contains the text field for the user to type in as well as the send button.
     var containerViewBA: NSLayoutConstraint?
+    ///Words that are to be filtered out. Read in from the badWords.txt file.
     var sanitiseWords = [String]()
+    ///Text is added here for smart message features, such as the "Say Hi" button.
     var messageSend = String()
+    ///The settings of the current user.
     let currentUserSettings = Settings()
+    ///The colour that the user has chosen to use as the chat bubble colour for the currentUser.
     var myColor = UIColor()
+    ///The text colour goes with the colour that the user has chosen for the currentUsers bubble colour.
     var myTextColor = UIColor()
+    ///The colour that the user has chosen to use as the chat bubble colour for the chatWithUser.
     var theirColor = UIColor()
+    ///The text colour goes with the colour that the user has chosen for the chatWithUser's bubble colour.
     var theirTextColor = UIColor()
+    ///The users the user is chatting with.
     var users: [User?] = []{
         didSet{
             getUserSettings()
@@ -107,9 +116,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
         
     }
-    
+    ///The user that the current user is chatting to.
     var chatWithUser = User()
     
+    ///Text field for the user to type a message.
     lazy var inputTextField: UITextField = {
         let inputTextField = UITextField()
         inputTextField.placeholder = "Type Message..."
@@ -119,12 +129,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }()
     
     
-    lazy var calenderButton: UIImageView = {
-        let imageView = UIImageView()
-        
-        return imageView
-    }()
+//    lazy var calenderButton: UIImageView = {
+//        let imageView = UIImageView()
+//
+//        return imageView
+//    }()
     
+    ///Cell reuse identifier for collection view.
     let cellId = "cellId"
     
     
@@ -177,7 +188,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     /**
      This function sanitises a message. This function is called when the send button is pressed. It finds words in the message which could be a bad word, and replaces the word with characyers in the middle of the string with * characters.
      - Parameters:
-     - Message: The message to sanitise.
+         - Message: The message to sanitise.
      - Returns: Returns a sanitised version of the message.
      */
     func sanitiseMessage(Message: String) -> String{
@@ -211,7 +222,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     /**
      Defines how to show the keyboard.
      - Parameters:
-     - notification: Used to get the keyboard size so that the text field and send button will appear above the keyboard when it shows.
+         - notification: Used to get the keyboard size so that the text field and send button will appear above the keyboard when it shows.
      */
     @objc func handleKeyboardWillShow(notification: Notification){
         let keyboardFrame = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? CGRect
@@ -225,7 +236,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     /**
      Defines how to hide the keyboard.
      - Parameters:
-     - notification: Used to get the keyboard size so that the text field and send button will appear at the bottom of the screen when the keyboard hides.
+         - notification: Used to get the keyboard size so that the text field and send button will appear at the bottom of the screen when the keyboard hides.
      */
     @objc func handleKeyboardWillHide(notification: Notification){
         containerViewBA?.constant = 0
@@ -251,9 +262,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         self.show(calendarView, sender: self)
     }
     
-    /**
-     Observes the messages for the chat with this particular user.
-     */
+    ///Observes the messages for the chat with this particular user.
     func observeMessages(){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -284,6 +293,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         })
         
     }
+    
     //    func observeGroupMessages() {
     //        guard let uid = Auth.auth().currentUser?.uid else {
     //            return
@@ -314,9 +324,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     //    }
     
     
-    /**
-     Reloads the collectionView
-     */
+    
+    ///Reloads the collectionView
     func reloadCollectionView(){
         
         DispatchQueue.main.async(execute: {
@@ -325,6 +334,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         })
     }
     
+    ///Checks which send should be called.
     @objc func handleCorrectSend() {
         if users.count == 1 {
             handleSend()
@@ -393,14 +403,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     /**
      Estimates the size of the bubble which will be needed for the message.
      - Parameters:
-     - text: The message to use to estimate the size of the bubble container for that message.
+         - message: The message to use to estimate the size of the bubble container for that message.
      */
     func estimatedBubble(message: String) -> CGRect {
         return NSString(string: message).boundingRect(with: CGSize(width: 150, height: 100), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
     
-    //    //This method is called when the send button is pressed.
+    ///This method is called when the send button is pressed.
     @objc func handleGroupSend() {
         //
         //        if inputTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
@@ -436,7 +446,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     
-    //This method is called when the send button is pressed.
     
     /**
      This method is called when the send button is pressed. It verifies that the message isn't empty, and then updates the database with the new message.
@@ -496,7 +505,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         return messages.count
     }
-    
+    ///Called when there is no messages in a certain chat.
     func noMessages(){
         let message = Message()
         message.message = "Say Heyy"
@@ -506,18 +515,21 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         messages.append(message)
         reloadCollectionView()
     }
+    ///Time which is pulled from the message.
     var time: String?
+    ///Location which is pulled from the message.
     var location: String?
+    ///Description which is pulled from the message.
     var desc: String?
     
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
-        
-        messageIsAboutEvent(message: message)
+        _ = messageIsAboutEvent(message: message)
         handleAutoEvent()
     }
     
+    ///Called when a event message is pressed. Fills in information about the event in the calendarcontroller.
     @objc func handleAutoEvent(){
         let calendarView = CalendarController()
         calendarView.user = chatWithUser
@@ -565,6 +577,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }
         self.show(calendarView, sender: self)
     }
+    
+    /// List of messages about events.
     var eventMessages = [Message]()
     
     
@@ -643,7 +657,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     /**
      Reads in a message, and decides whether it is about an event.
      - Parameters:
-     - message: The message to test.
+         - message: The message to test.
      - Returns: Returns a true or false value to decide whether the message is about an event or not.
      */
     func messageIsAboutEvent(message: Message) -> Bool {
