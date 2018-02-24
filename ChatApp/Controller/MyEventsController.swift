@@ -12,9 +12,13 @@ import Firebase
 import EventKit
 import MapKit
 class MyEventsController: UITableViewController {
+    ///The reuse cell identifier for the table view.
     let cellEId = "cellEId"
+    ///The list of events.
     var events = [Event]()
+    ///Global timer to make ensure that the TableView is only refreshed once to prevent flickering when there are loads of cells to load.
     var timer: Timer?
+    ///The current user of the system.
     var currentUser = User() {
         didSet {
             setupNavBarWithUser(currentUser)
@@ -31,9 +35,7 @@ class MyEventsController: UITableViewController {
         
         self.show(nc, sender: self)
         self.hidesBottomBarWhenPushed = true
-        //        observeUserEvents()
         setupNavBarWithUser(currentUser)
-        //        self.hidesBottomBarWhenPushed = true
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -66,7 +68,7 @@ class MyEventsController: UITableViewController {
     /**
      Uploads any errors to the database for examination.
      - Parameters:
-     - error: The error code which is called.
+         - error: The error code which is called.
      */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
@@ -77,8 +79,8 @@ class MyEventsController: UITableViewController {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
      
      */
     
@@ -92,7 +94,7 @@ class MyEventsController: UITableViewController {
     /**
      Gets passed the current user of the system, and then sets up the navigation bar with that users information.
      - Parameters:
-     - user: The current user of the application.
+         - user: The current user of the application.
      */
     func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
@@ -109,14 +111,11 @@ class MyEventsController: UITableViewController {
     }
     
     
-    //Not needed?
     override func viewDidAppear(_ animated: Bool) {
         if  currentUser.id == Auth.auth().currentUser?.uid {
-            print("Same user")
             return
         }
         else {
-            print("Different")
             events.removeAll()
             setupNavBarWithUser(currentUser)
             observeUserEvents()
@@ -140,7 +139,6 @@ class MyEventsController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let event = events[indexPath.row]
-        //pass event through
         let eventController = EventController()
         eventController.event = event
         show(eventController, sender: self)
@@ -149,7 +147,7 @@ class MyEventsController: UITableViewController {
     /**
      If the event has been accepted by the other user, it adds the event to their calendar.
      - Parameters:
-     - eventToAdd: The event to add to the calendar.
+         - eventToAdd: The event to add to the calendar.
      */
     func addEventToCalendar(eventToAdd: Event) {
         let eventStore: EKEventStore = EKEventStore()
@@ -178,9 +176,7 @@ class MyEventsController: UITableViewController {
         }
     }
     
-    /**
-     Gets all the users events.
-     */
+    ///Gets all the users events.
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
