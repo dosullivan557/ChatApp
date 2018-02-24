@@ -12,24 +12,8 @@ import MapKit
 import CoreLocation
 
 class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
-    ///The event that this information is for.
-    var event : Event? {
-        didSet {
-            self.navigationItem.title = event?.title
-            descriptionBox.text = (event?.desc)!
-            
-            let startTimestampDate = Date(timeIntervalSince1970: event?.startTime as! TimeInterval)
-            let finishTimestampDate = Date(timeIntervalSince1970: event?.finishTime as! TimeInterval)
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yy hh:mm a"
-            dateFieldS.text = dateFormatter.string(from: startTimestampDate)
-            dateFieldF.text = dateFormatter.string(from: finishTimestampDate)
-            fetchUser()
-            
-        }
-    }
-    ///The user who the event is with.
-    var user = User()
+    // MARK: - Constants
+    
     ///Height for text fields.
     let fieldWidth = CGFloat(80)
     ///Height for images.
@@ -184,7 +168,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         field.textAlignment = .center
         return field
     }()
-
+    
     ///The tapable area for opening maps.
     let drivingArea : UIView = {
         let view = UIView()
@@ -193,7 +177,7 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         //        view.backgroundColor = UIColor.purple
         return view
     }()
-
+    
     ///The icon for transit.
     let transitIcon : UIImageView = {
         let image = UIImageView()
@@ -239,31 +223,27 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         return field
     }()
     
-    ///Fetches the user the event is planned with.
-    func fetchUser(){
-        Database.database().reference().child("users").child((event?.eventWithId())!).observe(.value, with: { (DataSnapshot) in
-            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
-                let user = User()
-                user.name = dictionary["name"] as? String
-                user.email = dictionary["email"] as? String
-                user.profileImageUrl = dictionary["profileImageUrl"] as? String
-                user.id = DataSnapshot.key
-                self.user = user
-                self.nameLabel.text = user.name!
-                self.picview.loadImageUsingCache(urlString: user.profileImageUrl)
-            }
-        }, withCancel: nil)
-        
-        
+    // MARK: - Variables
+    ///The event that this information is for.
+    var event : Event? {
+        didSet {
+            self.navigationItem.title = event?.title
+            descriptionBox.text = (event?.desc)!
+            
+            let startTimestampDate = Date(timeIntervalSince1970: event?.startTime as! TimeInterval)
+            let finishTimestampDate = Date(timeIntervalSince1970: event?.finishTime as! TimeInterval)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/yy hh:mm a"
+            dateFieldS.text = dateFormatter.string(from: startTimestampDate)
+            dateFieldF.text = dateFormatter.string(from: finishTimestampDate)
+            fetchUser()
+            
+        }
     }
-    
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let renderer = MKPolylineRenderer(overlay: overlay)
-        renderer.strokeColor = UIColor.purple
-        renderer.lineWidth = 5.0
-        
-        return renderer
-    }
+    ///The user who the event is with.
+    var user = User()
+
+    //MARK: - View initialisation
     
     override func viewDidLoad() {
         
@@ -342,73 +322,10 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         view.addSubview(eventWith)
         setupFields()
     }
-    /**
-     Estimates the time for the each method of transport, and then sets the time in the relevant textField.
-     - Parameters:
-         - request: The MKDirectionsRequest which is to be used to get the route.
-     */
     
-    func fillInEstimates(request: MKDirectionsRequest) {
-        request.transportType = .walking
-        
-        let directionsWalk = MKDirections(request: request)
-        directionsWalk.calculate { (response, error) in
-            guard let response = response else {
-                if let error = error {
-                    print(error)
-                }
-                return
-            }
-            let route = response.routes[0]
-            self.walkingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
-        }
-        
-        request.transportType = .automobile
-        
-        let directionsDrive = MKDirections(request: request)
-        directionsDrive.calculate { (response, error) in
-            guard let response = response else {
-                if let error = error {
-                    print(error.localizedDescription)
-                }
-                return
-            }
-            let route = response.routes[0]
-            self.drivingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
-        }
-        
-        let directionsTransit = MKDirections(request: request)
-        directionsTransit.calculate { (response, error) in
-            guard let response = response else {
-                if let error = error {
-                    print(error)
-                }
-                return
-            }
-            let route = response.routes[0]
-            self.transitField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
-        }
-        
-    }
-    /**
-     Converts a time interval into a string.
-     - Parameter:
-         - interval: TimeInterval to convert.
-     - Return: Returns the formate
-     */
-    func stringFromTimeInterval(interval: TimeInterval) -> String {
-        
-        let ti = NSInteger(interval)
-        
-        
-        let minutes = (ti / 60) % 60
-        let hours = (ti / 3600)
-        if String(describing: hours) == "0"
-        {
-            return String(format: "%0.2d mins",minutes)
-        }
-        return String(format: "%0.2d h %0.2d mins",hours,minutes)
-    }
+    
+    //MARK: - Setup
+    
     ///Sets up the container constraints.
     func setupContainer(){
         picview.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -423,14 +340,6 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
     }
     
-    ///Called when the driving icon is pressed.
-    @objc func openMapForPlace() {
-
-        let coordinate = CLLocationCoordinate2DMake((event?.location[0]?.doubleValue)!,(event?.location[1]?.doubleValue)!)
-        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
-        mapItem.name = event?.location[2]! as String?
-        mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving])
-    }
     ///Sets up view constraints.
     func setupEstimateBox(){
         walkingIcon.topAnchor.constraint(equalTo: estimateBox.topAnchor).isActive = true
@@ -442,7 +351,6 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         walkingField.leftAnchor.constraint(equalTo: estimateBox.leftAnchor).isActive = true
         walkingField.widthAnchor.constraint(equalToConstant: fieldWidth).isActive = true
         walkingField.bottomAnchor.constraint(equalTo: estimateBox.bottomAnchor).isActive = true
-        
         
         drivingField.topAnchor.constraint(equalTo: drivingIcon.bottomAnchor, constant: 5).isActive = true
         drivingField.leftAnchor.constraint(equalTo: walkingField.rightAnchor, constant: spaces).isActive = true
@@ -514,7 +422,114 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         
     }
     
+    //MARK: - Firebase
     
+    ///Fetches the user the event is planned with.
+    func fetchUser(){
+        Database.database().reference().child("users").child((event?.eventWithId())!).observe(.value, with: { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
+                let user = User()
+                user.name = dictionary["name"] as? String
+                user.email = dictionary["email"] as? String
+                user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                user.id = DataSnapshot.key
+                self.user = user
+                self.nameLabel.text = user.name!
+                self.picview.loadImageUsingCache(urlString: user.profileImageUrl)
+            }
+        }, withCancel: nil)
+        
+        
+    }
     
+    //MARK: - Location
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.purple
+        renderer.lineWidth = 5.0
+        
+        return renderer
+    }
+    
+    ///Called when the driving icon is pressed.
+    @objc func openMapForPlace() {
+        
+        let coordinate = CLLocationCoordinate2DMake((event?.location[0]?.doubleValue)!,(event?.location[1]?.doubleValue)!)
+        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
+        mapItem.name = event?.location[2]! as String?
+        mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving])
+    }
+    
+    /**
+     Estimates the time for the each method of transport, and then sets the time in the relevant textField.
+     - Parameters:
+     - request: The MKDirectionsRequest which is to be used to get the route.
+     */
+    
+    func fillInEstimates(request: MKDirectionsRequest) {
+        request.transportType = .walking
+        
+        let directionsWalk = MKDirections(request: request)
+        directionsWalk.calculate { (response, error) in
+            guard let response = response else {
+                if let error = error {
+                    print(error)
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.walkingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+        }
+        
+        request.transportType = .automobile
+        
+        let directionsDrive = MKDirections(request: request)
+        directionsDrive.calculate { (response, error) in
+            guard let response = response else {
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.drivingField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+        }
+        
+        let directionsTransit = MKDirections(request: request)
+        directionsTransit.calculate { (response, error) in
+            guard let response = response else {
+                if let error = error {
+                    print(error)
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.transitField.text = self.stringFromTimeInterval(interval: route.expectedTravelTime)
+        }
+        
+    }
+    
+   
+    //MARK: - Time interval
+    
+    /**
+     Converts a time interval into a string.
+     - Parameter:
+         - interval: TimeInterval to convert.
+     - Return: Returns the formate
+     */
+    func stringFromTimeInterval(interval: TimeInterval) -> String {
+        
+        let ti = NSInteger(interval)
+        
+        
+        let minutes = (ti / 60) % 60
+        let hours = (ti / 3600)
+        if String(describing: hours) == "0"
+        {
+            return String(format: "%0.2d mins",minutes)
+        }
+        return String(format: "%0.2d h %0.2d mins",hours,minutes)
+    }
     
 }
