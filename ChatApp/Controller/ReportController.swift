@@ -9,13 +9,8 @@
 import UIKit
 import Firebase
 class ReportController: UIViewController, UITextFieldDelegate {
-    
-    ///The user who is being reported.
-    var user : User? {
-        didSet {
-            pageTitle.text = "Report " + (user?.name!)!
-        }
-    }
+    // MARK: - Constants
+   
     ///Page title.
     let pageTitle : UITextView = {
         let name = UITextView()
@@ -52,33 +47,16 @@ class ReportController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    
-    ///Called when the submit report button is pressed.
-    @objc func handleReport() {
-        guard let id = Auth.auth().currentUser?.uid else {
-            return
+    // MARK: - Variables
+    ///The user who is being reported.
+    var user : User? {
+        didSet {
+            pageTitle.text = "Report " + (user?.name!)!
         }
-        let values = ["UserReported": user?.id!, "Reporter": id, "Comment": reasonForReportingTextField.text!] as [String : Any]
-        
-        let ref = Database.database().reference().child("Reports").child((user?.id)!).child(id)
-        ref.updateChildValues(values, withCompletionBlock: { (err, ref) in
-            if  err != nil {
-                return
-            }
-            self.sucessfulReport()
-        })
-        
     }
     
-    /// Called when a report has been submitted successfully.
-    func sucessfulReport(){
-        let alert = UIAlertController(title: "Thank you", message: "Thank you for reporting this user. We will look into this!", preferredStyle: UIAlertControllerStyle.alert)
-        
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        self.present(alert, animated: true, completion: nil)
-    }
+    //MARK: - View initialisation
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
@@ -89,16 +67,7 @@ class ReportController: UIViewController, UITextFieldDelegate {
         setupFields()
     }
     
-    ///Hides Keyboard when called.
-    @objc func hideKeyboard() {
-        view.self.endEditing(true)
-    }
-    
-    ///Hides the keyboard when the return key is pressed.
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return true
-    }
+    //MARK: - Setup
     
     ///Sets up view constraints.
     func setupFields() {
@@ -121,6 +90,51 @@ class ReportController: UIViewController, UITextFieldDelegate {
     }
     
     
+    
+    //MARK: - Interaction
+    ///Called when the submit report button is pressed.
+    @objc func handleReport() {
+        guard let id = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let values = ["UserReported": user?.id!, "Reporter": id, "Comment": reasonForReportingTextField.text!] as [String : Any]
+        
+        let ref = Database.database().reference().child("Reports").child((user?.id)!).child(id)
+        ref.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            if  err != nil {
+                return
+            }
+            self.sucessfulReport()
+        })
+        
+    }
+    
+    //MARK: - Alert
+    
+    /// Called when a report has been submitted successfully.
+    func sucessfulReport(){
+        let alert = UIAlertController(title: "Thank you", message: "Thank you for reporting this user. We will look into this!", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+   
+    //MARK: - Keyboard
+    
+    ///Hides Keyboard when called.
+    @objc func hideKeyboard() {
+        view.self.endEditing(true)
+    }
+    
+    ///Hides the keyboard when the return key is pressed.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
+  
     
 }
 
