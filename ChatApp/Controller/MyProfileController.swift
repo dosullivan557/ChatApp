@@ -10,7 +10,7 @@
 import UIKit
 import Firebase
 class MyProfileController : UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-    
+    ///The users profile picture.
     let profileImage : UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "defaultPic")
@@ -20,7 +20,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         image.isUserInteractionEnabled = true
         return image
     }()
-    
+    ///The overlay.
     let overlay : UIView = {
         let view = UIView()
         //        view.backgroundColor = UIColor.clear
@@ -28,6 +28,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    ///Change picture overlay.
     let label : UITextView = {
         let label = UITextView()
         label.text = "Change Picture"
@@ -37,6 +38,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         label.font = UIFont(name: "arial", size: 15)
         return label
     }()
+    ///The current user of the system.
     var user : User? {
         didSet {
             nameLabel.text = user?.name
@@ -44,11 +46,11 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             profileImage.loadImageUsingCache(urlString: user?.profileImageUrl)
         }
     }
-    ///
+    ///Called when the overlay for the profile image is pressed.
     @objc func handleTap() {
         handleSelectProfileImageView()
     }
-    
+    ///Label to show the users name.
     let nameLabel : UITextView = {
         let name = UITextView()
         name.allowsEditingTextAttributes = false
@@ -61,6 +63,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         return name
     }()
     
+    ///Text view to show the user which email address they are signed up with.
     let emailLabel : UITextView = {
         let email = UITextView()
         email.allowsEditingTextAttributes = false
@@ -71,6 +74,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         email.textColor = UIColor.black
         return email
     }()
+    ///Button to get help.
     let helpButton : UIButton = {
         let button = UIButton()
         button.setTitle("Help me", for: .normal)
@@ -80,7 +84,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         return button
     }()
     
-    
+    ///Button to view that users events.
     let myEventsButton : UIButton = {
         let button = UIButton()
         button.setTitle("My Events", for: .normal)
@@ -90,6 +94,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         return button
     }()
     
+    ///Button which allows the user to delete their profile.
     let deleteProfileButton : UIButton = {
         let button = UIButton()
         button.setTitle("Delete Profile", for: .normal)
@@ -98,6 +103,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
     ///Called when the delete profile button is pressed.
     @objc func deletePressed(){
         showDeleteAlert(title:"Deleting your account.", message: "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.")
@@ -108,14 +114,11 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         Auth.auth().currentUser?.delete(completion: nil)
         let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
         ref.removeValue()
-        
         handleLogout()
     }
     
     
-    /**
-     This function is called if there is no user logged into the system or if the user wants to logout.
-     */
+     ///This function is called if there is no user logged into the system or if the user wants to logout.
     @objc func handleLogout() {
         
         do {
@@ -133,8 +136,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
      
      */
     
@@ -148,19 +151,17 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         }))
         self.present(alert, animated: true, completion: nil)
     }
+    
     ///Opens the myevents controller.
     @objc func handleMyEvents(){
         let myEventController = MyEventsController()
         myEventController.currentUser = user!
-        //        self.navigationController?.isNavigationBarHidden = false
         show(myEventController, sender: self)
     }
     ///Opens the help controller.
     @objc func handleHelp() {
         let helpController = HelpController()
         helpController.hidesBottomBarWhenPushed = true
-        //        self.navigationController?.isNavigationBarHidden = false
-        
         show(helpController, sender: self)
     }
     
@@ -280,6 +281,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         
         present(picker, animated: true, completion: nil)
     }
+    
     ///Deletes the users current profile picture.
     func deleteImageFromDatabase() {
         let optionalVal = user?.profileImageUrl?.components(separatedBy: "%2F")[1].prefix(40)
@@ -322,7 +324,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     /**
      Updates the users information in the database.
      - Parameters:
-     - values: The values to update.
+         - values: The values to update.
      */
     func updateValuesInDatabase(values: [String: AnyObject]) {
         if let id = Auth.auth().currentUser?.uid{
@@ -364,7 +366,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     /**
      Sets up the page with the user's information.
      - Parameters:
-     - user: The current users information.
+         - user: The current users information.
      */
     func setupWithUser(user: User){
         if let profileImageUrl = user.profileImageUrl {
