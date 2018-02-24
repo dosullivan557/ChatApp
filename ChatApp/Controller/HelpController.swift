@@ -9,9 +9,10 @@
 import UIKit
 
 class HelpController: UIViewController, UIWebViewDelegate {
+    // MARK: - Constants
+    // MARK: - Variables
     
-    
-    
+    //MARK: - View initialisation
     override func viewDidLoad() {
         self.navigationController?.isNavigationBarHidden = false
         
@@ -25,6 +26,7 @@ class HelpController: UIViewController, UIWebViewDelegate {
         //        self.view.addSubview(webV)
     }
     
+    //MARK: - Setup
     ///Setup fields.
     func setupFields(){
         
