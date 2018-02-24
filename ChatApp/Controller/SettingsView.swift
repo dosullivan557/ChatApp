@@ -10,15 +10,19 @@ import UIKit
 import Firebase
 
 class SettingsView: UITableViewController {
+    // MARK: - Constants
     ///Array for the settings.
     let settings = ["Greeting Message", "Colours"]
     ///The reuse cell identifier for the table view.
     let cellId = "cellId"
+    
+    // MARK: - Variables
+    
     ///The current user of the system.
     var currentUser = User()
     
     
-    
+    //MARK: - View initalisation
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -30,6 +34,9 @@ class SettingsView: UITableViewController {
         titleView.backgroundColor? = UIColor.clear
         navigationItem.titleView = titleView
     }
+    
+    //MARK: - Tableview
+    
     ///Reloads the table view using the main thread.
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
