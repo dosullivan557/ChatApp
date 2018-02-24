@@ -10,16 +10,7 @@ import UIKit
 import Firebase
 
 class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
-    ///The current users settings.
-    var settings : Settings? {
-        didSet {
-            myColor.text = settings?.myColor!
-            theirColor.text = settings?.theirColor!
-        }
-    }
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
+    // MARK: - Constants
     
     ///The textfield used for the current users colour.
     let myColor : UITextField = {
@@ -51,7 +42,80 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         toolBar.isUserInteractionEnabled = true
         return toolBar
     }()
+    ///The save button.
+    let saveButton : UIButton = {
+        let btn = UIButton()
+        btn.setTitle("Save", for: .normal)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.addTarget(self, action: #selector(handleSave), for: .touchUpInside)
+        btn.backgroundColor = UIColor.niceBlue
+        return btn
+    }()
     
+    // MARK: - Variables
+    ///The current users settings.
+    var settings : Settings? {
+        didSet {
+            myColor.text = settings?.myColor!
+            theirColor.text = settings?.theirColor!
+        }
+    }
+    
+    //MARK: - View initialisation
+    
+    override func viewDidLoad() {
+        view.backgroundColor = UIColor.niceOrange
+        view.addSubview(myColor)
+        view.addSubview(theirColor)
+        view.addSubview(saveButton)
+        setupFields()
+        myColor.inputAccessoryView = tb
+        theirColor.inputAccessoryView = tb
+        
+        setupVariables()
+        super.viewDidLoad()
+    }
+    
+    //MARK: - Setup
+    
+    ///Sets up pickers.
+    func setupVariables(){
+        let pickerView = UIPickerView()
+        pickerView.delegate = self
+        myColor.inputView = pickerView
+        myColor.allowsEditingTextAttributes = false
+        theirColor.inputView = pickerView
+        theirColor.allowsEditingTextAttributes = false
+    }
+    
+    ///Sets up fields.
+    func setupFields() {
+        myColor.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
+        myColor.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        myColor.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        myColor.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        theirColor.topAnchor.constraint(equalTo: myColor.bottomAnchor, constant: 30).isActive = true
+        theirColor.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        theirColor.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        theirColor.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        saveButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        saveButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+    }
+    
+    
+
+    
+    
+    //MARK: - Pickerview
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
     
     /**
      When the done button in the toolbar is pressed, it checks which datefield is being edited, and then forces the finish of that, which will hide the picker.
@@ -83,16 +147,8 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         }
     }
     
-    ///The save button.
-    let saveButton : UIButton = {
-        let btn = UIButton()
-        btn.setTitle("Save", for: .normal)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.addTarget(self, action: #selector(handleSave), for: .touchUpInside)
-        btn.backgroundColor = UIColor.niceBlue
-        return btn
-    }()
-    
+   
+    //MARK: - Firebase
     ///Called when the save button is pressed.
     @objc func handleSave() {
         let values = ["Greeting" : settings?.greeting!, "TheirColor" : theirColor.text!, "YourColor" : myColor.text!]
@@ -101,45 +157,6 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
             let ref = Database.database().reference().child("user-settings").child(id)
             ref.updateChildValues(values)
         }
-    }
-    ///Sets up pickers.
-    func setupVariables(){
-        let pickerView = UIPickerView()
-        pickerView.delegate = self
-        myColor.inputView = pickerView
-        myColor.allowsEditingTextAttributes = false
-        theirColor.inputView = pickerView
-        theirColor.allowsEditingTextAttributes = false
-    }
-    override func viewDidLoad() {
-        view.backgroundColor = UIColor.niceOrange
-        view.addSubview(myColor)
-        view.addSubview(theirColor)
-        view.addSubview(saveButton)
-        setupFields()
-        myColor.inputAccessoryView = tb
-        theirColor.inputAccessoryView = tb
-        
-        setupVariables()
-        super.viewDidLoad()
-    }
-    ///Sets up fields.
-    func setupFields() {
-        myColor.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
-        myColor.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        myColor.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        myColor.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        theirColor.topAnchor.constraint(equalTo: myColor.bottomAnchor, constant: 30).isActive = true
-        theirColor.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        theirColor.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        theirColor.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        saveButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        saveButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
     }
     
 }
