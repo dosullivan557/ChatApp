@@ -11,8 +11,11 @@ import Firebase
 
 class UpdateGreeting: UIViewController {
     
-    var settings : Settings? 
-    let textField : UITextField = {
+    ///The users settings.
+    var settings : Settings?
+    
+    ///Greeting text field.
+    let greetingTextField : UITextField = {
         let tf = UITextField()
         tf.text = ""
         tf.placeholder = "Please enter a greeting."
@@ -21,7 +24,8 @@ class UpdateGreeting: UIViewController {
         return tf
     }()
     
-    let button : UIButton = {
+    ///Save button.
+    let saveButton : UIButton = {
         let btn = UIButton()
         btn.setTitle("Save", for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -32,7 +36,7 @@ class UpdateGreeting: UIViewController {
     
     ///Called when the save button is pressed. Updates the new data to the database.
     @objc func handleSave() {
-        let values = ["Greeting" : textField.text!, "TheirColor" : "Pink", "YourColor" : "Green"]
+        let values = ["Greeting" : greetingTextField.text!, "TheirColor" : "Pink", "YourColor" : "Green"]
         if let id = Auth.auth().currentUser?.uid{
             print(values)
             let ref = Database.database().reference().child("user-settings").child(id)
@@ -42,9 +46,9 @@ class UpdateGreeting: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = UIColor.niceOrange
         super.viewDidLoad()
-        view.addSubview(textField)
-        view.addSubview(button)
-        textField.text = settings?.greeting!
+        view.addSubview(greetingTextField)
+        view.addSubview(saveButton)
+        greetingTextField.text = settings?.greeting!
         setupFields()
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         
@@ -53,20 +57,20 @@ class UpdateGreeting: UIViewController {
     
     ///Hides keyboard.
     @objc func hideKeyboard() {
-        textField.endEditing(true)
+        greetingTextField.endEditing(true)
     }
     
     ///Sets up views.
     func setupFields(){
-        textField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        textField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        textField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        greetingTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        greetingTextField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        greetingTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        greetingTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        button.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 30).isActive = true
-        button.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        saveButton.topAnchor.constraint(equalTo: greetingTextField.bottomAnchor, constant: 30).isActive = true
+        saveButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     
