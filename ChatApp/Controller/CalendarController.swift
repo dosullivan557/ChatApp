@@ -32,22 +32,30 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
+    ///The user that the event is with.
     var user: User? {
         didSet{
             
             navigationItem.title = "Event with " + ((user?.name)!.components(separatedBy: " "))[0]
         }
     }
+    
+    ///The date that the event is to start.
     var sDate : Date?
+    ///The date that the event is to finish.
     var fDate : Date?
+    ///The closest location with the given name.
     var closest = MKMapItem()
+    ///The mapview to search.
     let mapView = MKMapView()
     
-    
+    ///Used aas a height for other elements.
     let defaultHeight = CGFloat(30)
+    ///Used as a height for all labels.
     let labelHeight = CGFloat(40)
+    ///Used as a standard space between elements.
     let spacing = CGFloat(10)
-    
+    ///Text field for the user to give a title to the event.
     let titleField : UITextField = {
         let title = UITextField()
         title.placeholder = "Enter Title"
@@ -57,6 +65,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         title.layer.borderWidth = 1
         return title
     }()
+    ///Text field for the user to give a description for the event.
     let descriptionField : UITextField = {
         let title = UITextField()
         title.placeholder = "Enter Description"
@@ -66,7 +75,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         title.layer.borderWidth = 1
         return title
     }()
-    
+    ///The datepicker.
     let datePicker : UIDatePicker = {
         let dp = UIDatePicker()
         dp.translatesAutoresizingMaskIntoConstraints = false
@@ -76,7 +85,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         dp.addTarget(self, action: #selector(selectedDate), for: .valueChanged)
         return dp
     }()
-    
+    ///Start label.
     let labelStart :UITextView = {
         let label = UITextView()
         label.text = "Start Date"
@@ -88,7 +97,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
-    
+    ///Finish label.
     let labelFinish :UITextView = {
         let label = UITextView()
         label.text = "End Date"
@@ -101,6 +110,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return label
     }()
     
+    ///Toolbar for the datepickers.
     let tb : UIToolbar = {
         let toolBar = UIToolbar()
         toolBar.barStyle = UIBarStyle.default
@@ -117,7 +127,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return toolBar
     }()
     
-    
+    ///Date field for the user to select a start date and time.
     let dateFieldS : UITextField = {
         let field = UITextField()
         field.allowsEditingTextAttributes = false
@@ -128,7 +138,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
     }()
-    
+    ///Date field for the user to select a finish date and time.
     let dateFieldF : UITextField = {
         let field = UITextField()
         field.allowsEditingTextAttributes = false
@@ -140,7 +150,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return field
     }()
     
-    
+    ///The submit event button.
     let submitButton : UIButton = {
         let button = UIButton()
         button.setTitle("Submit", for: .normal)
@@ -152,6 +162,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return button
     }()
     
+    ///Textfield for the user to type in a location.
     let locationField : UITextField = {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
@@ -159,15 +170,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return field
     }()
     
-    
-    let containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.borderColor = UIColor.black.cgColor
-        view.layer.borderWidth = 1
-        return view
-        
-    }()
     
     
     override func viewDidLoad() {
@@ -245,9 +247,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25).isActive = true
     }
     
-    /**
-     Gets date from datepicker and sets the date to the relevant text field.
-     */
+    ///Gets date from datepicker and sets the date to the relevant text field.
     @objc func selectedDate(){
         let timeFormatter = DateFormatter()
         timeFormatter.timeStyle = DateFormatter.Style.short
@@ -299,9 +299,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
-     
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
      */
     
     func showAlert(title: String, message: String) {
@@ -312,9 +311,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         self.present(alert, animated: true, completion: nil)
     }
     
-    /**
-     Called when the submit button is pressed. Adds all the information into an object, and uploads it to the database.
-     */
+
+    ///Called when the submit button is pressed. Adds all the information into an object, and uploads it to the database.
     @objc func handleSubmit(){
         if !validate() {
             return
@@ -367,7 +365,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     /**
      Uploads any errors to the database for examination.
      - Parameters:
-     - error: The error code which is called.
+         - error: The error code which is called.
      */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
