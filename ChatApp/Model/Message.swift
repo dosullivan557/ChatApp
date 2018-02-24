@@ -10,9 +10,13 @@ import UIKit
 import Firebase
 ///A Message object that holds the user id of the sender and the receiver, the message, and a timestamp.
 class Message: NSObject {
+    ///The user id of the person who sent the message.
     var sendId: String?
+    ///The user id of the person the message was sent to.
     var receiveId: String?
+    ///The text the user want's to send.
     var message: String?
+    ///The time the message was sent.
     var timestamp: NSNumber?
     
     
@@ -26,8 +30,6 @@ class Message: NSObject {
     
     /**
      Method that returns your chatting partner's ID, so you can check which user is the correct user.
-     
-     
      - Returns: The userId of the user you are chatting with.
      */
     func chatWithId() -> String? {
@@ -58,7 +60,7 @@ class Message: NSObject {
     /**
      Gets a string and returns a list of all of its characters.
      - Parameters:
-     - text: The text to convert.
+         - text: The text to convert.
      - Returns: Returns the list of characters.
      */
     func stringToList(text: String) -> [Character] {
@@ -72,7 +74,7 @@ class Message: NSObject {
     /**
      Encrypts the message text.
      - Parameters:
-     - key: The key to use.
+         - key: The key to use.
      */
     func encrypt(key: String) {
         let newKey = getKey(key: key.lowercased())
@@ -119,7 +121,7 @@ class Message: NSObject {
     /**
      Decrypts the message text.
      - Parameters:
-     - key: The key to use.
+         - key: The key to use.
      */
     func decrypt(key: String) {
         let newKey = getKey(key: key.lowercased())
