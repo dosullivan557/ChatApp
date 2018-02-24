@@ -10,12 +10,13 @@ import UIKit
 import Firebase
 class ReportController: UIViewController, UITextFieldDelegate {
     
-    
+    ///The user who is being reported.
     var user : User? {
         didSet {
             pageTitle.text = "Report " + (user?.name!)!
         }
     }
+    ///Page title.
     let pageTitle : UITextView = {
         let name = UITextView()
         name.allowsEditingTextAttributes = false
@@ -29,7 +30,8 @@ class ReportController: UIViewController, UITextFieldDelegate {
         return name
     }()
     
-    let textField : UITextField = {
+    ///Reason for reporting the user text field.
+    let reasonForReportingTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Please Enter a description as to why you are reporting this user."
         tf.translatesAutoresizingMaskIntoConstraints = false
@@ -39,6 +41,7 @@ class ReportController: UIViewController, UITextFieldDelegate {
         return tf
     }()
     
+    ///Report button.
     let reportButton: UIButton = {
         let button = UIButton()
         button.setTitle("Report User", for: .normal)
@@ -50,14 +53,12 @@ class ReportController: UIViewController, UITextFieldDelegate {
     }()
     
     
-    /**
-     Called when the submit report button is pressed.
-     */
+    ///Called when the submit report button is pressed.
     @objc func handleReport() {
         guard let id = Auth.auth().currentUser?.uid else {
             return
         }
-        let values = ["UserReported": user?.id!, "Reporter": id, "Comment": textField.text!] as [String : Any]
+        let values = ["UserReported": user?.id!, "Reporter": id, "Comment": reasonForReportingTextField.text!] as [String : Any]
         
         let ref = Database.database().reference().child("Reports").child((user?.id)!).child(id)
         ref.updateChildValues(values, withCompletionBlock: { (err, ref) in
@@ -83,19 +84,22 @@ class ReportController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         // Do any additional setup after loading the view.
         view.addSubview(pageTitle)
-        view.addSubview(textField)
+        view.addSubview(reasonForReportingTextField)
         view.addSubview(reportButton)
         setupFields()
     }
+    
     ///Hides Keyboard when called.
     @objc func hideKeyboard() {
         view.self.endEditing(true)
     }
+    
     ///Hides the keyboard when the return key is pressed.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return true
     }
+    
     ///Sets up view constraints.
     func setupFields() {
         pageTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 75).isActive = true
@@ -103,12 +107,12 @@ class ReportController: UIViewController, UITextFieldDelegate {
         pageTitle.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         pageTitle.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        textField.topAnchor.constraint(equalTo: pageTitle.bottomAnchor, constant: 20).isActive = true
-        textField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        textField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        textField.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        reasonForReportingTextField.topAnchor.constraint(equalTo: pageTitle.bottomAnchor, constant: 20).isActive = true
+        reasonForReportingTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        reasonForReportingTextField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        reasonForReportingTextField.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-        reportButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 20).isActive = true
+        reportButton.topAnchor.constraint(equalTo: reasonForReportingTextField.bottomAnchor, constant: 20).isActive = true
         reportButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         reportButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
         reportButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
