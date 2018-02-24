@@ -8,14 +8,24 @@
 import UIKit
 import Firebase
 class NewMessageController: UITableViewController {
+    
+    // MARK: - Constants
+
     ///Reusable cell identidier.
     let cellId = "cellId"
+    
+    // MARK: - Variables
+
     ///An array of all the users to show.
     var users = [User]()
     ///An instance of timer so that we can make sure the tableview only gets refreshed once to prevent flickering when sorting.
     var timer: Timer?
     ///An instance of messageController which called this instance of NewMessageController so that I can push back to that view, and open the chat from there.
     var messagesController = MessagesController()
+    
+    
+    // MARK: - View initialisation
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,41 +43,13 @@ class NewMessageController: UITableViewController {
     //        group.messagesController = messagesController
     //        show(group, sender: self)
     //    }
-    
-    ///Cancel Button being pressed.
-    @objc func handleCancel(){
-        dismiss(animated: true, completion: nil)
-    }
+
+    //MARK: - TableView
     //Defines the number of cells in the tableview.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
     }
     
-    ///Fetches each user from the database, and populates the tableview cells with each user.
-    func fetchUser(){
-        Database.database().reference().child("users").observe(.childAdded, with: { (DataSnapshot) in
-            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
-                let user = User()
-                user.name = dictionary["name"] as? String
-                user.email = dictionary["email"] as? String
-                user.profileImageUrl = dictionary["profileImageUrl"] as? String
-                user.id = DataSnapshot.key
-                if user.id != Auth.auth().currentUser?.uid {
-                    
-                    self.users.append(user)
-                    
-                    self.users.sort(by: { (u1, u2) -> Bool in
-                        return u1.name! < u2.name!
-                    })
-                    self.timer?.invalidate()
-                    self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
-                }
-            }
-            
-        }, withCancel: nil)
-        
-        
-    }
     ///Reloads the tableview.
     @objc func handleReload() {
         DispatchQueue.main.async(execute: {
@@ -103,6 +85,40 @@ class NewMessageController: UITableViewController {
         return 65
     }
     
+    //MARK: - Interaction
+    ///Cancel Button being pressed.
+    @objc func handleCancel(){
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    //MARK: - Firebase
+    ///Fetches each user from the database, and populates the tableview cells with each user.
+    func fetchUser(){
+        Database.database().reference().child("users").observe(.childAdded, with: { (DataSnapshot) in
+            if let dictionary = DataSnapshot.value as? [String: AnyObject]{
+                let user = User()
+                user.name = dictionary["name"] as? String
+                user.email = dictionary["email"] as? String
+                user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                user.id = DataSnapshot.key
+                if user.id != Auth.auth().currentUser?.uid {
+                    
+                    self.users.append(user)
+                    
+                    self.users.sort(by: { (u1, u2) -> Bool in
+                        return u1.name! < u2.name!
+                    })
+                    self.timer?.invalidate()
+                    self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+                }
+            }
+            
+        }, withCancel: nil)
+        
+        
+    }
+
 }
 
 
