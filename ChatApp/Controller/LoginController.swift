@@ -10,11 +10,11 @@ import UIKit
 import Firebase
 
 class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    //Variables
+
+    ///An instance of messagesController that called this instance of the view controller so when the submit is pressed, certain information can be set up already.
     var messagesController: MessagesController?
     
-    //constants
-    //container for text fields
+    ///Container for text fields and seperaters.
     let inputsContainerView : UIView={
         let view = UIView()
         view.backgroundColor = UIColor.white
@@ -23,7 +23,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         view.layer.masksToBounds = true
         return view
     }()
-    //picture container
+    ///Picture container.
     let pictureContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.niceOrange
@@ -34,7 +34,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     }()
     
     
-    //register Button
+    ///Register Button.
     lazy var loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor.niceBlue
@@ -50,7 +50,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     }()
     
     
-    //name TextField
+    ///Name TextField.
     lazy var nameTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Name"
@@ -59,14 +59,14 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         tf.delegate = self
         return tf
     }()
-    //seperator
+    ///Name seperator.
     let nameSeperatorView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 239, g: 239, b: 239)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    //email TextField
+    ///Email TextField.
     lazy var emailTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
@@ -76,14 +76,14 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         tf.delegate = self
         return tf
     }()
-    //seperator
+    ///Email seperator.
     let emailSeperatorView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 239, g: 239, b: 239)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    //password TextField
+    ///Password TextField.
     lazy var passwordTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Password"
@@ -93,7 +93,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         return tf
     }()
     
-    //Register page logo image
+    ///Register page logo image.
     let logo: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "Icon-App-29x29")
@@ -101,7 +101,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
-    //upload profileImage
+    ///Upload profileImage.
     lazy var profileImageUpload: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultPic")
@@ -114,20 +114,19 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         imageView.layer.masksToBounds = true
         return imageView
     }()
-    //segmented display
+    ///Segmented display.
     let loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
         sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white], for: UIControlState.selected)
         sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
         sc.translatesAutoresizingMaskIntoConstraints = false
         sc.tintColor = UIColor.niceBlue
-        
-        //        sc.backgroundColor = UIColor.niceBlue
         sc.selectedSegmentIndex = 1
         sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
         return sc
     }()
-    //clear image button
+    
+    ///Clear image button.
     let clearProfilePictureImage: UIButton = {
         let button = UIButton()
         button.setTitle("Clear Image", for: .normal)
@@ -138,17 +137,17 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    //height anchor for picture container
+    ///Height anchor for picture container.
     var pictureContainerHeightAnchor: NSLayoutConstraint?
-    //height anchor for input container
+    ///Height anchor for input container.
     var inputsContainerViewHeightAnchor: NSLayoutConstraint?
-    //height anchor for name textfield
+    ///Height anchor for name textfield.
     var nameTextFieldHeightAnchor: NSLayoutConstraint?
-    //height anchor for email textfield
+    ///Height anchor for email textfield.
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
-    //height anchor for password textfield
+    ///Height anchor for password textfield.
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
-    
+    ///Reset Password button. Opens up the PasswordResetController.
     let resetButton: UIButton = {
         let button = UIButton()
         button.setTitle("Forgotten Password?", for: .normal)
@@ -292,11 +291,12 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         logo.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
     
-    
+    ///Sets preference for colouring.
     func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .lightContent
     }
-    ///Hide keyboard when screen is touched.
+    
+    ///Hide keyboard when the view is touched.
     @objc func hideKeyboard() {
         view.self.endEditing(true)
     }
@@ -346,12 +346,13 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      All possible errors for logging in or registering that could be thrown by firebase are passed into here and shows an alert box which notifies the user of the error. An example of how to use it correctly is shown below.
      
-     if error != nil{
-     self.firebaseAuth(error: error!)
-     return
-     }
+         if error != nil{
+             self.firebaseAuth(error: error!)
+             return
+         }
+     
      - Parameters:
-     - error: The error code which has been returned.
+         - error: The error code which has been returned.
      */
     func firebaseAuth(error: Error){
         if let errCode = AuthErrorCode(rawValue: error._code) {
@@ -396,7 +397,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
             }
         }
     }
-    /// Clears the a profile image that has been added, and replaces it with the defaultPic.
+    ///Clears the a profile image that has been added, and replaces it with the defaultPic.
     @objc func handleClearImage(){
         profileImageUpload.image = UIImage(named: "defaultPic")
         clearProfilePictureImage.isHidden = true
@@ -465,9 +466,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
-     
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
      */
     
     func showAlert(title: String, message: String) {
@@ -481,8 +481,8 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      Adds the relevant buttons to the alert box.
      - Parameters:
-     - title: The title of the alert, so I can use it to determine what the meaning of the alert is, and therefore add in the relevant buttons.
-     - alert: The alert box to add the buttons to.
+         - title: The title of the alert, so I can use it to determine what the meaning of the alert is, and therefore add in the relevant buttons.
+         - alert: The alert box to add the buttons to.
      - Returns: The alert box with the relevant buttons added.
      */
     
@@ -555,7 +555,7 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      Is called to verify the whether the password is valid before sending it to Firebase.
      - Parameters:
-     - testStr: The string to test.
+         - testStr: The string to test.
      - Returns: A boolean value to say whether the password is valid.
      */
     func isValidPassword(testStr: String) -> Bool{
@@ -566,17 +566,15 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
     /**
      Is called to verify the whether the email is valid locally before sending it to Firebase. Uses a regular expression to check the email typed in abides by the conventions.
      - Parameters:
-     - testStr: The string to test.
+         - testStr: The string to test.
      - Returns: A boolean value to say whether the email is valid.
      */
     func isValidEmail(testStr:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: testStr)
     }
     
-    //handleRegister
     /**
      Handles the registration of the user. Checks the information is valid locally, and then checks it against Firebase Authentication to authenticate it there as well.
      */
@@ -646,13 +644,12 @@ class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerContr
         
     }
     
-    //Registers the user into the database upon registering.
     
     /**
      Registers the user into the database upon registering.
      - Parameters:
-     - uid: The unique identifier for the user.
-     - values: A dictionary of `[String: AnyObject]` to upload to the database. This contains all of the information to upload.
+         - uid: The unique identifier for the user.
+         - values: A dictionary of `[String: AnyObject]` to upload to the database. This contains all of the information to upload.
      */
     private func registerUserIntoDatabaseWithUID(uid: String, values: [String: AnyObject]){
         //save info
