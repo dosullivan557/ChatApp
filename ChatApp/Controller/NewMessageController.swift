@@ -8,11 +8,13 @@
 import UIKit
 import Firebase
 class NewMessageController: UITableViewController {
-    //    Constants.
+    ///Reusable cell identidier.
     let cellId = "cellId"
-    //Variables
+    ///An array of all the users to show.
     var users = [User]()
+    ///An instance of timer so that we can make sure the tableview only gets refreshed once to prevent flickering when sorting.
     var timer: Timer?
+    ///An instance of messageController which called this instance of NewMessageController so that I can push back to that view, and open the chat from there.
     var messagesController = MessagesController()
     
     override func viewDidLoad() {
@@ -40,6 +42,7 @@ class NewMessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
     }
+    
     ///Fetches each user from the database, and populates the tableview cells with each user.
     func fetchUser(){
         Database.database().reference().child("users").observe(.childAdded, with: { (DataSnapshot) in
