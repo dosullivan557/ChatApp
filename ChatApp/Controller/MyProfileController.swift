@@ -10,6 +10,8 @@
 import UIKit
 import Firebase
 class MyProfileController : UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    // MARK: - Constants
+
     ///The users profile picture.
     let profileImage : UIImageView = {
         let image = UIImageView()
@@ -38,18 +40,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         label.font = UIFont(name: "arial", size: 15)
         return label
     }()
-    ///The current user of the system.
-    var user : User? {
-        didSet {
-            nameLabel.text = user?.name
-            emailLabel.text = user?.email
-            profileImage.loadImageUsingCache(urlString: user?.profileImageUrl)
-        }
-    }
-    ///Called when the overlay for the profile image is pressed.
-    @objc func handleTap() {
-        handleSelectProfileImageView()
-    }
+
     ///Label to show the users name.
     let nameLabel : UITextView = {
         let name = UITextView()
@@ -104,74 +95,20 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         return button
     }()
     
-    ///Called when the delete profile button is pressed.
-    @objc func deletePressed(){
-        showDeleteAlert(title:"Deleting your account.", message: "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.")
-        
-    }
-    ///Called when the delete profile is confirmed.
-    func handleDelete(){
-        Auth.auth().currentUser?.delete(completion: nil)
-        let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
-        ref.removeValue()
-        handleLogout()
-    }
     
-    
-     ///This function is called if there is no user logged into the system or if the user wants to logout.
-    @objc func handleLogout() {
-        
-        do {
-            try Auth.auth().signOut()
-        } catch let logoutError{
-            print(logoutError)
+    // MARK: - Variables
+
+    ///The current user of the system.
+    var user : User? {
+        didSet {
+            nameLabel.text = user?.name
+            emailLabel.text = user?.email
+            profileImage.loadImageUsingCache(urlString: user?.profileImageUrl)
         }
-        
-        tabBarController?.selectedIndex = 0
-        
     }
     
     
-    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
-    /**
-     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
-     - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
-     
-     */
-    
-    func showDeleteAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
-            self.handleDelete()
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    ///Opens the myevents controller.
-    @objc func handleMyEvents(){
-        let myEventController = MyEventsController()
-        myEventController.currentUser = user!
-        show(myEventController, sender: self)
-    }
-    ///Opens the help controller.
-    @objc func handleHelp() {
-        let helpController = HelpController()
-        helpController.hidesBottomBarWhenPushed = true
-        show(helpController, sender: self)
-    }
-    
-    ///Called when the settings button is pressed.
-    @objc func handleShowSettings(){
-        let settingsView = SettingsView()
-        settingsView.currentUser = self.user!
-        settingsView.hidesBottomBarWhenPushed = true
-        show(settingsView, sender: self)
-    }
+    //MARK: - View initialisation
     
     override func viewDidLoad() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
@@ -193,21 +130,19 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     }
     
     
-    ///Shows alert to check whether the user definitely wants to log out. If so, It will handle the logout, otherwise, it will do nothing.
-    @objc func checkLogout() {
-        let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
+    override func viewDidAppear(_ animated: Bool) {
+        //        if user?.id == nil {
+        //            viewDidLoad()
+        //        }
+        //        else {
+        //            self.setupWithUser(user: user!)
+        //        }
         
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-            self.handleLogout()
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
-            alert.dismiss(animated: true, completion: nil)
-        }
-        ))
-        self.present(alert, animated: true, completion: nil)
+        //        self.navigationController?.isNavigationBarHidden = true
+        
     }
     
+    //MARK: - Setup
     
     ///Sets up the overlay constraints for resetting the profile picture.
     func setupOverlay() {
@@ -258,6 +193,124 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         deleteProfileButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
+    /**
+     Sets up the page with the user's information.
+     - Parameters:
+     - user: The current users information.
+     */
+    func setupWithUser(user: User){
+        if let profileImageUrl = user.profileImageUrl {
+            profileImage.loadImageUsingCache(urlString: profileImageUrl)
+            nameLabel.text = user.name
+            emailLabel.text = user.email
+        }
+    }
+    
+    
+    
+    //MARK: - Interaction
+    
+    ///Called when the overlay for the profile image is pressed.
+    @objc func handleTap() {
+        handleSelectProfileImageView()
+    }
+   
+    ///Called when the delete profile button is pressed.
+    @objc func deletePressed(){
+        showDeleteAlert(title:"Deleting your account.", message: "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.")
+        
+    }
+    ///Called when the delete profile is confirmed.
+    func handleDelete(){
+        Auth.auth().currentUser?.delete(completion: nil)
+        let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
+        ref.removeValue()
+        handleLogout()
+    }
+    
+    
+     ///This function is called if there is no user logged into the system or if the user wants to logout.
+    @objc func handleLogout() {
+        
+        do {
+            try Auth.auth().signOut()
+        } catch let logoutError{
+            print(logoutError)
+        }
+        
+        tabBarController?.selectedIndex = 0
+        
+    }
+    ///Opens the myevents controller.
+    @objc func handleMyEvents(){
+        let myEventController = MyEventsController()
+        myEventController.currentUser = user!
+        show(myEventController, sender: self)
+    }
+    ///Opens the help controller.
+    @objc func handleHelp() {
+        let helpController = HelpController()
+        helpController.hidesBottomBarWhenPushed = true
+        show(helpController, sender: self)
+    }
+    
+    ///Called when the settings button is pressed.
+    @objc func handleShowSettings(){
+        let settingsView = SettingsView()
+        settingsView.currentUser = self.user!
+        settingsView.hidesBottomBarWhenPushed = true
+        show(settingsView, sender: self)
+    }
+    
+    /// Opens up an image picker and allows the user to select the picture.
+    @objc func handleSelectProfileImageView(){
+        let picker = UIImagePickerController()
+        picker.delegate = self as UIImagePickerControllerDelegate & UINavigationControllerDelegate
+        picker.allowsEditing = true
+        
+        present(picker, animated: true, completion: nil)
+    }
+    
+    
+    //MARK: - Alert
+    
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+     
+     */
+    
+    func showDeleteAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+            self.handleDelete()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    ///Shows alert to check whether the user definitely wants to log out. If so, It will handle the logout, otherwise, it will do nothing.
+    @objc func checkLogout() {
+        let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+            self.handleLogout()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+   
+    //MARK: - Firebase
     ///Gets your users information and sets the data.
     func getUser(){
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observe(.value, with: { (DataSnapshot) in
@@ -273,15 +326,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         }, withCancel: nil)
     }
     
-    /// Opens up an image picker and allows the user to select the picture.
-    @objc func handleSelectProfileImageView(){
-        let picker = UIImagePickerController()
-        picker.delegate = self as UIImagePickerControllerDelegate & UINavigationControllerDelegate
-        picker.allowsEditing = true
-        
-        present(picker, animated: true, completion: nil)
-    }
     
+   
     ///Deletes the users current profile picture.
     func deleteImageFromDatabase() {
         let optionalVal = user?.profileImageUrl?.components(separatedBy: "%2F")[1].prefix(40)
@@ -340,6 +386,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         
     }
     
+    //MARK: - ImagePicker
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var selectedImageFP: UIImage?
         if let editedImage = info["UIImagePickerControllerEditedImage"]{
@@ -360,31 +407,5 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         print("cancelled")
         dismiss(animated: true, completion: nil)
-    }
-    
-    
-    /**
-     Sets up the page with the user's information.
-     - Parameters:
-         - user: The current users information.
-     */
-    func setupWithUser(user: User){
-        if let profileImageUrl = user.profileImageUrl {
-            profileImage.loadImageUsingCache(urlString: profileImageUrl)
-            nameLabel.text = user.name
-            emailLabel.text = user.email
-        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        //        if user?.id == nil {
-        //            viewDidLoad()
-        //        }
-        //        else {
-        //            self.setupWithUser(user: user!)
-        //        }
-        
-        //        self.navigationController?.isNavigationBarHidden = true
-        
     }
 }
