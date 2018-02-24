@@ -32,20 +32,8 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
-    ///The user that the event is with.
-    var user: User? {
-        didSet{
-            
-            navigationItem.title = "Event with " + ((user?.name)!.components(separatedBy: " "))[0]
-        }
-    }
+    // MARK: - Constants
     
-    ///The date that the event is to start.
-    var sDate : Date?
-    ///The date that the event is to finish.
-    var fDate : Date?
-    ///The closest location with the given name.
-    var closest = MKMapItem()
     ///The mapview to search.
     let mapView = MKMapView()
     
@@ -172,6 +160,25 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     
     
+    
+    // MARK: - Variables
+    ///The user that the event is with.
+    var user: User? {
+        didSet{
+            
+            navigationItem.title = "Event with " + ((user?.name)!.components(separatedBy: " "))[0]
+        }
+    }
+    
+    ///The date that the event is to start.
+    var sDate : Date?
+    ///The date that the event is to finish.
+    var fDate : Date?
+    ///The closest location with the given name.
+    var closest = MKMapItem()
+    
+    // MARK: - View initialisation
+
     override func viewDidLoad() {
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         //        navigationController?.navigationBar.barTintColor = UIColor(r: 233, g: 175,b: 50)
@@ -195,7 +202,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         setupFields()
     }
     
-    
+    //MARK: - Setup
     
     ///Sets up the view constraints.
     func setupFields(){
@@ -247,6 +254,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25).isActive = true
     }
     
+    //MARK: - Datepicker
+    
     ///Gets date from datepicker and sets the date to the relevant text field.
     @objc func selectedDate(){
         let timeFormatter = DateFormatter()
@@ -264,6 +273,36 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             
         }
     }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 1
+    }
+    
+    ///Converts the time from a datepicker to seconds.
+    func dateToSecs() -> Int {
+        return Int(datePicker.date.timeIntervalSince1970)
+    }
+    
+    
+    /**
+     When the done button in the toolbar is pressed, it checks which datefield is being edited, and then forces the finish of that, which will hide the picker.
+     */
+    @objc func donePicker(){
+        
+        if dateFieldS.isEditing {
+            dateFieldS.endEditing(true)
+        }
+        else if dateFieldF.isEditing {
+            dateFieldF.endEditing(true)
+        }
+    }
+    
+    
+    //MARK: - Validation
     
     /**
      Validates the information provided in the fields.
@@ -295,6 +334,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return true
     }
     
+    //MARK: - Alert
+    
     //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
@@ -310,7 +351,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }))
         self.present(alert, animated: true, completion: nil)
     }
-    
+
+    //MARK: - Interaction
 
     ///Called when the submit button is pressed. Adds all the information into an object, and uploads it to the database.
     @objc func handleSubmit(){
@@ -361,6 +403,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }
     }
     
+    //MARK: - Firebase
     
     /**
      Uploads any errors to the database for examination.
@@ -372,29 +415,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         let values = ["Error Description": error.localizedDescription]
         ref.updateChildValues(values as [String: AnyObject])
     }
-    
-    /**
-     Converts the time from a datepicker to seconds.
-     */
-    func dateToSecs() -> Int {
-        return Int(datePicker.date.timeIntervalSince1970)
-    }
-    
-    
-    /**
-     When the done button in the toolbar is pressed, it checks which datefield is being edited, and then forces the finish of that, which will hide the picker.
-     */
-    @objc func donePicker(){
-        
-        if dateFieldS.isEditing {
-            dateFieldS.endEditing(true)
-        }
-        else if dateFieldF.isEditing {
-            dateFieldF.endEditing(true)
-        }
-    }
-    
-    
+   
+    //MARK: - Location
     
     /**
      This method checks for permissions, and if it doesn't have them, it will not do anything, otherwise, it will get the current users location, and search for a place with the name which is given which is close to the location. If it cannot find any, it will search over a larger area, and then gets the location. Once it finds locations, it will sort through them and find the closest one, and then it sets the variable closest to it.
@@ -432,7 +454,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             }
             let currentCoordinates = currentLocation?.coordinate
             self.closest = response.mapItems[0]
-            //            print("Start value :\(self.closest)")
+            //print("Start value :\(self.closest)")
             print(response.mapItems.count)
             if response.mapItems.count > 1 {
                 for i in 1...(response.mapItems.count - 1){
@@ -486,13 +508,5 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 }
             }
         }
-    }
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 1
     }
 }
