@@ -8,7 +8,7 @@
 import UIKit
 import Firebase
 class ProfileController : UIViewController {
-    
+    ///The profile image for the user.
     let profileImage : UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "defaultPic")
@@ -18,6 +18,7 @@ class ProfileController : UIViewController {
         image.image = UIImage(named: "defaultPic")
         return image
     }()
+    ///The user for who this instance of profile controller is for.
     var user : User?{
         didSet{
             if let cu = user {
@@ -28,6 +29,7 @@ class ProfileController : UIViewController {
             }
         }
     }
+    ///Label for the users name.
     let nameLabel : UITextView = {
         let name = UITextView()
         name.allowsEditingTextAttributes = false
@@ -39,6 +41,7 @@ class ProfileController : UIViewController {
         name.textColor = UIColor.black
         return name
     }()
+    ///Report button.
     let reportButton : UIButton = {
         let button = UIButton()
         button.setTitle("Report User", for: .normal)
