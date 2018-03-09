@@ -330,13 +330,13 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
    
     ///Deletes the users current profile picture.
     func deleteImageFromDatabase() {
-        let optionalVal = user?.profileImageUrl?.components(separatedBy: "%2F")[1].prefix(40)
-        if let imageName = optionalVal {
+        let profileURLParts = user?.profileImageUrl?.components(separatedBy: "%2F")[1].prefix(40)
+        if let imageName = profileURLParts {
             let storageRef = Storage.storage().reference().child("profileImages").child(String(describing: imageName))
             print(String(describing: imageName))
             storageRef.delete { (Error) in
                 if let error = Error {
-                    // Uh-oh, an error occurred!
+                    // An error occurred!
                     print(error)
                     return
                 } else {
