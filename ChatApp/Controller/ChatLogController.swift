@@ -40,7 +40,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var users: [User?] = []{
         didSet{
             getUserSettings()
-//            print(currentUserSettings.toString())
             let titleView = UITextView()
             
             if users.count == 1 {
@@ -795,4 +794,5 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         reloadCollectionView()
         
     }
+    
 }
