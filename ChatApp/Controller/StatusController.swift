@@ -63,4 +63,17 @@ class StatusController: UIViewController {
         saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
+    //MARK: - Firebase
+    ///Called when the save button is pressed. Updates the new data to the database.
+    @objc func handleSave() {
+        user.status = statusField.text
+        let values = ["name": user.name!, "email": user.email!, "profileImageUrl": user.profileImageUrl!, "status": statusField.text!]
+        if let id = Auth.auth().currentUser?.uid{
+            print(values)
+            let ref = Database.database().reference().child("users").child(id)
+            ref.updateChildValues(values)
+            self.settingsView.currentUser = user
+        }
+    }
+
 }
