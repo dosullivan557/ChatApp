@@ -12,6 +12,7 @@ import Firebase
 class UpdateGreeting: UIViewController {
     // MARK: - Constants
     
+    var settingsView = SettingsView()
     ///Greeting text field.
     let greetingTextField : UITextField = {
         let tf = UITextField()
@@ -36,12 +37,16 @@ class UpdateGreeting: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = UIColor.niceOrange
         super.viewDidLoad()
+        addToolBar(textField: greetingTextField)
+        
         view.addSubview(greetingTextField)
         view.addSubview(saveButton)
         greetingTextField.text = settings?.greeting!
         setupFields()
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         
+        self.navigationItem.title = "Update Greeting"
+
         view.addGestureRecognizer(tap)
     }
     
@@ -69,12 +74,14 @@ class UpdateGreeting: UIViewController {
     //MARK: - Firebase
     ///Called when the save button is pressed. Updates the new data to the database.
     @objc func handleSave() {
+        settings?.greeting = greetingTextField.text!
         let values = ["Greeting" : greetingTextField.text!, "TheirColor" : "Pink", "YourColor" : "Green"]
         if let id = Auth.auth().currentUser?.uid{
             print(values)
             let ref = Database.database().reference().child("user-settings").child(id)
             ref.updateChildValues(values)
         }
+        settingsView.currentUser.settings = settings
     }
   
     
