@@ -12,7 +12,7 @@ import Firebase
 class SettingsView: UITableViewController {
     // MARK: - Constants
     ///Array for the settings.
-    let settings = ["Greeting Message", "Colours"]
+    let settings = ["Greeting Message", "Colours", "Status"]
     ///The reuse cell identifier for the table view.
     let cellId = "cellId"
     
@@ -55,6 +55,13 @@ class SettingsView: UITableViewController {
         cell.textLabel!.text = settings[indexPath.row]
         if indexPath.row == 0 {
             cell.detailTextLabel?.text = currentUser.settings?.greeting!
+        }
+        else if indexPath.row == 1 {
+            let details = (currentUser.settings?.myColor!)! + " and " + (currentUser.settings?.theirColor!)!
+            cell.detailTextLabel?.text = details
+        }
+        else if indexPath.row == 2 {
+            cell.detailTextLabel?.text = currentUser.status!
         }
         return cell
     }
