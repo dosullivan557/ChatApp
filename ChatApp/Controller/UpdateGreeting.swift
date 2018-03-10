@@ -54,7 +54,7 @@ class UpdateGreeting: UIViewController {
     
     ///Sets up views.
     func setupFields(){
-        greetingTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        greetingTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         greetingTextField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         greetingTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         greetingTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
