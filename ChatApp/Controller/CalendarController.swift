@@ -195,6 +195,11 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         view.addSubview(dateFieldF)
         view.addSubview(submitButton)
         view.addSubview(locationField)
+        addToolBar(textField: titleField)
+        addToolBar(textField: descriptionField)
+        addToolBar(textField: locationField)
+
+
         
         setupFields()
     }
