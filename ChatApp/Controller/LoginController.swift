@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 
+class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     // MARK: - Constants
     
     ///Container for text fields and seperaters.
@@ -415,7 +416,7 @@ import Firebase
                         return
                     }
                     if let profileUrl = metadata?.downloadURL()?.absoluteString{
-                        let values = ["name": name, "email": email, "profileImageUrl": profileUrl]
+                        let values = ["name": name, "email": email, "profileImageUrl": profileUrl, "status": "I'm new, say Hi!"]
                         self.registerUserIntoDatabaseWithUID(uid: uid, values: values as [String : AnyObject])
                     }
                 })
