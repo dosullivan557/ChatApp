@@ -78,12 +78,14 @@ class SettingsView: UITableViewController {
         if indexPath.row == 0 {
             let GV = UpdateGreeting()
             GV.settings = currentUser.settings
+            GV.settingsView = self
             show(GV, sender: self)
         }
-        else {
+        else if indexPath.row == 1{
             //            print("2")
             let CP = ColourPickerController()
             CP.settings = currentUser.settings
+            CP.settingsView = self
             show(CP, sender: self)
         }
     }
