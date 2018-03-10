@@ -205,7 +205,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     func setupFields(){
         //main title
         
-        titleField.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
+        titleField.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         titleField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         titleField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         titleField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
@@ -216,10 +216,14 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         descriptionField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         descriptionField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         descriptionField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+      
+        dateFieldS.topAnchor.constraint(equalTo: descriptionField.bottomAnchor, constant: spacing).isActive = true
         dateFieldS.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldS.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateFieldS.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         dateFieldS.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
+      
+        dateFieldF.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: spacing).isActive = true
         dateFieldF.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateFieldF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
