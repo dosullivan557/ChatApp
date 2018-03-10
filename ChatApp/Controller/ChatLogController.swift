@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout{
+class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout{
     // MARK: - Constants
     
     ///The settings of the current user.
@@ -102,6 +102,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     // MARK: - View initialisation
 
     override func viewDidLoad(){
+
         self.hidesBottomBarWhenPushed = true
         reloadCollectionView()
         super.viewDidLoad()
