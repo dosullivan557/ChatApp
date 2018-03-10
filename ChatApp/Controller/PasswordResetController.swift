@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-class PasswordResetController: UIViewController, UITextFieldDelegate {
+class PasswordResetController: UIViewController {
     // MARK: - Constants
     ///Title view.
     let titleMain: UITextView = {
