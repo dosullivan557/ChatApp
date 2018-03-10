@@ -191,13 +191,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         dateFieldF.inputAccessoryView = tb
         view.addSubview(titleField)
         view.addSubview(descriptionField)
-        view.addSubview(labelStart)
         view.addSubview(dateFieldS)
         view.addSubview(dateFieldF)
-        view.addSubview(labelFinish)
         view.addSubview(submitButton)
         view.addSubview(locationField)
-        
         
         setupFields()
     }
@@ -219,24 +216,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         descriptionField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         descriptionField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         descriptionField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-        
-        labelStart.topAnchor.constraint(equalTo:descriptionField.bottomAnchor,constant: spacing).isActive = true
-        labelStart.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        labelStart.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
-        labelStart.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
-        
-        dateFieldS.topAnchor.constraint(equalTo: labelStart.bottomAnchor).isActive = true
         dateFieldS.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldS.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateFieldS.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         dateFieldS.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-        
-        labelFinish.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: spacing).isActive = true
-        labelFinish.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
-        labelFinish.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
-        labelFinish.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
-        
-        dateFieldF.topAnchor.constraint(equalTo: labelFinish.bottomAnchor).isActive = true
         dateFieldF.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateFieldF.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
