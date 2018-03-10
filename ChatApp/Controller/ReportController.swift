@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-class ReportController: UIViewController, UITextFieldDelegate {
+class ReportController: UIViewController {
     // MARK: - Constants
    
     ///Page title.
