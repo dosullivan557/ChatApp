@@ -99,6 +99,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         }
     }
     
+    ///SettingsView
     var settingsView = SettingsView()
 
     
