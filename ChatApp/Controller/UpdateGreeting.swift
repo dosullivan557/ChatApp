@@ -12,7 +12,6 @@ import Firebase
 class UpdateGreeting: UIViewController {
     // MARK: - Constants
     
-    var settingsView = SettingsView()
     ///Greeting text field.
     let greetingTextField : UITextField = {
         let tf = UITextField()
@@ -33,6 +32,12 @@ class UpdateGreeting: UIViewController {
         return btn
     }()
     
+    // MARK: - Variables
+    ///The users settings.
+    var settings : Settings?
+    ///SettingsView
+    var settingsView = SettingsView()
+
     //MARK: - View initialisation
     override func viewDidLoad() {
         view.backgroundColor = UIColor.niceOrange
@@ -65,11 +70,7 @@ class UpdateGreeting: UIViewController {
         saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
-    
-    
-    // MARK: - Variables
-    ///The users settings.
-    var settings : Settings?
+
     
     //MARK: - Firebase
     ///Called when the save button is pressed. Updates the new data to the database.
