@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 
-class LoginController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     // MARK: - Constants
     
     ///Container for text fields and seperaters.
