@@ -54,6 +54,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         return name
     }()
     
+    
+    
     ///Text view to show the user which email address they are signed up with.
     let emailLabel : UITextView = {
         let email = UITextView()
@@ -222,6 +224,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     }
     ///Called when the delete profile is confirmed.
     func handleDelete(){
+        deleteImageFromDatabase()
         Auth.auth().currentUser?.delete(completion: nil)
         let ref = Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!)
         ref.removeValue()
