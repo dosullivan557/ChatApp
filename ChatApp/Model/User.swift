@@ -20,6 +20,9 @@ class User: NSObject {
     ///The settings of the user.
     var settings : Settings?
     
+    ///User status
+    var status: String?
+    
     /**
      Gets the string of the user including all of its information. Used for development.
      - Returns: The string containing all of the information.
