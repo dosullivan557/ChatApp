@@ -88,6 +88,12 @@ class SettingsView: UITableViewController {
             CP.settingsView = self
             show(CP, sender: self)
         }
+        else if indexPath.row == 2 {
+            let SController = StatusController()
+            SController.settingsView = self
+            SController.user = currentUser
+            show(SController, sender: self)
+        }
     }
     
 }
