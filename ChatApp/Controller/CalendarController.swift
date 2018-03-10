@@ -481,7 +481,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                     let currentCoordinates = currentLocation?.coordinate
                     self.closest = response.mapItems[0]
                     //            print("Start value :\(self.closest)")
-                    print(response.mapItems.count)
                     for i in 1...(response.mapItems.count - 1){
                         print("Checking another")
                         let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
@@ -492,8 +491,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                         let currentClosestLat = Double(self.closest.placemark.coordinate.latitude)
                         
                         if (destLong.distance(to: currentLong) + destLat.distance(to: currentLat)) < ((currentClosestLat.distance(to: currentLat) + currentClosestLong.distance(to: currentLong))){
-                            print("Found closer: \(self.closest.placemark.coordinate)")
-                            
                             self.closest = response.mapItems[i]
                         }
                     }
@@ -501,4 +498,5 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             }
         }
     }
+    
 }
