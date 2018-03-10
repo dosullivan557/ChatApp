@@ -624,8 +624,8 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     /**
      Registers the user into the database upon registering.
      - Parameters:
-     - uid: The unique identifier for the user.
-     - values: A dictionary of `[String: AnyObject]` to upload to the database. This contains all of the information to upload.
+         - uid: The unique identifier for the user.
+         - values: A dictionary of `[String: AnyObject]` to upload to the database. This contains all of the information to upload.
      */
     private func registerUserIntoDatabaseWithUID(uid: String, values: [String: AnyObject]){
         //save info
@@ -657,7 +657,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
      }
      
      - Parameters:
-     - error: The error code which has been returned.
+         - error: The error code which has been returned.
      */
     func firebaseAuth(error: Error){
         if let errCode = AuthErrorCode(rawValue: error._code) {
