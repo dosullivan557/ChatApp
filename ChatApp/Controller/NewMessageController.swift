@@ -62,7 +62,7 @@ class NewMessageController: UITableViewController {
         let user = users[indexPath.row]
         cell?.profileImageView.image = UIImage(named: "defaultPic")
         cell?.textLabel?.text = user.name
-        cell?.detailTextLabel?.text = user.email
+        cell?.detailTextLabel?.text = user.status
         if let profileImageUrl = user.profileImageUrl {
             cell?.profileImageView.loadImageUsingCache(urlString: profileImageUrl)
             
@@ -102,8 +102,9 @@ class NewMessageController: UITableViewController {
                 user.email = dictionary["email"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 user.id = DataSnapshot.key
+                user.status = dictionary["status"] as? String
                 if user.id != Auth.auth().currentUser?.uid {
-                    
+                
                     self.users.append(user)
                     
                     self.users.sort(by: { (u1, u2) -> Bool in
