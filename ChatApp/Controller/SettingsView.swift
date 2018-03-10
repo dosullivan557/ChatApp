@@ -35,6 +35,11 @@ class SettingsView: UITableViewController {
         navigationItem.titleView = titleView
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        handleReload()
+    }
+    
+    
     //MARK: - Tableview
     
     ///Reloads the table view using the main thread.
@@ -70,10 +75,7 @@ class SettingsView: UITableViewController {
         return 60
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        handleReload()
-    }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             let GV = UpdateGreeting()
