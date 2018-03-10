@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     self.currentUser.email = dictionary["email"] as? String
                     self.currentUser.name = dictionary["name"] as? String
                     self.currentUser.profileImageUrl = dictionary["profileImageUrl"] as? String
+                    self.currentUser.status = dictionary["status"] as? String
                     let settingsRef = Database.database().reference().child("user-settings").child(self.currentUser.id!)
                     settingsRef.observe(.value, with: { (DataSnapshot) in
                         if let dictionary = DataSnapshot.value as? [String: AnyObject] {
