@@ -11,11 +11,8 @@ import Firebase
 
 class StatusController: UIViewController {
     
-    var user = User() {
-        didSet {
-            statusField.text = user.status
-        }
-    }
+    //MARK: - Constants
+
     ///Status Field
     let statusField : UITextField = {
         let tf = UITextField()
@@ -35,10 +32,20 @@ class StatusController: UIViewController {
         btn.backgroundColor = UIColor.niceBlue
         return btn
     }()
+
+    //MARK: - Variables
+    var user = User() {
+        didSet {
+            statusField.text = user.status
+        }
+    }
     
+    ///SettingsView
     var settingsView = SettingsView()
 
-    
+    //MARK: - View Initislisation
+
+    //View did load
     override func viewDidLoad() {
         super.viewDidLoad()
         addToolBar(textField: statusField)
@@ -51,6 +58,8 @@ class StatusController: UIViewController {
         setupFields()
     }
     
+    //MARK: - Setup
+
     func setupFields() {
         statusField.topAnchor.constraint(equalTo: view.topAnchor, constant: 75).isActive = true
         statusField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -62,8 +71,10 @@ class StatusController: UIViewController {
         saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
+
     
     //MARK: - Firebase
+    
     ///Called when the save button is pressed. Updates the new data to the database.
     @objc func handleSave() {
         user.status = statusField.text
