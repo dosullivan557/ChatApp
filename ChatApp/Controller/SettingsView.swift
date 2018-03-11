@@ -15,7 +15,7 @@ class SettingsView: UITableViewController {
     let settings = ["Greeting Message", "Colours", "Status"]
     ///The reuse cell identifier for the table view.
     let cellId = "cellId"
-    
+    var profileView = MyProfileController()
     // MARK: - Variables
     
     ///The current user of the system.
@@ -67,6 +67,7 @@ class SettingsView: UITableViewController {
         }
         else if indexPath.row == 2 {
             cell.detailTextLabel?.text = currentUser.status!
+            profileView.statusLabel.text = currentUser.status
         }
         return cell
     }
