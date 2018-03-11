@@ -119,6 +119,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     ///The current user of the system.
     var user : User? {
         didSet {
+            print(user?.status)
             nameLabel.text = user?.name
             emailLabel.text = user?.email
             profileImage.loadImageUsingCache(urlString: user?.profileImageUrl)
@@ -284,6 +285,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     ///Called when the settings button is pressed.
     @objc func handleShowSettings(){
         let settingsView = SettingsView()
+        settingsView.profileView = self
         settingsView.currentUser = self.user!
         settingsView.hidesBottomBarWhenPushed = true
         show(settingsView, sender: self)
