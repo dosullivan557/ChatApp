@@ -88,6 +88,16 @@ class StatusController: UIViewController {
         saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
+    //MARK: - Keyboard
+    
+    /**
+     Checks whether the textfield length is valid; in this case it is the length of the text inside of the textfield. If it passes, it allows the textfield's value to be changed, and if it doesn't, it doesn't allow the value to change.
+     - Parameters:
+         - textField : extfield to check.
+         - range : Range to pass.
+         - string : String to change.
+     - Returns: A boolean value that checks whether the test passes.
+     */
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return true }
         
@@ -95,6 +105,7 @@ class StatusController: UIViewController {
         return newLength <= 40
     }
     
+    ///Called when the value of the textfield changes.
     @objc func handleChangeValue() {
 //        print("Value changes")
         remainingChars.text = String(describing: 40 - statusField.text!.count)
