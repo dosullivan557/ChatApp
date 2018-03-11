@@ -53,6 +53,7 @@ class MyTabBar: UITabBarController {
                 user.email = dictionary["email"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 user.id = DataSnapshot.key
+                user.status = dictionary["status"] as? String
                 let settingsRef = Database.database().reference().child("user-settings").child((user.id)!)
                 settingsRef.observe(.value, with: { (DataSnapshot) in
                     if let dictionary = DataSnapshot.value as? [String: AnyObject] {
