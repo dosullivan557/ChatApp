@@ -231,6 +231,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
             ref.updateChildValues(values)
             self.setColors()
             settingsView.currentUser.settings = self.settings
+            self.showAlert(title: "Updated", message: "Your colours have successfully been updated.")
         }
         
     }
@@ -275,6 +276,24 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
     func saveSettings(){
         settings!.myColor = myColor.text!
         settings!.theirColor = theirColor.text!
+    }
+    
+    //MARK: - Alert
+    
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
+     */
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     
