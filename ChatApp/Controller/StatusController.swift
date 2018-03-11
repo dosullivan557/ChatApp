@@ -62,7 +62,7 @@ class StatusController: UIViewController {
         view.addSubview(remainingChars)
         view.addSubview(saveButton)
         view.backgroundColor = UIColor.niceOrange
-        
+        statusField.addTarget(self, action: #selector(handleChangeValue), for: .editingChanged)
         self.navigationItem.title = "Update Status"
 
         setupFields()
@@ -88,8 +88,17 @@ class StatusController: UIViewController {
         saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
-
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return true }
+        
+        let newLength = text.utf16.count + string.utf16.count - range.length
+        return newLength <= 40
+    }
     
+    @objc func handleChangeValue() {
+//        print("Value changes")
+        remainingChars.text = String(describing: 40 - statusField.text!.count)
+    }
     //MARK: - Firebase
     
     ///Called when the save button is pressed. Updates the new data to the database.
