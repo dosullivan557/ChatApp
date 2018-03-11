@@ -360,47 +360,62 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     
     //MARK: - Interaction
     
+    
+    let activityInd = ActivityController()
+    
+    func startActivityIndicator() {
+        activityInd.showActivityIndicatory(uiView: view)
+    }
+    
+    func removeActivityIndicator() {
+        activityInd.finishAnimating(uiView: view)
+    }
     /**
      Handles the registration of the user. Checks the information is valid locally, and then checks it against Firebase Authentication to authenticate it there as well.
      */
     func handleRegister(){
         guard let email = emailTextField.text else {
             showAlert(title: "Invalid Email", message: "Please enter a valid email address")
+            removeActivityIndicator()
             return
         }
         guard let password = passwordTextField.text else{
             showAlert(title: "Invalid Password", message: "Please enter a valid password")
+            removeActivityIndicator()
             return
         }
         guard let name = nameTextField.text else {
             showAlert(title: "Invalid Name", message: "Please enter a valid name")
+            removeActivityIndicator()
             return
         }
         
         if (!isValidEmail(testStr: email)){
             showAlert(title: "Invalid Email", message: "Please enter a valid email address")
+            removeActivityIndicator()
             return
         }
         if(!isValidPassword(testStr: password)){
             showAlert(title: "Invalid Password", message: "Please enter a valid password")
+            removeActivityIndicator()
             return
         }
         
         if self.profileImageUpload.image == UIImage(named: "defaultPic") {
-            let bool = self.showImageUploadAlert()
-            print(bool)
-            if bool==true {
-                return
-            }
+            showImageUploadAlert()
+            removeActivityIndicator()
+            return
         }
         Auth.auth().createUser(withEmail: email, password: password, completion: ({
             (user: Firebase.User?, error) in
             if  error != nil {
                 self.firebaseAuth(error: error!)
+                self.removeActivityIndicator()
                 return
                 
             }
             guard let uid = user?.uid else {
+                self.removeActivityIndicator()
                 return
             }
             
@@ -413,6 +428,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
                     (metadata, error) in
                     if error != nil{
                         self.firebaseAuth(error: error!)
+                        self.removeActivityIndicator()
                         return
                     }
                     if let profileUrl = metadata?.downloadURL()?.absoluteString{
@@ -495,6 +511,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
   
     ///Checks whether the segmented display is equal to login or register, and calls either the [handleLogin()]() or [handleRegister]().
     @objc func handleLoginRegister(){
+        startActivityIndicator()
         if(loginRegisterSegmentedControl.selectedSegmentIndex == 0 ){
             handleLogin()
         }
@@ -508,14 +525,18 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         
         guard let email = emailTextField.text,  let password = passwordTextField.text else {
             showAlert(title: "Invalid data", message: "Invalid email or Password")
+            removeActivityIndicator()
+
             return
         }
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             if error != nil {
                 self.firebaseAuth(error: error!)
+                self.removeActivityIndicator()
+
                 return
             }
-            
+            removeActivityIndicator()
             self.messagesController?.fetchUser()
             self.dismiss(animated: true, completion: nil)
         }
@@ -633,15 +654,18 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         let usersReference = ref.child("users").child(uid)
         usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
             if  err != nil {
+                self.removeActivityIndicator()
                 return
             }
             let settingsRef = Database.database().reference().child("user-settings").child(uid)
             let settingsValues = ["Greeting" : "Hey :O", "YourColor" : "Green", "TheirColor" : "Pink"]
             settingsRef.updateChildValues(settingsValues, withCompletionBlock: { (err, ref) in
                 if err != nil {
+                    self.removeActivityIndicator()
                     return
                 }
             })
+            self.removeActivityIndicator()
             self.messagesController?.fetchUser()
             self.dismiss(animated: true, completion: nil)
         })
