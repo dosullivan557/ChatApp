@@ -198,7 +198,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     /**
      Sets up the page with the user's information.
      - Parameters:
-     - user: The current users information.
+         - user: The current users information.
      */
     func setupWithUser(user: User){
         if let profileImageUrl = user.profileImageUrl {
@@ -363,7 +363,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
                     self.updateValuesInDatabase(values: values)
                     let delegate = UIApplication.shared.delegate as? AppDelegate
                     delegate?.updateUser()
-                    
                 }
             })
             
@@ -386,9 +385,11 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             
         }
         dismiss(animated: true, completion: nil)
+//        dismiss(animated: true, completion: nil)
         
     }
-    
+    let activityInd = ActivityController()
+
     //MARK: - ImagePicker
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var selectedImageFP: UIImage?
@@ -401,6 +402,10 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         if let selectedImage = selectedImageFP {
             profileImage.image = selectedImage
         }
+                dismiss(animated: true, completion: nil)
+
+        activityInd.showActivityIndicatory(uiView: view)
+
         deleteImageFromDatabase()
         uploadImageToDatabase()
     }
