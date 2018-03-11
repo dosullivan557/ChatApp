@@ -114,6 +114,10 @@ class StatusController: UIViewController {
     
     ///Called when the save button is pressed. Updates the new data to the database.
     @objc func handleSave() {
+        if statusField.text!.count == 0 {
+            showAlert(title: "Invalid status", message: "Please insert a status.")
+            return
+        }
         user.status = statusField.text
         let values = ["name": user.name!, "email": user.email!, "profileImageUrl": user.profileImageUrl!, "status": statusField.text!]
         if let id = Auth.auth().currentUser?.uid{
@@ -121,7 +125,26 @@ class StatusController: UIViewController {
             let ref = Database.database().reference().child("users").child(id)
             ref.updateChildValues(values)
             self.settingsView.currentUser = user
+            self.showAlert(title: "Updated", message: "Your status has successfully been updated.")
         }
+    }
+    
+    //MARK: - Alert
+    
+    //By creating the method in this way, I was able to reduce a lot of extra code by just calling this function when its just a simple alert.
+    /**
+     Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
+     - Parameters:
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
+     */
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 
 }
