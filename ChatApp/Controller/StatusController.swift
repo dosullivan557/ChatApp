@@ -33,9 +33,11 @@ class StatusController: UIViewController {
         return btn
     }()
     
+    ///Remaining characters.
     lazy var remainingChars : UITextField = {
         let tf = UITextField()
         tf.text = String(describing: 40 - user.status!.count)
+        tf.isUserInteractionEnabled = false
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.backgroundColor = UIColor.white
         return tf
@@ -110,6 +112,8 @@ class StatusController: UIViewController {
 //        print("Value changes")
         remainingChars.text = String(describing: 40 - statusField.text!.count)
     }
+    
+    
     //MARK: - Firebase
     
     ///Called when the save button is pressed. Updates the new data to the database.

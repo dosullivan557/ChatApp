@@ -392,7 +392,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
 //        dismiss(animated: true, completion: nil)
         
     }
-
+    
     //MARK: - ImagePicker
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var selectedImageFP: UIImage?

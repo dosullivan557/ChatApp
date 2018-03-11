@@ -32,6 +32,17 @@ class UpdateGreeting: UIViewController {
         return btn
     }()
     
+    ///Remaining characters.
+    lazy var remainingChars : UITextField = {
+        let tf = UITextField()
+        tf.text = String(describing: 40 - settings!.greeting!.count)
+        tf.isUserInteractionEnabled = false
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.backgroundColor = UIColor.white
+        return tf
+        
+    }()
+
     // MARK: - Variables
     ///The users settings.
     var settings : Settings?
@@ -45,6 +56,7 @@ class UpdateGreeting: UIViewController {
         addToolBar(textField: greetingTextField)
         
         view.addSubview(greetingTextField)
+        view.addSubview(remainingChars)
         view.addSubview(saveButton)
         greetingTextField.text = settings?.greeting!
         setupFields()
@@ -60,9 +72,14 @@ class UpdateGreeting: UIViewController {
     ///Sets up views.
     func setupFields(){
         greetingTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
-        greetingTextField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
-        greetingTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        greetingTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 15).isActive = true
+        greetingTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -50).isActive = true
         greetingTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        remainingChars.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
+        remainingChars.leftAnchor.constraint(equalTo: greetingTextField.rightAnchor).isActive = true
+        remainingChars.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -15).isActive = true
+        remainingChars.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         saveButton.topAnchor.constraint(equalTo: greetingTextField.bottomAnchor, constant: 30).isActive = true
         saveButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true

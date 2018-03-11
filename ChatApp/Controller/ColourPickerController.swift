@@ -224,7 +224,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
     ///Called when the save button is pressed.
     @objc func handleSave() {
         saveSettings()
-        let values = ["Greeting" : settings?.greeting!, "TheirColor" : theirColor.text!, "YourColor" : myColor.text!]
+        let values = ["Greeting" : settings?.greeting!, "TheirColor" : theirColor.text!, "YourColor" : myColor.text!] as [String: AnyObject]
         if let id = Auth.auth().currentUser?.uid{
             print(values)
             let ref = Database.database().reference().child("user-settings").child(id)

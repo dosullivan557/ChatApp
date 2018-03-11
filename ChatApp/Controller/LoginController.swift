@@ -632,7 +632,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
      Shows alert if you haven't got an upload image. If the user doesn't wish to upload one, then they can say no, otherwise they get a change to change their mind and add one.
      - Returns: A boolean to use as a flag to get the users response. This determines whether to continue the registering or to stop and allow the user to upload one.
      */
-    func showImageUploadAlert() -> Bool{
+    func showImageUploadAlert(){
         let alert = UIAlertController(title: "No profile image", message: "Please upload a profile picture to help people recognise who they are speaking to.", preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
@@ -641,7 +641,6 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         }
         ))
         self.present(alert, animated: true, completion: nil)
-        return true
     }
 
    
