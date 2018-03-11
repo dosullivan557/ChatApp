@@ -128,4 +128,11 @@ class UpdateGreeting: UIViewController {
         greetingTextField.endEditing(true)
     }
  
+    ///Called when the value of the textfield changes.
+    @objc func handleChangeValue() {
+        //        print("Value changes")
+        remainingChars.text = String(describing: 40 - greetingTextField.text!.count)
+    }
+    
+    
 }
