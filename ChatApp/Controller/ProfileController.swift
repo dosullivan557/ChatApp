@@ -33,6 +33,21 @@ class ProfileController : UIViewController {
         name.textColor = UIColor.black
         return name
     }()
+    
+    
+    ///Label for the users name.
+    let statusLabel : UITextView = {
+        let statusLabel = UITextView()
+        statusLabel.allowsEditingTextAttributes = false
+        statusLabel.isEditable = false
+        statusLabel.isUserInteractionEnabled = false
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        statusLabel.textAlignment = .center
+        statusLabel.font = UIFont(name: "arial", size: 15)
+        statusLabel.textColor = UIColor.black
+        return statusLabel
+    }()
+    
     ///Report button.
     let reportButton : UIButton = {
         let button = UIButton()
@@ -62,6 +77,7 @@ class ProfileController : UIViewController {
         view.backgroundColor = UIColor.white
         view.addSubview(profileImage)
         view.addSubview(nameLabel)
+        view.addSubview(statusLabel)
         view.addSubview(reportButton)
         setupWithUser(user: user!)
         setupFields()
@@ -80,7 +96,12 @@ class ProfileController : UIViewController {
         nameLabel.widthAnchor.constraint(equalTo: profileImage.widthAnchor).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        reportButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20).isActive = true
+        statusLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20).isActive = true
+        statusLabel.centerXAnchor.constraint(equalTo:profileImage.centerXAnchor).isActive = true
+        statusLabel.widthAnchor.constraint(equalTo: profileImage.widthAnchor).isActive = true
+        statusLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        reportButton.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 20).isActive = true
         reportButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
         reportButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         reportButton.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
@@ -93,6 +114,7 @@ class ProfileController : UIViewController {
             profileImage.loadImageUsingCache(urlString: profileImageUrl)
             print(user.name!)
             nameLabel.text = user.name!
+            statusLabel.text = user.status!
         }
     }
     
