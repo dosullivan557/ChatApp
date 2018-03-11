@@ -536,7 +536,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
 
                 return
             }
-            removeActivityIndicator()
+            self.removeActivityIndicator()
             self.messagesController?.fetchUser()
             self.dismiss(animated: true, completion: nil)
         }
