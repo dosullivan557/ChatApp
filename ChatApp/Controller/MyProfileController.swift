@@ -363,6 +363,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
                     self.updateValuesInDatabase(values: values)
                     let delegate = UIApplication.shared.delegate as? AppDelegate
                     delegate?.updateUser()
+                    self.activityInd.finishAnimating(uiView: self.view)
+
                 }
             })
             
@@ -384,7 +386,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             print("Error")
             
         }
-        dismiss(animated: true, completion: nil)
 //        dismiss(animated: true, completion: nil)
         
     }
