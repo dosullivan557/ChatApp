@@ -17,7 +17,7 @@ class StatusController: UIViewController {
     let statusField : UITextField = {
         let tf = UITextField()
         tf.text = ""
-        tf.placeholder = "Please enter a greeting."
+        tf.placeholder = "Please enter a status."
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.backgroundColor = UIColor.white
         return tf
