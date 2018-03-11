@@ -54,6 +54,19 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         return name
     }()
     
+    ///Label to show the users status.
+    let statusLabel : UITextView = {
+        let status = UITextView()
+        status.allowsEditingTextAttributes = false
+        status.isEditable = false
+        status.isUserInteractionEnabled = false
+        status.translatesAutoresizingMaskIntoConstraints = false
+        status.textAlignment = .center
+        status.textColor = UIColor.black
+        status.font = UIFont(name: "arial", size: 15)
+        return status
+    }()
+    
     
     
     ///Text view to show the user which email address they are signed up with.
@@ -127,6 +140,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         view.addSubview(emailLabel)
         view.addSubview(helpButton)
         view.addSubview(myEventsButton)
+        view.addSubview(statusLabel)
         view.addSubview(deleteProfileButton)
         //        self.navigationController?.isNavigationBarHidden = true
         setupFields()
@@ -177,7 +191,12 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         nameLabel.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        emailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor).isActive = true
+        statusLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor).isActive = true
+        statusLabel.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
+        statusLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        statusLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        emailLabel.topAnchor.constraint(equalTo: statusLabel.bottomAnchor).isActive = true
         emailLabel.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
         emailLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         emailLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
