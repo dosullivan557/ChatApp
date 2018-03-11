@@ -122,6 +122,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             nameLabel.text = user?.name
             emailLabel.text = user?.email
             profileImage.loadImageUsingCache(urlString: user?.profileImageUrl)
+            statusLabel.text = user?.status
         }
     }
     
@@ -227,6 +228,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
             profileImage.loadImageUsingCache(urlString: profileImageUrl)
             nameLabel.text = user.name
             emailLabel.text = user.email
+            statusLabel.text = user.status
         }
     }
     
@@ -345,8 +347,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
                 user.email = dictionary["email"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 user.id = DataSnapshot.key
+                user.status = dictionary["status"] as? String
                 self.setupWithUser(user: user)
-                print(user)
             }
         }, withCancel: nil)
     }
