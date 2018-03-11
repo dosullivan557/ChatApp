@@ -9,16 +9,29 @@
 import UIKit
 
 class ActivityController: UIViewController {
+    //MARK: - Constants
+    ///The activity indicator.
+    let actInd: UIActivityIndicatorView = UIActivityIndicatorView()
+    ///The background view.
+    let loadingView: UIView = UIView()
+    ///The container of all of the subviews.
+    let container: UIView = UIView()
+
+    //MARK: - View initialisation
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.tag = 1
     }
-    
-    let actInd: UIActivityIndicatorView = UIActivityIndicatorView()
-    let loadingView: UIView = UIView()
-    let container: UIView = UIView()
 
+    //MARK: - Activity Indicator
+
+    
+    /**
+     Shows the activity indicator, and starts the animation.
+     - Parameters:
+         - uiView : The view to add the activity indicator to.
+     */
     func showActivityIndicatory(uiView: UIView) {
         container.frame = uiView.frame
         container.center = uiView.center
@@ -41,6 +54,11 @@ class ActivityController: UIViewController {
         actInd.startAnimating()
     }
     
+    /**
+     Finishes the activity indicator's animation.
+     - Parameters:
+         - uiView : the view to add the activity indicator to.
+     */
     func finishAnimating(uiView: UIView) {
         uiView.alpha = 1
         actInd.stopAnimating()

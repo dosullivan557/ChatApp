@@ -96,7 +96,10 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
+    ///Activity Indicator
+    let activityInd = ActivityController()
+
     
     // MARK: - Variables
 
@@ -389,7 +392,6 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
 //        dismiss(animated: true, completion: nil)
         
     }
-    let activityInd = ActivityController()
 
     //MARK: - ImagePicker
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
