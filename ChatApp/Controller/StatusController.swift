@@ -32,6 +32,15 @@ class StatusController: UIViewController {
         btn.backgroundColor = UIColor.niceBlue
         return btn
     }()
+    
+    lazy var remainingChars : UITextField = {
+        let tf = UITextField()
+        tf.text = String(describing: 40 - user.status!.count)
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.backgroundColor = UIColor.white
+        return tf
+        
+    }()
 
     //MARK: - Variables
     var user = User() {
@@ -50,6 +59,7 @@ class StatusController: UIViewController {
         super.viewDidLoad()
         addToolBar(textField: statusField)
         view.addSubview(statusField)
+        view.addSubview(remainingChars)
         view.addSubview(saveButton)
         view.backgroundColor = UIColor.niceOrange
         
@@ -62,9 +72,16 @@ class StatusController: UIViewController {
 
     func setupFields() {
         statusField.topAnchor.constraint(equalTo: view.topAnchor, constant: 75).isActive = true
-        statusField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        statusField.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+//        statusField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        statusField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 15).isActive = true
+        statusField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -50).isActive = true
         statusField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        remainingChars.topAnchor.constraint(equalTo: view.topAnchor, constant: 75).isActive = true
+//        remainingChars.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        remainingChars.leftAnchor.constraint(equalTo: statusField.rightAnchor).isActive = true
+        remainingChars.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -15).isActive = true
+        remainingChars.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         saveButton.topAnchor.constraint(equalTo: statusField.bottomAnchor, constant: 30).isActive = true
         saveButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
