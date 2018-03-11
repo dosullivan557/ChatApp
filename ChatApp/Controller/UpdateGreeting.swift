@@ -58,6 +58,8 @@ class UpdateGreeting: UIViewController {
         view.addSubview(greetingTextField)
         view.addSubview(remainingChars)
         view.addSubview(saveButton)
+        
+        greetingTextField.addTarget(self, action: #selector(handleChangeValue), for: .editingChanged)
         greetingTextField.text = settings?.greeting!
         setupFields()
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -110,8 +112,8 @@ class UpdateGreeting: UIViewController {
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
      */
     
     func showAlert(title: String, message: String) {
@@ -127,7 +129,14 @@ class UpdateGreeting: UIViewController {
     @objc func hideKeyboard() {
         greetingTextField.endEditing(true)
     }
- 
+    
+    /**
+     Checks whether the textfield length is valid; in this case it is the length of the text inside of the textfield. If it passes, it allows the textfield's value to be changed, and if it doesn't, it doesn't allow the value to change.
+     - Parameters:
+         - textField : extfield to check.
+         - range : Range to pass.
+         - string : String to change.
+     - Returns: A boolean value that checks whether the test passes.
      */
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return true }
