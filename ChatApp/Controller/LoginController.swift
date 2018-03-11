@@ -79,7 +79,9 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+    ///The activity indicator.
+    let activityInd = ActivityController()
+
     // MARK: - Variables
     
     ///An instance of messagesController that called this instance of the view controller so when the submit is pressed, certain information can be set up already.
@@ -358,18 +360,21 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         return emailTest.evaluate(with: testStr)
     }
     
-    //MARK: - Interaction
+    //MARK: - Activity Indicator
     
     
-    let activityInd = ActivityController()
-    
+    ///Start the activity indicator.
     func startActivityIndicator() {
         activityInd.showActivityIndicatory(uiView: view)
     }
-    
+    ///Stops the animation and removes it from the view.
     func removeActivityIndicator() {
         activityInd.finishAnimating(uiView: view)
     }
+    
+    
+    //MARK: - Interaction
+    
     /**
      Handles the registration of the user. Checks the information is valid locally, and then checks it against Firebase Authentication to authenticate it there as well.
      */
