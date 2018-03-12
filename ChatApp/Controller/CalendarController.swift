@@ -159,6 +159,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     }()
     
     
+    ///The activity indicator.
+    let activityInd = ActivityController()
     
     
     // MARK: - Variables
@@ -198,8 +200,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         addToolBar(textField: titleField)
         addToolBar(textField: descriptionField)
         addToolBar(textField: locationField)
-
-
         
         setupFields()
     }
@@ -340,6 +340,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
+            if title == "Event has been submitted"
+            {
+                self.navigationController?.popViewController(animated: true)
+            }
         }))
         self.present(alert, animated: true, completion: nil)
     }
@@ -348,10 +352,13 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
 
     ///Called when the submit button is pressed. Adds all the information into an object, and uploads it to the database.
     @objc func handleSubmit(){
+        startActivityIndicator()
         if !validate() {
+            removeActivityIndicator()
             return
         }
         guard let uid = Auth.auth().currentUser?.uid else {
+            removeActivityIndicator()
             return
         }
         let event = Event()
@@ -379,6 +386,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 if error != nil {
                     self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
                     self.postError(error: error!)
+                    self.removeActivityIndicator()
+
                     return
                 }
                 self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
@@ -390,7 +399,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 
                 let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
                 recipientUserEventRef.updateChildValues([messageId: 1])
-                
+                self.removeActivityIndicator()
             }
         }
     }
@@ -486,6 +495,18 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 }
             }
         }
+    }
+    
+    //MARK: - Activity Indicator
+    
+    
+    ///Start the activity indicator.
+    func startActivityIndicator() {
+        activityInd.showActivityIndicatory(uiView: view)
+    }
+    ///Stops the animation and removes it from the view.
+    func removeActivityIndicator() {
+        activityInd.finishAnimating(uiView: view)
     }
     
 }
