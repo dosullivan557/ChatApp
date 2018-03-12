@@ -746,7 +746,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             foundMeetAt = true
         }
         for word in words {
-            counter += 1            
+            counter += 1
             let test = timeTest?.firstMatch(in: word, options: NSRegularExpression.MatchingOptions.withTransparentBounds, range: word.nsrange)
             //            print("test: \(test)")
             if (test != nil){
