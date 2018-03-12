@@ -284,11 +284,11 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     
     ///Called when the settings button is pressed.
     @objc func handleShowSettings(){
-        let settingsView = SettingsView()
-        settingsView.profileView = self
-        settingsView.currentUser = self.user!
-        settingsView.hidesBottomBarWhenPushed = true
-        show(settingsView, sender: self)
+        let settingsController = SettingsController()
+        settingsController.profileView = self
+        settingsController.currentUser = self.user!
+        settingsController.hidesBottomBarWhenPushed = true
+        show(settingsController, sender: self)
     }
     
     /// Opens up an image picker and allows the user to select the picture.
