@@ -143,7 +143,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     let locationField : UITextField = {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.placeholder = "Enter Location"
+        field.placeholder = "Enter Location (Optional)"
         field.backgroundColor = UIColor.white
         field.layer.borderColor = UIColor.black.cgColor
         field.layer.borderWidth = 1
@@ -382,37 +382,45 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         event.invitee = user?.id
         event.id = NSUUID().uuidString
         
-        findLocation()
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-            var array = [NSString]()
-            array.append(self.closest.placemark.coordinate.latitude.description as NSString)
-            array.append(self.closest.placemark.coordinate.longitude.description as NSString)
-            array.append(self.closest.placemark.title! as NSString)
-            
-            event.location = array
-            
-            let myRef = Database.database().reference().child("events").child(event.id!)
-            let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : "", "Location": event.location] as [String : Any]
-            
-            myRef.updateChildValues(values) { (error, ref) in
-                if error != nil {
-                    self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
-                    self.postError(error: error!)
-                    self.removeActivityIndicator()
-
-                    return
-                }
-                self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+        var array = [NSString]()
+        
+        if locationField.text?.count > 0 {
+            findLocation()
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+                array.append(self.closest.placemark.coordinate.latitude.description as NSString)
+                array.append(self.closest.placemark.coordinate.longitude.description as NSString)
+                array.append(self.closest.placemark.title! as NSString)
                 
-                let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
-                
-                let messageId = myRef.key
-                userEventRef.updateChildValues([messageId: 1])
-                
-                let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
-                recipientUserEventRef.updateChildValues([messageId: 1])
-                self.removeActivityIndicator()
+                event.location = array
             }
+        }
+        else {
+            array.append("0.00" as NSString)
+            array.append("0.00" as NSString)
+            array.append("0.00" as NSString)
+            event.location = array
+        }
+        let myRef = Database.database().reference().child("events").child(event.id!)
+        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : "", "Location": event.location] as [String : Any]
+        
+        myRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
+                self.postError(error: error!)
+                self.removeActivityIndicator()
+                
+                return
+            }
+            self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+            
+            let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
+            
+            let messageId = myRef.key
+            userEventRef.updateChildValues([messageId: 1])
+            
+            let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
+            recipientUserEventRef.updateChildValues([messageId: 1])
+            self.removeActivityIndicator()
         }
     }
     
