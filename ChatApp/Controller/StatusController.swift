@@ -68,6 +68,10 @@ class StatusController: UIViewController {
         self.navigationItem.title = "Update Status"
 
         setupFields()
+        
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        self.navigationItem.leftBarButtonItem = newBackButton
     }
     
     //MARK: - Setup
@@ -147,8 +151,13 @@ class StatusController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
+            self.back(sender: self.navigationItem.leftBarButtonItem!)
         }))
         self.present(alert, animated: true, completion: nil)
     }
 
+    ///Back button for NavigationBarItem
+    @objc func back(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
 }
