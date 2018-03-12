@@ -124,6 +124,11 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         
         setupVariables()
         super.viewDidLoad()
+    
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        self.navigationItem.leftBarButtonItem = newBackButton
+        
     }
     
     //MARK: - Setup
@@ -284,17 +289,29 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-     - title: The title to set for the alert box.
-     - message: The message to set for the alert box.
+         - title: The title to set for the alert box.
+         - message: The message to set for the alert box.
      */
     
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
+            self.back(sender: self.navigationItem.leftBarButtonItem!)
+
         }))
         self.present(alert, animated: true, completion: nil)
     }
     
+    ///Back button for NavigationBarItem
+    @objc func back(sender: UIBarButtonItem) {
+        // Perform your custom actions
+        // ...
+        // Go back to the previous ViewController
+        print("Yass bitch")
+        self.navigationController?.popViewController(animated: true)
+        
+    }
     
 }
+
