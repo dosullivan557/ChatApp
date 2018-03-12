@@ -32,6 +32,7 @@ class StatusController: UIViewController {
         btn.backgroundColor = UIColor.niceBlue
         return btn
     }()
+
     
     ///Remaining characters.
     lazy var remainingChars : UITextField = {
@@ -43,7 +44,7 @@ class StatusController: UIViewController {
         return tf
         
     }()
-
+    
     //MARK: - Variables
     var user = User() {
         didSet {
