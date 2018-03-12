@@ -100,7 +100,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
     }
     
     ///SettingsView
-    var settingsView = SettingsView()
+    var settingsView = SettingsController()
 
     
     //MARK: - View initialisation
