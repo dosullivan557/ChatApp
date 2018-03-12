@@ -431,7 +431,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
                 dismiss(animated: true, completion: nil)
 
         activityInd.showActivityIndicatory(uiView: view)
-
+        
         deleteImageFromDatabase()
         uploadImageToDatabase()
     }
