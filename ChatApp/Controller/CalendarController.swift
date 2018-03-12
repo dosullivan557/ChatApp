@@ -397,7 +397,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         else {
             array.append("0.00" as NSString)
             array.append("0.00" as NSString)
-            array.append("0.00" as NSString)
+            array.append("nil" as NSString)
             event.location = array
         }
         let myRef = Database.database().reference().child("events").child(event.id!)
