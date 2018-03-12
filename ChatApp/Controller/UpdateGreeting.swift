@@ -67,6 +67,19 @@ class UpdateGreeting: UIViewController {
         self.navigationItem.title = "Update Greeting"
 
         view.addGestureRecognizer(tap)
+        
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        self.navigationItem.leftBarButtonItem = newBackButton
+    }
+    ///Back button for NavigationBarItem
+    @objc func back(sender: UIBarButtonItem) {
+        // Perform your custom actions
+        // ...
+        // Go back to the previous ViewController
+        print("Yass bitch")
+    self.navigationController?.popViewController(animated: true)
+        
     }
     
     //MARK: - Setup
@@ -101,7 +114,6 @@ class UpdateGreeting: UIViewController {
             let ref = Database.database().reference().child("user-settings").child(id)
             ref.updateChildValues(values)
             self.showAlert(title: "Updated", message: "Your greeting has successfully been updated.")
-
         }
         settingsView.currentUser.settings = settings
     }
@@ -120,6 +132,8 @@ class UpdateGreeting: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
+            self.back(sender: self.navigationItem.leftBarButtonItem!)
+
         }))
         self.present(alert, animated: true, completion: nil)
     }
