@@ -179,18 +179,7 @@ class MyEventsController: UITableViewController {
         }, withCancel: nil)
     }
     
-    
-    /**
-     Uploads any errors to the database for examination.
-     - Parameters:
-         - error: The error code which is called.
-     */
-    func postError(error: Error){
-        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
-        let values = ["Error Description": error.localizedDescription]
-        ref.updateChildValues(values as [String: AnyObject])
-    }
-    
+        
     //MARK: - Alert
     
     /**
