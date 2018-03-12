@@ -107,6 +107,10 @@ class UpdateGreeting: UIViewController {
     //MARK: - Firebase
     ///Called when the save button is pressed. Updates the new data to the database.
     @objc func handleSave() {
+        if greetingTextField.text!.count == 0 {
+            showAlert(title: "Invalid status", message: "Please insert a status.")
+            return
+        }
         settings?.greeting = greetingTextField.text!
         let values = ["Greeting" : greetingTextField.text!, "TheirColor" : "Pink", "YourColor" : "Green"]
         if let id = Auth.auth().currentUser?.uid{
@@ -132,7 +136,9 @@ class UpdateGreeting: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
-            self.back(sender: self.navigationItem.leftBarButtonItem!)
+            if title == "Updated"{
+                self.back(sender: self.navigationItem.leftBarButtonItem!)
+            }
 
         }))
         self.present(alert, animated: true, completion: nil)
