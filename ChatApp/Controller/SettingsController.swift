@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class SettingsView: UITableViewController {
+class SettingsController: UITableViewController {
     // MARK: - Constants
     ///Array for the settings.
     let settings = ["Greeting Message", "Colours", "Status"]
