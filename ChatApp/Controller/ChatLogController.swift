@@ -734,7 +734,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         var numberOfEventWords = Int()
         var counter = 0
         let max = words.count
-        let locationWords = ["at", "the", "cinema", "park", "pub", "college", "uni", "bar", "town", "shop", "shops", "nandos", "restaurant", "office", "club",]
+        let locationWords = ["at", "the", "cinema", "park", "pub", "college", "uni", "bar", "town", "shop", "shops", "nandos", "restaurant", "office", "club"]
         var foundMeetAt : Bool? = false
         var timeTest : NSRegularExpression?
         do {
@@ -746,10 +746,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             foundMeetAt = true
         }
         for word in words {
-            //            print("test: \(String(describing: timeTest?.firstMatch(in: word, options: NSRegularExpression.MatchingOptions.withTransparentBounds, range: word.nsrange))!)")
-            counter += 1
-            //            print(word)
-            
+            counter += 1            
             let test = timeTest?.firstMatch(in: word, options: NSRegularExpression.MatchingOptions.withTransparentBounds, range: word.nsrange)
             //            print("test: \(test)")
             if (test != nil){
