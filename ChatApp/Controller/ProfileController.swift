@@ -89,7 +89,7 @@ class ProfileController : UIViewController {
         
         statusLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20).isActive = true
         statusLabel.centerXAnchor.constraint(equalTo:profileImage.centerXAnchor).isActive = true
-        statusLabel.widthAnchor.constraint(equalTo: profileImage.widthAnchor).isActive = true
+        statusLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         statusLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         reportButton.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 20).isActive = true
@@ -103,7 +103,7 @@ class ProfileController : UIViewController {
     func setupWithUser(user: User){
         if let profileImageUrl = user.profileImageUrl {
             profileImage.loadImageUsingCache(urlString: profileImageUrl)
-            print(user.name!)
+            print(user.status!)
             nameLabel.text = user.name!
             statusLabel.text = user.status!
         }
