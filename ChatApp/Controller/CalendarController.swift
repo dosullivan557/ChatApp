@@ -202,6 +202,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         addToolBar(textField: locationField)
         
         setupFields()
+        
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        self.navigationItem.leftBarButtonItem = newBackButton
     }
     
     //MARK: - Setup
@@ -507,6 +511,12 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     ///Stops the animation and removes it from the view.
     func removeActivityIndicator() {
         activityInd.finishAnimating(uiView: view)
+    }
+    
+    
+    ///Back button for NavigationBarItem
+    @objc func back(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
     }
     
 }
