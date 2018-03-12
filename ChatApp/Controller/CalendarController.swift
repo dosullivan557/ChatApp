@@ -119,7 +119,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     let dateFieldS : UITextField = {
         let field = UITextField()
         field.allowsEditingTextAttributes = false
-        field.placeholder = "Please select a date..."
+        field.placeholder = "Please select a start date..."
         field.layer.borderColor = UIColor.black.cgColor
         field.layer.borderWidth = 1
         field.backgroundColor = UIColor.white
@@ -130,7 +130,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     let dateFieldF : UITextField = {
         let field = UITextField()
         field.allowsEditingTextAttributes = false
-        field.placeholder = "Please select a date..."
+        field.placeholder = "Please select an end date..."
         field.layer.borderColor = UIColor.black.cgColor
         field.backgroundColor = UIColor.white
         field.layer.borderWidth = 1
