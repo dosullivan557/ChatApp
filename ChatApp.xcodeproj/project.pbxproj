@@ -28,7 +28,7 @@
 		DE4BDD8E1FF526D500E67C45 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4BDD8D1FF526D500E67C45 /* LoginController.swift */; };
 		DE4BDD901FF5475700E67C45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE4BDD8F1FF5475700E67C45 /* GoogleService-Info.plist */; };
 		DE7E7ACC203CD7D70000312B /* ColourPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7E7ACB203CD7D70000312B /* ColourPickerController.swift */; };
-		DE8393842039BB0C001A378E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8393832039BB0C001A378E /* SettingsView.swift */; };
+		DE8393842039BB0C001A378E /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8393832039BB0C001A378E /* SettingsController.swift */; };
 		DE839386203B1C9D001A378E /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE839385203B1C9C001A378E /* Settings.swift */; };
 		DE839388203B3CA0001A378E /* UpdateGreeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE839387203B3CA0001A378E /* UpdateGreeting.swift */; };
 		DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */; };
@@ -101,7 +101,7 @@
 		DE4BDD8D1FF526D500E67C45 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		DE4BDD8F1FF5475700E67C45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DE7E7ACB203CD7D70000312B /* ColourPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourPickerController.swift; sourceTree = "<group>"; };
-		DE8393832039BB0C001A378E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		DE8393832039BB0C001A378E /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		DE839385203B1C9C001A378E /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		DE839387203B3CA0001A378E /* UpdateGreeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateGreeting.swift; sourceTree = "<group>"; };
 		DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
@@ -259,7 +259,7 @@
 				DECD3386201777F400772123 /* HelpController.swift */,
 				DECD338820177F1A00772123 /* NewGroupMessageController.swift */,
 				DECD338C2018A1E300772123 /* GroupChatLogController.swift */,
-				DE8393832039BB0C001A378E /* SettingsView.swift */,
+				DE8393832039BB0C001A378E /* SettingsController.swift */,
 				DE839387203B3CA0001A378E /* UpdateGreeting.swift */,
 				DE7E7ACB203CD7D70000312B /* ColourPickerController.swift */,
 				DED6D1AF205351BC00B3A313 /* StatusController.swift */,
@@ -610,7 +610,7 @@
 				DE47D1911FF96A9C000B6C08 /* Extensions.swift in Sources */,
 				DE4BDD8E1FF526D500E67C45 /* LoginController.swift in Sources */,
 				DE2D67CF200BF8740084078A /* EventsController.swift in Sources */,
-				DE8393842039BB0C001A378E /* SettingsView.swift in Sources */,
+				DE8393842039BB0C001A378E /* SettingsController.swift in Sources */,
 				DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */,
 				DEF4618F200FD79600FD4327 /* PasswordResetController.swift in Sources */,
 				DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */,
