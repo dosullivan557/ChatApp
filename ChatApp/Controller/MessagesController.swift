@@ -86,7 +86,6 @@ class MessagesController: UITableViewController {
     ///Defines the current user of the system, and passes it to [setupNavBarWithUser(_ user: User)]( )) to setup the navigation bar for the particular user.
     func fetchUser() {
         guard let uid = Auth.auth().currentUser?.uid else {
-            //for some reason uid = nil
             return
         }
         
@@ -124,7 +123,7 @@ class MessagesController: UITableViewController {
     /**
      Reads in the current user of the system which has been passed through from the [fetchUser()]() method. From here, it resets information such as the messages array and the messages dictionary, reloads the table to show the empty table, and then calls [observeUserMessages()]() to observe all the users messages. As well as this, everything is added into the navigation bar and positioned correctly.
      - Parameters:
-     - user: Reads in the current user of the system, and will use this user object to set all the information in the navigation bar.
+         - user: Reads in the current user of the system, and will use this user object to set all the information in the navigation bar.
      */
     func setupNavBarWithUser(_ user: User) {
         messages.removeAll()
@@ -240,6 +239,7 @@ class MessagesController: UITableViewController {
             self.user.name = dictionary["name"] as? String
             self.user.id = chatId
             self.user.profileImageUrl = dictionary["profileImageUrl"] as? String
+            self.user.status = dictionary["status"] as? String
             var chatWithUser = [User]()
             chatWithUser.append(self.user)
             self.showChatControllerForUser(chatWithUser)
