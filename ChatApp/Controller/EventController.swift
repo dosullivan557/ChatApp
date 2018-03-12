@@ -270,53 +270,76 @@ class EventController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         estimateBox.addSubview(transitField)
         estimateBox.addSubview(drivingArea)
         view.addSubview(mapView)
-        drivingArea.addGestureRecognizer(tap)
         
-        
-        mapView.delegate = self
-        mapView.showsPointsOfInterest = true
-        mapView.showsScale = true
-        mapView.showsUserLocation = true
-        
-        locationManager.requestAlwaysAuthorization()
-        locationManager.requestWhenInUseAuthorization()
-        
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.startUpdatingLocation()
-        }
-        
-        let sourceCoordinates = locationManager.location?.coordinate
-        let destinationCoordinates = CLLocationCoordinate2DMake((event?.location[0]!.doubleValue)!, (event?.location[1]!.doubleValue)!)
-        let sourcePlacemark = MKPlacemark(coordinate: sourceCoordinates!)
-        let destinationPlacemark = MKPlacemark(coordinate: destinationCoordinates)
-        
-        let sourceItem = MKMapItem(placemark: sourcePlacemark)
-        let destinationItem = MKMapItem(placemark: destinationPlacemark)
-        
-        let directionRequest = MKDirectionsRequest()
-        directionRequest.source = sourceItem
-        directionRequest.destination = destinationItem
-        
-        directionRequest.transportType = .walking
-        
-        let directions = MKDirections(request: directionRequest)
-        directions.calculate { (response, error) in
-            guard let response = response else {
-                if let error = error {
-                    print(error)
-                }
-                return
+        if event?.location[2] != "nil" {
+            drivingArea.addGestureRecognizer(tap)
+            
+            
+            mapView.delegate = self
+            mapView.showsPointsOfInterest = true
+            mapView.showsScale = true
+            mapView.showsUserLocation = true
+            
+            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+            
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.delegate = self
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                locationManager.startUpdatingLocation()
             }
-            let route = response.routes[0]
-            self.mapView.add(route.polyline, level: .aboveRoads)
-            let rekt = route.polyline.boundingMapRect
-            self.mapView.setRegion(MKCoordinateRegionForMapRect(rekt), animated: true)
+            
+            let sourceCoordinates = locationManager.location?.coordinate
+            let destinationCoordinates = CLLocationCoordinate2DMake((event?.location[0]!.doubleValue)!, (event?.location[1]!.doubleValue)!)
+            let sourcePlacemark = MKPlacemark(coordinate: sourceCoordinates!)
+            let destinationPlacemark = MKPlacemark(coordinate: destinationCoordinates)
+            
+            let sourceItem = MKMapItem(placemark: sourcePlacemark)
+            let destinationItem = MKMapItem(placemark: destinationPlacemark)
+            
+            let directionRequest = MKDirectionsRequest()
+            directionRequest.source = sourceItem
+            directionRequest.destination = destinationItem
+            
+            directionRequest.transportType = .walking
+            
+            let directions = MKDirections(request: directionRequest)
+            directions.calculate { (response, error) in
+                guard let response = response else {
+                    if let error = error {
+                        print(error)
+                    }
+                    return
+                }
+                let route = response.routes[0]
+                self.mapView.add(route.polyline, level: .aboveRoads)
+                let rekt = route.polyline.boundingMapRect
+                self.mapView.setRegion(MKCoordinateRegionForMapRect(rekt), animated: true)
+            }
+            fillInEstimates(request: directionRequest)
+        }
+        else {
+            mapView.delegate = self
+            mapView.showsPointsOfInterest = true
+            mapView.showsScale = true
+            mapView.showsUserLocation = true
+            
+            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+            
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.delegate = self
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                locationManager.startUpdatingLocation()
+            }
+            let sourceCoordinates = locationManager.location?.coordinate
+
+            drivingField.text = "0"
+            walkingField.text = "0"
+            transitField.text = "0"
         }
         view.addSubview(estimateBox)
-        fillInEstimates(request: directionRequest)
-        
+
         setupEstimateBox()
         setupContainer()
         view.addSubview(eventWith)
