@@ -47,7 +47,7 @@ class UpdateGreeting: UIViewController {
     ///The users settings.
     var settings : Settings?
     ///SettingsView
-    var settingsView = SettingsView()
+    var settingsView = SettingsController()
 
     //MARK: - View initialisation
     override func viewDidLoad() {
