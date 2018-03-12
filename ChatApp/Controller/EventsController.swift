@@ -368,17 +368,7 @@ class EventsController: UITableViewController {
         ref.updateChildValues(values)
     }
 
-    /**
-     Uploads any errors to the database for examination.
-     - Parameters:
-         - error: The error code which is called.
-     */
-    func postError(error: Error){
-        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
-        let values = ["Error Description": error.localizedDescription]
-        ref.updateChildValues(values as [String: AnyObject])
-    }
-    
+
     ///Gets all the users events.
     func observeUserEvents() {
         guard let uid = Auth.auth().currentUser?.uid else {
