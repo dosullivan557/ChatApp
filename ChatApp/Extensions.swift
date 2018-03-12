@@ -166,7 +166,7 @@ extension EventsController: postError {
      - error: The error code which is called.
      */
     func postError(error: Error){
-        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
+        let ref = Database.database().reference().child("Error").child("EventsController").child(NSUUID().uuidString)
         let values = ["Error Description": error.localizedDescription]
         ref.updateChildValues(values as [String: AnyObject])
     }
@@ -179,7 +179,7 @@ extension MyEventsController: postError {
          - error: The error code which is called.
      */
     func postError(error: Error){
-        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
+        let ref = Database.database().reference().child("Error").child("MyEventsController").child(NSUUID().uuidString)
         let values = ["Error Description": error.localizedDescription]
         ref.updateChildValues(values as [String: AnyObject])
     }
@@ -193,7 +193,7 @@ extension CalendarController: postError {
          - error: The error code which is called.
      */
     func postError(error: Error){
-        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
+        let ref = Database.database().reference().child("Error").child("CalendarController").child(NSUUID().uuidString)
         let values = ["Error Description": error.localizedDescription]
         ref.updateChildValues(values as [String: AnyObject])
     }
