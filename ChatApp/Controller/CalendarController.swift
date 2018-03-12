@@ -56,7 +56,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     ///Text field for the user to give a description for the event.
     let descriptionField : UITextField = {
         let title = UITextField()
-        title.placeholder = "Enter Description"
+        title.placeholder = "Enter Description (Optional)"
         title.translatesAutoresizingMaskIntoConstraints = false
         title.backgroundColor = UIColor.white
         title.layer.borderColor = UIColor.black.cgColor
@@ -309,10 +309,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             showAlert(title: "Invalid Title", message: "Please enter a valid title. (Minimum of 5 characters).")
             return false
         }
-        if ((descriptionField.text?.count)! < 5) {
-            showAlert(title: "Invalid description", message: "Please enter a valid description. (Minimum of 5 characters).")
-            return false
-        }
+//        if ((descriptionField.text?.count)! < 5) {
+//            showAlert(title: "Invalid description", message: "Please enter a valid description. (Minimum of 5 characters).")
+//            return false
+//        }
         if (dateFieldS.text?.isEmpty)! {
             showAlert(title: "Invalid Start Date.", message: "Please enter a valid Start Date.")
             return false
@@ -367,7 +367,12 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }
         let event = Event()
         event.title = titleField.text
-        event.desc = descriptionField.text
+        if descriptionField.text?.count == 0 {
+            event.desc = ""
+        }
+        else {
+            event.desc = descriptionField.text
+        }
         event.startTime = sDate?.timeIntervalSince1970 as NSNumber?
         event.finishTime = fDate?.timeIntervalSince1970 as NSNumber?
         event.host = uid
