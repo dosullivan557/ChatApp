@@ -82,6 +82,18 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     ///The activity indicator.
     let activityInd = ActivityController()
 
+    ///Reset Password button. Opens up the PasswordResetController.
+    let resetButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Forgotten Password?", for: .normal)
+        button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.alpha = 0
+        
+        return button
+    }()
+    
     // MARK: - Variables
     
     ///An instance of messagesController that called this instance of the view controller so when the submit is pressed, certain information can be set up already.
@@ -159,17 +171,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     ///Height anchor for password textfield.
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
-    ///Reset Password button. Opens up the PasswordResetController.
-    let resetButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Forgotten Password?", for: .normal)
-        button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.alpha = 0
-        
-        return button
-    }()
+
     
     // MARK: - View initialisation
 
