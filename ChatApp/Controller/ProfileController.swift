@@ -61,10 +61,7 @@ class ProfileController : UIViewController {
     // MARK: - Variables
     
     ///The user for who this instance of profile controller is for.
-    var user : User?{
-        didSet{
-        }
-    }
+    var user : User?
     
     //MARK: - View initialisation
     override func viewDidLoad() {
