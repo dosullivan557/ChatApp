@@ -7,6 +7,8 @@
 //
 
 import UIKit
+
+import Firebase
 ///Stores cache of the profile images.
 let imageCache = NSCache<AnyObject, AnyObject>()
 
@@ -145,5 +147,54 @@ extension UIViewController: UITextFieldDelegate{
     @objc func donePressed(){
         view.endEditing(true)
     }
+    
+   
 
+}
+
+
+protocol postError {
+    func postError(error: Error)
+}
+
+
+
+extension EventsController: postError {
+    /**
+     Uploads any errors to the database for examination.
+     - Parameters:
+     - error: The error code which is called.
+     */
+    func postError(error: Error){
+        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
+        let values = ["Error Description": error.localizedDescription]
+        ref.updateChildValues(values as [String: AnyObject])
+    }
+}
+
+extension MyEventsController: postError {
+    /**
+     Uploads any errors to the database for examination.
+     - Parameters:
+         - error: The error code which is called.
+     */
+    func postError(error: Error){
+        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
+        let values = ["Error Description": error.localizedDescription]
+        ref.updateChildValues(values as [String: AnyObject])
+    }
+}
+
+
+extension CalendarController: postError {
+    /**
+     Uploads any errors to the database for examination.
+     - Parameters:
+         - error: The error code which is called.
+     */
+    func postError(error: Error){
+        let ref = Database.database().reference().child("Error").child(NSUUID().uuidString)
+        let values = ["Error Description": error.localizedDescription]
+        ref.updateChildValues(values as [String: AnyObject])
+    }
 }
