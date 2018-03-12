@@ -305,8 +305,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
      - Returns: The boolean value to symbolise whether the values are valid or not.
      */
     func validate() -> Bool {
-        if (titleField.text?.count)! < 5 {
-            showAlert(title: "Invalid Title", message: "Please enter a valid title. (Minimum of 5 characters).")
+        if (titleField.text?.count)! < 3 {
+            showAlert(title: "Invalid Title", message: "Please enter a valid title. (Minimum of 3 characters).")
             return false
         }
 //        if ((descriptionField.text?.count)! < 5) {
