@@ -63,12 +63,6 @@ class ProfileController : UIViewController {
     ///The user for who this instance of profile controller is for.
     var user : User?{
         didSet{
-            if let cu = user {
-                print("huhuhuh")
-                print(cu.name!)
-                nameLabel.text = cu.name!
-                //                setupWithUser(user: cu)
-            }
         }
     }
     
