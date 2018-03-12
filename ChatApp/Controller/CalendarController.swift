@@ -138,6 +138,18 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         return field
     }()
     
+    
+    ///Textfield for the user to type in a location.
+    let locationField : UITextField = {
+        let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.placeholder = "Enter Location"
+        field.backgroundColor = UIColor.white
+        field.layer.borderColor = UIColor.black.cgColor
+        field.layer.borderWidth = 1
+        return field
+    }()
+    
     ///The submit event button.
     let submitButton : UIButton = {
         let button = UIButton()
@@ -149,15 +161,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         
         return button
     }()
-    
-    ///Textfield for the user to type in a location.
-    let locationField : UITextField = {
-        let field = UITextField()
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.placeholder = "Enter Location"
-        return field
-    }()
-    
     
     ///The activity indicator.
     let activityInd = ActivityController()
