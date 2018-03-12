@@ -136,6 +136,7 @@ class StatusController: UIViewController {
             self.settingsView.currentUser = user
             self.showAlert(title: "Updated", message: "Your status has successfully been updated.")
         }
+        
     }
     
     //MARK: - Alert
@@ -152,7 +153,9 @@ class StatusController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
-            self.back(sender: self.navigationItem.leftBarButtonItem!)
+            if title == "Updated" {
+                self.back(sender: self.navigationItem.leftBarButtonItem!)
+            }
         }))
         self.present(alert, animated: true, completion: nil)
     }
