@@ -27,13 +27,15 @@ class Event: NSObject {
     var finishTime: NSNumber?
     ///The location of the event: Given as a list of NSString, containing the latitude, longitude and name.
     var location = [NSString?]()
+    ///Whether the event has been accepted, declined, or requested
+    var accepted: NSNumber?
     
     /**
      Gets the string of the event including all of its information. Used for development.
      - Returns: The string containing all of the information.
      */
     func toString() -> String {
-        return ("title:\(title!), desc:\(desc!), host:\(host!), invitee:\(invitee!), startTime:\(startTime!), finishTime:\(finishTime!), location: \(location)")
+        return ("title:\(title!), desc:\(desc!), host:\(host!), invitee:\(invitee!), startTime:\(startTime!), finishTime:\(finishTime!), location: \(location), accepted: \(accepted)")
     }
     
     /**
