@@ -65,6 +65,11 @@ class ReportController: UIViewController {
         view.addSubview(reasonForReportingTextField)
         view.addSubview(reportButton)
         setupFields()
+        
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        self.navigationItem.leftBarButtonItem = newBackButton
+        
     }
     
     //MARK: - Setup
@@ -109,6 +114,11 @@ class ReportController: UIViewController {
         
     }
     
+    ///Back button for NavigationBarItem
+    @objc func back(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     //MARK: - Alert
     
     /// Called when a report has been submitted successfully.
@@ -117,6 +127,7 @@ class ReportController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
+            self.back(sender: self.navigationItem.leftBarButtonItem!)
         }))
         self.present(alert, animated: true, completion: nil)
     }
