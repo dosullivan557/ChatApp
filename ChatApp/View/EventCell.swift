@@ -20,6 +20,15 @@ class EventCell: UITableViewCell {
             dateFormatter.dateFormat = "dd/MM/yy hh:mm a"
             detailTextLabel?.text = dateFormatter.string(from: startTimestampDate) + " - " + dateFormatter.string(from: finishTimestampDate)
             setupNameAndProfileImage()
+            if event?.accepted! == 0 {
+                eventImage.image = UIImage(named: "requestedIcon")
+            }
+            else if event?.accepted! == 1 {
+                eventImage.image = UIImage(named: "acceptedIcon")
+            }
+            else {
+                eventImage.image = UIImage(named: "declinedIcon")
+            }
         }
     }
     
@@ -29,6 +38,15 @@ class EventCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 25
         imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    let eventImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+//        imageView.layer.cornerRadius = 25
+//        imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
@@ -68,13 +86,18 @@ class EventCell: UITableViewCell {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         addSubview(profileImageView)
-        
+        addSubview(eventImage)
         //ios 9 constraint anchors
         //need x,y,width,height anchors
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        eventImage.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true
+        eventImage.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        eventImage.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        eventImage.widthAnchor.constraint(equalToConstant: 15).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
