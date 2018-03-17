@@ -381,6 +381,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         event.host = uid
         event.invitee = user?.id
         event.id = NSUUID().uuidString
+        event.accepted = 0
         
         var array = [NSString]()
         
@@ -401,7 +402,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             event.location = array
         }
         let myRef = Database.database().reference().child("events").child(event.id!)
-        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : "", "Location": event.location] as [String : Any]
+        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : event.accepted!, "Location": event.location] as [String : Any]
         
         myRef.updateChildValues(values) { (error, ref) in
             if error != nil {
