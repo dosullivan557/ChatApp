@@ -167,7 +167,7 @@ class EventsController: UITableViewController {
      */
     func declineFunc(index: IndexPath, event: Event){
         print("Decline")
-        self.updateDatabase(IndexPath: index, bool: false)
+        self.updateDatabase(IndexPath: index, num: -1)
         self.events.remove(at: index.row)
         DispatchQueue.main.async() {
             self.tableView.deleteRows(at: [index], with: .fade)
@@ -205,7 +205,7 @@ class EventsController: UITableViewController {
                         self.postError(error: error)
                         return
                     }
-                    self.updateDatabase(IndexPath: index, bool: true)
+                    self.updateDatabase(IndexPath: index, num: 1)
                     self.events.remove(at: index.row)
                     DispatchQueue.main.async() {
                         self.tableView.deleteRows(at: [index], with: .fade)
@@ -298,15 +298,18 @@ class EventsController: UITableViewController {
             }
             
         }
-        print("Size: \(loadedEvents.count)")
-        
+        print("\(newEvent.startTime!) \t \(newEvent.finishTime!) \n")
+
         for event in loadedEvents {
-            print(event.title)
-            if newEvent.startTime?.doubleValue > event.startTime?.doubleValue && newEvent.startTime?.doubleValue < event.finishTime?.doubleValue && newEvent.finishTime?.doubleValue < event.finishTime?.doubleValue && newEvent.finishTime?.doubleValue > event.startTime?.doubleValue {
-                print("HUH")
+            print("\(event.startTime!) \t \(event.finishTime!) \n")
+            if ((newEvent.startTime?.doubleValue > event.startTime?.doubleValue) && (newEvent.finishTime?.doubleValue < event.finishTime?.doubleValue)) {
+                print("Conflicting")
+                showAlert(title: "Event conflict", message: "You have conflicting events.")
+
+                return false
             }
         }
-        return false
+        return true
     }
     
     
@@ -358,12 +361,12 @@ class EventsController: UITableViewController {
          - IndexPath: The index of the tableCell which is to be accepted.
          - bool: The value to update the accepted value of that event to.
      */
-    func updateDatabase(IndexPath: IndexPath, bool: Bool){
+    func updateDatabase(IndexPath: IndexPath, num: NSNumber){
         let event = events[IndexPath.row]
         
         let ref = Database.database().reference().child("events").child(event.id!)
         
-        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : bool] as [String : Any]
+        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : num] as [String : Any]
         
         ref.updateChildValues(values)
     }
@@ -392,11 +395,13 @@ class EventsController: UITableViewController {
                         event.invitee = dictionary["Invitee"] as? String
                         event.startTime = dictionary["StartTime"] as? NSNumber
                         event.finishTime = dictionary["FinishTime"] as? NSNumber
+                        
                         event.location = (dictionary["Location"] as? [NSString?])!
                         if let acceptedS = dictionary["Accepted"] as? String {
                             if event.invitee == self.currentUser.id {
                                 if acceptedS == "" {
                                     self.events.append(event)
+                                    
                                 }
                             }
                         }
