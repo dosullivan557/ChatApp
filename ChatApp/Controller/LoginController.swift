@@ -90,6 +90,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         button.setTitleColor(UIColor.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.alpha = 0
+        button.setTitleColor(UIColor.red, for: .normal)
         
         return button
     }()
