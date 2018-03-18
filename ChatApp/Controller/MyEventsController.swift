@@ -23,6 +23,14 @@ class MyEventsController: UITableViewController {
     ///The list of events.
     var events = [Event]()
     ///Global timer to make ensure that the TableView is only refreshed once to prevent flickering when there are loads of cells to load.
+    
+    var acceptedEvents = [Event]()
+    
+    var declinedEvents = [Event]()
+    
+    var requestedEvents = [Event]()
+    
+    
     var timer: Timer?
     ///The current user of the system.
     var currentUser = User() {
@@ -47,15 +55,10 @@ class MyEventsController: UITableViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if  currentUser.id == Auth.auth().currentUser?.uid {
-            return
-        }
-        else {
-            events.removeAll()
-            setupNavBarWithUser(currentUser)
-            observeUserEvents()
-            handleReload()
-        }
+        events.removeAll()
+        setupNavBarWithUser(currentUser)
+        observeUserEvents()
+        handleReload()
     }
     
     //MARK: - Setup
@@ -63,12 +66,12 @@ class MyEventsController: UITableViewController {
     /**
      Gets passed the current user of the system, and then sets up the navigation bar with that users information.
      - Parameters:
-     - user: The current user of the application.
+         - user: The current user of the application.
      */
     func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
         
-        self.navigationItem.title = ("My Events")
+        self.navigationItem.title = NSLocalizedString("myEvents", comment: "My Events")
         
     }
     
@@ -80,14 +83,42 @@ class MyEventsController: UITableViewController {
         return 72
     }
     
+//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+////
+////        if section == 1 {
+////            return acceptedEvents.count
+////        }
+////        else if section == 2 {
+////            return declinedEvents.count
+////        }
+////        else {
+////            return requestedEvents.count
+////        }
+//
+//    }
+    
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return events.count
     }
+    
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
+//    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        if section == 1 {
+//            return "Accepted"
+//        }
+//        else if section == 2 {
+//            return "Declined"
+//        }
+//        else {
+//            return "Requested"
+//
+//        }
+//    }
     
     /// Reloads the table view.
     @objc func handleReload(){
@@ -97,6 +128,7 @@ class MyEventsController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellEId", for: indexPath) as! EventCell
+        print(events.count)
         cell.event = events[indexPath.row]
         cell.textLabel?.text = events[indexPath.row].title
         return cell
@@ -140,7 +172,6 @@ class MyEventsController: UITableViewController {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-        
         let ref = Database.database().reference().child("user-events").child(uid)
         ref.observe(.childAdded, with: { (DataSnapshot) in
             let newRef = ref.child(DataSnapshot.key)
@@ -159,17 +190,22 @@ class MyEventsController: UITableViewController {
                         event.startTime = dictionary["StartTime"] as? NSNumber
                         event.finishTime = dictionary["FinishTime"] as? NSNumber
                         event.location = (dictionary["Location"] as? [NSString?])!
-                        if let acceptedS = dictionary["Accepted"] as? String {
-                            if event.host == self.currentUser.id {
-                                if acceptedS == "" || acceptedS == "true"{
-                                    if(acceptedS == "true") {
-                                        self.addEventToCalendar(eventToAdd: event)
-                                    }
-                                    self.events.append(event)
-                                }
-                            }
-                        }
-                        
+                        event.accepted = dictionary["Accepted"] as? NSNumber
+                        print(event.title!)
+                        print(dictionary["Accepted"] as? NSNumber)
+//                            if event.host == self.currentUser.id {
+//                                if event.accepted == 0 {
+//                                    self.requestedEvents.append(event)
+//                                }
+//                                else if event.accepted == 1 {
+////                                    self.addEventToCalendar(eventToAdd: event)
+//                                    self.acceptedEvents.append(event)
+//                                }
+//                                else {
+//                                    self.declinedEvents.append(event)
+//                                }
+                               self.events.append(event)
+                        //                        }
                         //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
                         self.timer?.invalidate()
                         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
@@ -209,7 +245,6 @@ class MyEventsController: UITableViewController {
         let eventStore: EKEventStore = EKEventStore()
         eventStore.requestAccess(to: .event) { (bool, error) in
             if (bool) && (error == nil) {
-                print("granted \(bool)")
                 let event:EKEvent = EKEvent(eventStore: eventStore)
                 event.title = eventToAdd.title
                 event.startDate = Date(timeIntervalSince1970: eventToAdd.startTime as! TimeInterval)
@@ -219,20 +254,17 @@ class MyEventsController: UITableViewController {
                 do {
                     try eventStore.save(event, span: .thisEvent)
                 } catch let error as NSError {
-                    self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
+                    self.showAlert(title: NSLocalizedString("Error", comment: "error"), message: NSLocalizedString("techIssues", comment: "Error"))
                     self.postError(error: error)
                     return
                 }
             }
             else {
-                self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
+                    self.showAlert(title: NSLocalizedString("Error", comment: "error"), message: NSLocalizedString("techIssues", comment: "Error"))
                 self.postError(error: error!)
                 return
             }
         }
     }
     
-   
 }
-
-

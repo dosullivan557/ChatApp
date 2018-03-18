@@ -63,10 +63,8 @@ class EventsController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         if let id = currentUser.id {
             if id == Auth.auth().currentUser?.uid {
-                print("Same user")
             }
             else {
-                print("Different")
                 events.removeAll()
                 handleReload()
                 getCurrentUser()
@@ -74,10 +72,7 @@ class EventsController: UITableViewController {
                 observeUserEvents()
             }
         }
-        else {
-            print("error")
-        }
-        
+
     }
     
     override func viewDidLoad() {
@@ -96,7 +91,7 @@ class EventsController: UITableViewController {
     func setupNavBarWithUser(_ user: User?) {
         tableView.reloadData()
         
-        self.navigationItem.title = (currentUser.name! + "'s Events")
+        self.navigationItem.title = (currentUser.name! + "'s " + NSLocalizedString("eventTab", comment: "title"))
         
     }
     
@@ -141,15 +136,12 @@ class EventsController: UITableViewController {
     //Defines the current user of the system, and passes it to another method to setup the navigation bar
     override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
         let deleteEvent = events[editActionsForRowAt.row]
-        let decline = UITableViewRowAction(style: .normal, title: "Decline") { action, index in
-            print("decline button tapped")
+        let decline = UITableViewRowAction(style: .normal, title: NSLocalizedString("decline", comment: "Declined")) { action, index in
             self.declineFunc(index: index, event: deleteEvent)
         }
         decline.backgroundColor = UIColor(r: 206, g: 27, b: 0)
         
-        let accept = UITableViewRowAction(style: .normal, title: "Accept") { action, index in
-            
-            print("accept button tapped")
+        let accept = UITableViewRowAction(style: .normal, title: NSLocalizedString("accept", comment: "Accept")) { action, index in
             self.acceptFunc(index: index)
         }
         accept.backgroundColor = UIColor(r: 0, g: 168, b: 48)
@@ -166,13 +158,12 @@ class EventsController: UITableViewController {
      
      */
     func declineFunc(index: IndexPath, event: Event){
-        print("Decline")
         self.updateDatabase(IndexPath: index, num: -1)
         self.events.remove(at: index.row)
         DispatchQueue.main.async() {
             self.tableView.deleteRows(at: [index], with: .fade)
         }
-        showDeleteAlertSure(title: "You have declined this event", message: "You have declined the event with this user, would you like to send your appologies?", index: index, event: event)
+        showDeleteAlertSure(title: NSLocalizedString("declineAlertTitle", comment: "Title"), message: NSLocalizedString("declineAlertBody", comment: "Body"), index: index, event: event)
         self.handleReload()
     }
     
@@ -187,7 +178,6 @@ class EventsController: UITableViewController {
         if eventConflict(newEvent: events[index.row]){
             eventStore.requestAccess(to: .event) { (bool, error) in
                 if (bool) && (error == nil) {
-                    print("granted \(bool)")
                     let event:EKEvent = EKEvent(eventStore: eventStore)
                     event.title = currentEvent.title
                     event.startDate = Date(timeIntervalSince1970: currentEvent.startTime as! TimeInterval)
@@ -201,7 +191,7 @@ class EventsController: UITableViewController {
                     do {
                         try eventStore.save(event, span: .thisEvent)
                     } catch let error as NSError {
-                        self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
+                        self.showAlert(title: NSLocalizedString("Error", comment: "Error"), message: NSLocalizedString("techIssues", comment: "Error"))
                         self.postError(error: error)
                         return
                     }
@@ -211,10 +201,10 @@ class EventsController: UITableViewController {
                         self.tableView.deleteRows(at: [index], with: .fade)
                     }
                     self.handleReload()
-                    self.showAlert(title: "Event Accepted", message: "Event has been confirmed, and is now in your calendar. We will remind you an hour before the event, as well as at the planned meeting time!.")
+                    self.showAlert(title: NSLocalizedString("acceptedAlertTitle", comment: "Title"), message: NSLocalizedString("acceptedAlertBody", comment: "body"))
                 }
                 else {
-                    self.showAlert(title: "Error", message: "We have run into an issue whilst creating the event. We have informed the developer to this issue")
+                    self.showAlert(title: NSLocalizedString("Error", comment: "error"), message: NSLocalizedString("techIssues", comment: "Error"))
                     self.postError(error: error!)
                     return
                 }
@@ -254,10 +244,10 @@ class EventsController: UITableViewController {
     
     func showDeleteAlertSure(title: String, message: String, index: IndexPath, event: Event) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("no", comment: "no"), style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
         }))
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("yes", comment: "yes"), style: UIAlertActionStyle.default, handler: { (x) in
             self.sendAppologies(event: event)
             alert.dismiss(animated: true, completion: nil)
         }))
@@ -303,8 +293,7 @@ class EventsController: UITableViewController {
         for event in loadedEvents {
             print("\(event.startTime!) \t \(event.finishTime!) \n")
             if ((newEvent.startTime?.doubleValue > event.startTime?.doubleValue) && (newEvent.finishTime?.doubleValue < event.finishTime?.doubleValue)) {
-                print("Conflicting")
-                showAlert(title: "Event conflict", message: "You have conflicting events.")
+                showAlert(title: NSLocalizedString("eventConflictingtitle", comment: "title"), message: NSLocalizedString("eventConflictingBody", comment: "body"))
 
                 return false
             }
@@ -350,7 +339,6 @@ class EventsController: UITableViewController {
             let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(recieveId!).child(sendId!)
             recipientUserMessagesRef.updateChildValues([messageId: 1])
         }
-        self.showAlert(title: "Event Declined", message: "This event has been removed.")
     }
     
     //MARK: - Firebase
@@ -399,10 +387,7 @@ class EventsController: UITableViewController {
                         event.location = (dictionary["Location"] as? [NSString?])!
                         if let acceptedS = dictionary["Accepted"] as? String {
                             if event.invitee == self.currentUser.id {
-                                if acceptedS == "" {
-                                    self.events.append(event)
-                                    
-                                }
+                                self.events.append(event)
                             }
                         }
                         

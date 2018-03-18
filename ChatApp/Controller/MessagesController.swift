@@ -55,7 +55,7 @@ class MessagesController: UITableViewController {
     // MARK: - View initialisation
     
     override func viewDidAppear(_ animated: Bool) {
-        print("appeared")
+//        print("appeared")
         if Auth.auth().currentUser?.uid == nil {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
@@ -70,7 +70,7 @@ class MessagesController: UITableViewController {
         super.viewDidLoad()
         self.hidesBottomBarWhenPushed = false
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("logoutButton", comment: "Logout text for logout button"), style: .plain, target: self, action: #selector(checkLogout))
         
         let image = UIImage(named: "newMessage")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
@@ -268,13 +268,13 @@ class MessagesController: UITableViewController {
     
     ///Shows alert to check whether the user definitely wants to log out. If so, It will handle the logout, otherwise, it will do nothing.
     @objc func checkLogout() {
-        let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: NSLocalizedString("logoutButton", comment: "Title"), message: NSLocalizedString("logoutCheck", comment: "Body"), preferredStyle: UIAlertControllerStyle.alert)
         
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("yes", comment: "yes"), style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
             self.handleLogout()
         }))
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("no", comment: "no"), style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
         }
         ))

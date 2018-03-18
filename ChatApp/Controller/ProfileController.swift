@@ -51,7 +51,7 @@ class ProfileController : UIViewController {
     ///Report button.
     let reportButton : UIButton = {
         let button = UIButton()
-        button.setTitle("Report User", for: .normal)
+        button.setTitle(NSLocalizedString("reportUserTitle", comment: "report button title"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.red, for: .normal)
         button.addTarget(self, action: #selector(handleReport), for: .touchUpInside)
@@ -93,7 +93,7 @@ class ProfileController : UIViewController {
         statusLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         reportButton.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 20).isActive = true
-        reportButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        reportButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         reportButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         reportButton.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
     }

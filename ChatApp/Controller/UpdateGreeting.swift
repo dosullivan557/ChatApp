@@ -16,7 +16,7 @@ class UpdateGreeting: UIViewController {
     let greetingTextField : UITextField = {
         let tf = UITextField()
         tf.text = ""
-        tf.placeholder = "Please enter a greeting."
+        tf.placeholder = NSLocalizedString("enterGreeting", comment: "Enter Greeting")
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.backgroundColor = UIColor.white
         return tf
@@ -25,7 +25,7 @@ class UpdateGreeting: UIViewController {
     ///Save button.
     let saveButton : UIButton = {
         let btn = UIButton()
-        btn.setTitle("Save", for: .normal)
+        btn.setTitle(NSLocalizedString("saveTitle", comment: "Save"), for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.addTarget(self, action: #selector(handleSave), for: .touchUpInside)
         btn.backgroundColor = UIColor.niceBlue
@@ -64,22 +64,17 @@ class UpdateGreeting: UIViewController {
         setupFields()
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         
-        self.navigationItem.title = "Update Greeting"
+        self.navigationItem.title = NSLocalizedString("updateGreeting", comment: "Update Greeting view title")
 
         view.addGestureRecognizer(tap)
         
         self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        let newBackButton = UIBarButtonItem(title: NSLocalizedString("backText", comment: "Back"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
         self.navigationItem.leftBarButtonItem = newBackButton
     }
     ///Back button for NavigationBarItem
     @objc func back(sender: UIBarButtonItem) {
-        // Perform your custom actions
-        // ...
-        // Go back to the previous ViewController
-        print("Yass bitch")
-    self.navigationController?.popViewController(animated: true)
-        
+        self.navigationController?.popViewController(animated: true)
     }
     
     //MARK: - Setup
@@ -108,7 +103,7 @@ class UpdateGreeting: UIViewController {
     ///Called when the save button is pressed. Updates the new data to the database.
     @objc func handleSave() {
         if greetingTextField.text!.count == 0 {
-            showAlert(title: "Invalid status", message: "Please insert a status.")
+            showAlert(title: NSLocalizedString("invalidGreetingTitle", comment: "Title"), message: NSLocalizedString("invalidGreetingBody", comment: "Body of alert"))
             return
         }
         settings?.greeting = greetingTextField.text!
@@ -117,7 +112,7 @@ class UpdateGreeting: UIViewController {
             print(values)
             let ref = Database.database().reference().child("user-settings").child(id)
             ref.updateChildValues(values)
-            self.showAlert(title: "Updated", message: "Your greeting has successfully been updated.")
+            self.showAlert(title: NSLocalizedString("validGreetingTitle", comment: "title"), message: NSLocalizedString("validGreetingBody", comment: "Body of alert"))
         }
         settingsView.currentUser.settings = settings
     }
@@ -136,7 +131,7 @@ class UpdateGreeting: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
-            if title == "Updated"{
+            if title == NSLocalizedString("validGreetingTitle", comment: "Title") {
                 self.back(sender: self.navigationItem.leftBarButtonItem!)
             }
 

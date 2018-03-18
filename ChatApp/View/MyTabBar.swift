@@ -30,9 +30,9 @@ class MyTabBar: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        createElements(view: messagesController, title: "Messages", imageName: "Messages")
-        createElements(view: eventController, title: "Events", imageName: "CalendarIcon")
-        createElements(view: myProfileController, title: "Profile", imageName: "profile")
+        createElements(view: messagesController, title: NSLocalizedString("messagesTab", comment: "Messages Tab Title"), imageName: "Messages")
+        createElements(view: eventController, title: NSLocalizedString("eventTab", comment: "Event Tab Title"), imageName: "CalendarIcon")
+        createElements(view: myProfileController, title: NSLocalizedString("myProfileTab", comment: "My Profile Tab Title"), imageName: "profile")
         
         viewControllers = tabList
     }

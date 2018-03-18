@@ -33,7 +33,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     ///Change picture overlay.
     let label : UITextView = {
         let label = UITextView()
-        label.text = "Change Picture"
+        label.text = NSLocalizedString("changePictureText", comment: "Change Picture text")
         label.allowsEditingTextAttributes = false
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
@@ -83,7 +83,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     ///Button to get help.
     let helpButton : UIButton = {
         let button = UIButton()
-        button.setTitle("Help me", for: .normal)
+        button.setTitle(NSLocalizedString("helpButton", comment: "Help Button title"), for: .normal)
         button.setTitleColor(UIColor.red, for: .normal)
         button.addTarget(self, action: #selector(handleHelp), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -93,7 +93,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     ///Button to view that users events.
     let myEventsButton : UIButton = {
         let button = UIButton()
-        button.setTitle("My Events", for: .normal)
+        button.setTitle(NSLocalizedString("myEvents", comment: "My Events title"), for: .normal)
         button.setTitleColor(UIColor.blue, for: .normal)
         button.addTarget(self, action: #selector(handleMyEvents), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -103,7 +103,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     ///Button which allows the user to delete their profile.
     let deleteProfileButton : UIButton = {
         let button = UIButton()
-        button.setTitle("Delete Profile", for: .normal)
+        button.setTitle(NSLocalizedString("deleteProfileButton", comment: "Delete Profile title"), for: .normal)
         button.setTitleColor(UIColor.red, for: .normal)
         button.addTarget(self, action: #selector(deletePressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -119,7 +119,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     ///The current user of the system.
     var user : User? {
         didSet {
-            print(user?.status)
+//            print(user?.status)
             nameLabel.text = user?.name
             emailLabel.text = user?.email
             profileImage.loadImageUsingCache(urlString: user?.profileImageUrl)
@@ -131,7 +131,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     //MARK: - View initialisation
     
     override func viewDidLoad() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(checkLogout))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("logoutButton", comment: "Logout text for logout button"), style: .plain, target: self, action: #selector(checkLogout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "gear"), style: .plain, target: self, action: #selector(handleShowSettings))
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         label.addGestureRecognizer(tap)
@@ -244,7 +244,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
    
     ///Called when the delete profile button is pressed.
     @objc func deletePressed(){
-        showDeleteAlert(title:"Deleting your account.", message: "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.")
+        showDeleteAlert(title: NSLocalizedString("deleteProfileTitle", comment: "Title"), message: NSLocalizedString("deleteProfileBody", comment: "Body"))
         
     }
     ///Called when the delete profile is confirmed.
@@ -314,10 +314,10 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     
     func showDeleteAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("yes", comment: "yes"), style: UIAlertActionStyle.default, handler: { (x) in
             self.handleDelete()
         }))
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("no", comment: "No"), style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
         }))
         self.present(alert, animated: true, completion: nil)
@@ -325,13 +325,13 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     
     ///Shows alert to check whether the user definitely wants to log out. If so, It will handle the logout, otherwise, it will do nothing.
     @objc func checkLogout() {
-        let alert = UIAlertController(title: "Logout", message: "Are you sure you would like to logout?", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: NSLocalizedString("logoutButton", comment: "Logout"), message: NSLocalizedString("logoutCheck", comment: "Logout check"), preferredStyle: UIAlertControllerStyle.alert)
         
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("yes", comment: "yes"), style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
             self.handleLogout()
         }))
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (x) in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("no", comment: "no"), style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
         }
         ))

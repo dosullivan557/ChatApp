@@ -28,7 +28,7 @@ class ReportController: UIViewController {
     ///Reason for reporting the user text field.
     let reasonForReportingTextField : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Please Enter a description as to why you are reporting this user."
+        tf.placeholder = NSLocalizedString("reasonForReporting", comment: "Reason for placeholer")
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.font = UIFont(name: "arial", size: 10)
         tf.textColor = UIColor.black
@@ -39,7 +39,7 @@ class ReportController: UIViewController {
     ///Report button.
     let reportButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Report User", for: .normal)
+        button.setTitle(NSLocalizedString("reportTitle", comment: "Title for button"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.red, for: .normal)
         button.addTarget(self, action: #selector(handleReport), for: .touchUpInside)
@@ -51,7 +51,7 @@ class ReportController: UIViewController {
     ///The user who is being reported.
     var user : User? {
         didSet {
-            pageTitle.text = "Report " + (user?.name!)!
+            pageTitle.text = NSLocalizedString("reportTitle", comment: "report title") + " " + (user?.name!)!
         }
     }
     
@@ -67,7 +67,7 @@ class ReportController: UIViewController {
         setupFields()
         
         self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        let newBackButton = UIBarButtonItem(title: NSLocalizedString("backText", comment: "back"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
         self.navigationItem.leftBarButtonItem = newBackButton
         
     }
@@ -88,7 +88,7 @@ class ReportController: UIViewController {
         
         reportButton.topAnchor.constraint(equalTo: reasonForReportingTextField.bottomAnchor, constant: 20).isActive = true
         reportButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        reportButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        reportButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         reportButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         
@@ -123,7 +123,7 @@ class ReportController: UIViewController {
     
     /// Called when a report has been submitted successfully.
     func sucessfulReport(){
-        let alert = UIAlertController(title: "Thank you", message: "Thank you for reporting this user. We will look into this!", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: NSLocalizedString("reportTitle", comment: "Title"), message: NSLocalizedString("reportBody", comment: "Report body"), preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)

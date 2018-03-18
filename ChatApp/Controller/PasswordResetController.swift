@@ -13,7 +13,7 @@ class PasswordResetController: UIViewController {
     ///Title view.
     let titleMain: UITextView = {
         let title = UITextView()
-        title.text = "Reset Password"
+        title.text = NSLocalizedString("resetPassword", comment: "reset password")
         title.isEditable = false
         title.isUserInteractionEnabled = false
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -27,7 +27,7 @@ class PasswordResetController: UIViewController {
     ///Email textfield.
     let emailField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Email"
+        tf.placeholder = NSLocalizedString("email", comment: "email")
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.backgroundColor = UIColor.white
         tf.autocapitalizationType = .none
@@ -40,7 +40,7 @@ class PasswordResetController: UIViewController {
     ///Reset button.
     let resetButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Reset Password", for: .normal)
+        button.setTitle(NSLocalizedString("resetPassword", comment: "Reset password title button"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.niceBlue
         button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
@@ -50,7 +50,7 @@ class PasswordResetController: UIViewController {
     ///Cancel button.
     let cancelButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Cancel", for: .normal)
+        button.setTitle(NSLocalizedString("cancel", comment: "cancel"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
         return button
@@ -126,16 +126,16 @@ class PasswordResetController: UIViewController {
             if isValidEmail(testStr: email) {
                 Auth.auth().sendPasswordReset(withEmail: email, completion: { (Error) in
                     if Error != nil {
-                        self.showAlert(title: "Invalid Email", message: (Error?.localizedDescription)! + " Please Enter a valid Email")
+                        self.showAlert(title: NSLocalizedString("invalidEmailTitle", comment: "title"), message: (Error?.localizedDescription)! + NSLocalizedString("invalidEmailBody", comment: "Body"))
                     }
                     else {
-                        self.showAlert(title: "Email has been sent", message: "An email has been sent with instructions to reset your password.")
+                        self.showAlert(title: NSLocalizedString("emailResetTitle", comment: "Title"), message: NSLocalizedString("emailResetBody", comment: "Body"))
                     }
                 })
             }
         }
         else {
-            showAlert(title: "Invalid Email", message: "Please enter a valid Email Address")
+            showAlert(title: NSLocalizedString("invalidEmailTitle", comment: "Title"), message: NSLocalizedString("invalidEmailBody", comment: "Body"))
         }
     }
     

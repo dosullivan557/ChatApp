@@ -46,19 +46,19 @@ class UserCell: UITableViewCell {
                     let weekDay = myComponents.weekday
                     switch weekDay! {
                     case 1:
-                        timeLabel.text =  "Monday"
+                        timeLabel.text =  NSLocalizedString("monday", comment: "Day")
                     case 2:
-                        timeLabel.text =  "Tuesday"
+                        timeLabel.text =  NSLocalizedString("tuesday", comment: "Day")
                     case 3:
-                        timeLabel.text =  "Wednesday"
+                        timeLabel.text =  NSLocalizedString("wednesday", comment: "Day")
                     case 4:
-                        timeLabel.text =  "Thursday"
+                        timeLabel.text =  NSLocalizedString("thursday", comment: "Day")
                     case 5:
-                        timeLabel.text =  "Friday"
+                        timeLabel.text =  NSLocalizedString("friday", comment: "Day")
                     case 6:
-                        timeLabel.text =  "Saturday"
+                        timeLabel.text =  NSLocalizedString("saturday", comment: "Day")
                     case 7:
-                        timeLabel.text =  "Sunday"
+                        timeLabel.text =  NSLocalizedString("Sunday", comment: "Day")
                     default:
                         timeLabel.text =  ""
                     }
@@ -68,7 +68,7 @@ class UserCell: UITableViewCell {
                     
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "h:mm a"
-                    timeLabel.text = ("Yesterday: " + dateFormatter.string(from: timestampDate))
+                    timeLabel.text = (NSLocalizedString("yesterday", comment: "YDay") + " " + dateFormatter.string(from: timestampDate))
                 }
                     //from today
                 else {

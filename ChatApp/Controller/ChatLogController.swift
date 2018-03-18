@@ -89,7 +89,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     ///Text field for the user to type a message.
     lazy var inputTextField: UITextField = {
         let inputTextField = UITextField()
-        inputTextField.placeholder = "Type Message..."
+        inputTextField.placeholder = NSLocalizedString("messagePlaceholder", comment: "Messages placeholder")
         inputTextField.translatesAutoresizingMaskIntoConstraints = false
         inputTextField.delegate = self
         return inputTextField
@@ -156,7 +156,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         let sendButton = UIButton(type: .system)
-        sendButton.setTitle("Send", for: .normal)
+        sendButton.setTitle(NSLocalizedString("sendButton", comment: "Send"), for: .normal)
         sendButton.setTitleColor(UIColor.purple, for: .normal)
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -212,9 +212,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 self.currentUserSettings.theirColor = dictionary["TheirColor"] as? String
                 self.currentUserSettings.myColor = dictionary["YourColor"] as? String
                 
-                print("My Colour: \(self.currentUserSettings.myColor)")
-                print("Their Colour: \(self.currentUserSettings.theirColor)")
-                print("Greeting: \(self.currentUserSettings.greeting)")
+//                print("My Colour: \(self.currentUserSettings.myColor)")
+//                print("Their Colour: \(self.currentUserSettings.theirColor)")
+//                print("Greeting: \(self.currentUserSettings.greeting)")
                 self.setColors()
             }
         }
@@ -333,8 +333,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             myColor = UIColor.green
             myTextColor = UIColor.black
         case "Pink" :
-            myColor = UIColor.blue
-            myTextColor = UIColor.white
+            myColor = UIColor(r: 255, g: 105, b: 180)
+            myTextColor = UIColor.black
         case "Purple" :
             myColor = UIColor.purple
             myTextColor = UIColor.white
@@ -348,8 +348,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             theirColor = UIColor.green
             theirTextColor = UIColor.black
         case "Pink" :
-            theirColor = UIColor.blue
-            theirTextColor = UIColor.white
+            theirColor = UIColor(r: 255, g: 105, b: 180)
+            theirTextColor = UIColor.black
         case "Purple" :
             theirColor = UIColor.purple
             theirTextColor = UIColor.white
@@ -663,7 +663,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     ///Called when there is no messages in a certain chat.
     func noMessages(){
         let message = Message()
-        message.message = "Say Heyy"
+        message.message = NSLocalizedString("sayHi", comment: "Say hey")
         message.sendId = "Me"
         message.receiveId = "Me"
         

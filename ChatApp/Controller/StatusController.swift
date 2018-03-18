@@ -16,8 +16,7 @@ class StatusController: UIViewController {
     ///Status Field
     let statusField : UITextField = {
         let tf = UITextField()
-        tf.text = ""
-        tf.placeholder = "Please enter a status."
+        tf.placeholder = NSLocalizedString("statusPlaceHolder", comment: "status")
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.backgroundColor = UIColor.white
         return tf
@@ -26,7 +25,7 @@ class StatusController: UIViewController {
     ///Save button.
     let saveButton : UIButton = {
         let btn = UIButton()
-        btn.setTitle("Save", for: .normal)
+        btn.setTitle(NSLocalizedString("saveTitle", comment: "save"), for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.addTarget(self, action: #selector(handleSave), for: .touchUpInside)
         btn.backgroundColor = UIColor.niceBlue
@@ -66,12 +65,12 @@ class StatusController: UIViewController {
         view.addSubview(saveButton)
         view.backgroundColor = UIColor.niceOrange
         statusField.addTarget(self, action: #selector(handleChangeValue), for: .editingChanged)
-        self.navigationItem.title = "Update Status"
+        self.navigationItem.title = NSLocalizedString("updateStatus", comment: "Update Status")
 
         setupFields()
         
         self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        let newBackButton = UIBarButtonItem(title: NSLocalizedString("backText", comment: "Back"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
         self.navigationItem.leftBarButtonItem = newBackButton
     }
     
@@ -124,7 +123,7 @@ class StatusController: UIViewController {
     ///Called when the save button is pressed. Updates the new data to the database.
     @objc func handleSave() {
         if statusField.text!.count == 0 {
-            showAlert(title: "Invalid status", message: "Please insert a status.")
+            showAlert(title: NSLocalizedString("invalidStatusTitle", comment: "Alert title"), message: NSLocalizedString("invalidStatusBody", comment: "Alert title"))
             return
         }
         user.status = statusField.text
@@ -134,7 +133,7 @@ class StatusController: UIViewController {
             let ref = Database.database().reference().child("users").child(id)
             ref.updateChildValues(values)
             self.settingsView.currentUser = user
-            self.showAlert(title: "Updated", message: "Your status has successfully been updated.")
+            self.showAlert(title: NSLocalizedString("validStatusTitle", comment: "Alert title"), message: NSLocalizedString("validStatusBody", comment: "Alert body"))
         }
         
     }
@@ -153,7 +152,7 @@ class StatusController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
-            if title == "Updated" {
+            if title == NSLocalizedString("validStatusTitle", comment: "Title") {
                 self.back(sender: self.navigationItem.leftBarButtonItem!)
             }
         }))

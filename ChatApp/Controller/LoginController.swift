@@ -58,7 +58,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     
     ///Segmented display.
     let loginRegisterSegmentedControl: UISegmentedControl = {
-        let sc = UISegmentedControl(items: ["Login", "Register"])
+        let sc = UISegmentedControl(items: [NSLocalizedString("login", comment: "Login"), NSLocalizedString("register", comment: "register")])
         sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white], for: UIControlState.selected)
         sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
         sc.translatesAutoresizingMaskIntoConstraints = false
@@ -71,7 +71,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     ///Clear image button.
     let clearProfilePictureImage: UIButton = {
         let button = UIButton()
-        button.setTitle("Clear Image", for: .normal)
+        button.setTitle(NSLocalizedString("clearImage", comment: "Clear image"), for: .normal)
         button.addTarget(self, action: #selector(handleClearImage), for: .touchUpInside)
         button.setTitleColor(UIColor.niceBlue, for: .normal)
         button.layer.cornerRadius = 5
@@ -85,7 +85,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     ///Reset Password button. Opens up the PasswordResetController.
     let resetButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Forgotten Password?", for: .normal)
+        button.setTitle(NSLocalizedString("forgottenPassword", comment: "Forgotten password"), for: .normal)
         button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
         button.setTitleColor(UIColor.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -104,7 +104,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     lazy var loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor.niceBlue
-        button.setTitle("Register", for: .normal)
+        button.setTitle(NSLocalizedString("register", comment: "register"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor(r: 239, g: 239, b: 239), for: .normal)
         button.layer.cornerRadius = 5
@@ -119,7 +119,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     ///Name TextField.
     lazy var nameTextField : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Name"
+        tf.placeholder = NSLocalizedString("name", comment: "Name")
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.autocapitalizationType = UITextAutocapitalizationType.words
         tf.delegate = self
@@ -129,7 +129,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     ///Email TextField.
     lazy var emailTextField : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Email"
+        tf.placeholder = NSLocalizedString("email", comment: "Email")
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.keyboardType = .emailAddress
         tf.autocapitalizationType = UITextAutocapitalizationType.none
@@ -140,7 +140,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     ///Password TextField.
     lazy var passwordTextField : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Password"
+        tf.placeholder = NSLocalizedString("password", comment: "Password")
         tf.isSecureTextEntry = true
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.delegate = self
@@ -343,7 +343,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     /**
      Is called to verify the whether the password is valid before sending it to Firebase.
      - Parameters:
-     - testStr: The string to test.
+         - testStr: The string to test.
      - Returns: A boolean value to say whether the password is valid.
      */
     func isValidPassword(testStr: String) -> Bool{
@@ -354,7 +354,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     /**
      Is called to verify the whether the email is valid locally before sending it to Firebase. Uses a regular expression to check the email typed in abides by the conventions.
      - Parameters:
-     - testStr: The string to test.
+         - testStr: The string to test.
      - Returns: A boolean value to say whether the email is valid.
      */
     func isValidEmail(testStr:String) -> Bool {
@@ -383,28 +383,28 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
      */
     func handleRegister(){
         guard let email = emailTextField.text else {
-            showAlert(title: "Invalid Email", message: "Please enter a valid email address")
+            showAlert(title: NSLocalizedString("invalidEmailTitle", comment: "Title"), message: NSLocalizedString("invalidEmailBody", comment: "Body"))
             removeActivityIndicator()
             return
         }
         guard let password = passwordTextField.text else{
-            showAlert(title: "Invalid Password", message: "Please enter a valid password")
+            showAlert(title: NSLocalizedString("invalidPassTitle", comment: "Title"), message: NSLocalizedString("invalidPassBody", comment: "Body"))
             removeActivityIndicator()
             return
         }
         guard let name = nameTextField.text else {
-            showAlert(title: "Invalid Name", message: "Please enter a valid name")
+            showAlert(title: NSLocalizedString("invalidNameTitle", comment: "Title"), message: NSLocalizedString("invalidNameBody", comment: "Body"))
             removeActivityIndicator()
             return
         }
         
         if (!isValidEmail(testStr: email)){
-            showAlert(title: "Invalid Email", message: "Please enter a valid email address")
+            showAlert(title: NSLocalizedString("invalidEmailTitle", comment: "Title"), message: NSLocalizedString("invalidEmailBody", comment: "Body"))
             removeActivityIndicator()
             return
         }
         if(!isValidPassword(testStr: password)){
-            showAlert(title: "Invalid Password", message: "Please enter a valid password")
+            showAlert(title: NSLocalizedString("invalidPassTitle", comment: "Title"), message: NSLocalizedString("invalidPassBody", comment: "Body"))
             removeActivityIndicator()
             return
         }
@@ -532,7 +532,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     @objc func handleLogin(){
         
         guard let email = emailTextField.text,  let password = passwordTextField.text else {
-            showAlert(title: "Invalid data", message: "Invalid email or Password")
+            showAlert(title: NSLocalizedString("invalidDataTitle", comment: "Title"), message: NSLocalizedString("invalidDataBody", comment: "Body"))
             removeActivityIndicator()
 
             return
@@ -605,16 +605,16 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
      */
     
     func createAlertButton(title: String, alert: UIAlertController) -> UIAlertController {
-        if title.contains("Invalid") {
+        if title.contains(NSLocalizedString("invalid", comment: "Invalid")) {
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
                 alert.dismiss(animated: true, completion: nil)
             }))
         }
-        else if title.contains("Profile"){
-            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (x) in
+        else if title.contains(NSLocalizedString("profile", comment: "Profile")){
+            alert.addAction(UIAlertAction(title: NSLocalizedString("yes", comment: "Yes"), style: UIAlertActionStyle.default, handler: { (x) in
                 alert.dismiss(animated: true, completion: nil)
             }))
-            alert.addAction(UIAlertAction(title: "No, Let me!", style: UIAlertActionStyle.default, handler: { (x) in
+            alert.addAction(UIAlertAction(title: NSLocalizedString("no", comment: "no"), style: UIAlertActionStyle.default, handler: { (x) in
                 alert.dismiss(animated: true, completion: {
                     self.handleSelectProfileImageView()
                 })
@@ -636,7 +636,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
      - Returns: A boolean to use as a flag to get the users response. This determines whether to continue the registering or to stop and allow the user to upload one.
      */
     func showImageUploadAlert(){
-        let alert = UIAlertController(title: "No profile image", message: "Please upload a profile picture to help people recognise who they are speaking to.", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: NSLocalizedString("noProfileImageTitle", comment: "Title"), message: NSLocalizedString("noProfileImageBody", comment: "Body"), preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
@@ -694,41 +694,41 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         if let errCode = AuthErrorCode(rawValue: error._code) {
             if loginRegisterSegmentedControl.selectedSegmentIndex == 1 {
                 if nameTextField.text?.count == 0 {
-                    self.showAlert(title: "Invalid Name", message: "Please enter your name and try again!")
+                    self.showAlert(title: NSLocalizedString("invalidNameTitle", comment: "Title"), message: NSLocalizedString("invalidNameBody", comment: "Body"))
                     return
                 }
             }
             if emailTextField.text?.count == 0{
-                self.showAlert(title: "Invalid Email", message: "Please enter a valid email address and try again!")
+                self.showAlert(title: NSLocalizedString("invalidEmailTitle", comment: "Title"), message: NSLocalizedString("invalidEmailBody", comment: "Body"))
                 return
             }
             
             if passwordTextField.text?.count == 0 {
-                self.showAlert(title: "Empty Password Field", message: "Please enter a valid password and try again.")
+                self.showAlert(title: NSLocalizedString("invalidPassTitle", comment: "Title"), message: NSLocalizedString("invalidPassBody", comment: "Body"))
                 return
             }
             
             switch errCode {
             case AuthErrorCode.invalidEmail:
-                self.showAlert(title: "Invalid Email", message: "Please insert a valid email address, and try again!")
+                self.showAlert(title: NSLocalizedString("invalidEmailTitle", comment: "Title"), message: NSLocalizedString("invalidEmailBody", comment: "Body"))
                 return
             case AuthErrorCode.emailAlreadyInUse:
-                self.showAlert(title: "Email Already In Use", message: "Email address is already in use, please insert a different one, or login!")
+                self.showAlert(title: NSLocalizedString("emailInUseTitle", comment: "Title"), message: NSLocalizedString("emailInUseBody", comment: "Body"))
                 return
                 
             case AuthErrorCode.weakPassword:
-                self.showAlert(title: "Weak Password", message: "Please insert a more secure password and try again.")
+                self.showAlert(title: NSLocalizedString("weakPassTitle", comment: "Title"), message: NSLocalizedString("weakPassBody", comment: "Body"))
                 return
                 
             case AuthErrorCode.userNotFound:
-                self.showAlert(title: "User Does Not Exist", message: "The user with the email \"\(emailTextField.text!)\" does not exist, Please register for an account!")
+                self.showAlert(title: NSLocalizedString("userNotExistTitle", comment: "Title"), message:( NSLocalizedString("userNotExistBody1", comment: "1") + "\"\(emailTextField.text!)\"" +  NSLocalizedString("userNotExistBody2", comment: "2")))
                 return
                 
             case AuthErrorCode.wrongPassword:
-                self.showAlert(title: "Wrong Password", message: "Please check the password and try again.")
+                self.showAlert(title: NSLocalizedString("wrongPasswordTitle", comment: "Title"), message: NSLocalizedString("wrongPasswordBody", comment: "Body"))
                 return
             default:
-                self.showAlert(title: "Oops", message: "There was an error, please try again later!")
+                self.showAlert(title: NSLocalizedString("oops", comment: "Oops"), message: NSLocalizedString("techIssues", comment: "Body"))
                 return
             }
         }

@@ -42,7 +42,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.allowsEditingTextAttributes = false
         tf.isUserInteractionEnabled = false
-        tf.text = "Your message"
+        tf.text = NSLocalizedString("exampleMyMessage", comment: "My Message")
         return tf
     }()
     
@@ -53,7 +53,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         tf.allowsEditingTextAttributes = false
         tf.isUserInteractionEnabled = false
 
-        tf.text = "Their message"
+        tf.text = NSLocalizedString("exampleTheirMessage", comment: "Their Message")
         return tf
     }()
     
@@ -65,7 +65,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         return tf
     }()
     ///The array used to populate the picker view.
-    let colorDropdown = ["Green", "Pink", "Purple"]
+    let colorDropdown = [NSLocalizedString("green", comment: "green colour"), NSLocalizedString("pink", comment: "Pink colour"), NSLocalizedString("purple", comment: "Purple colour")]
     
     ///The toolbar added to the pickerview.
     let tb : UIToolbar = {
@@ -74,7 +74,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         toolBar.isTranslucent = true
         toolBar.tintColor = UIColor.purple
         toolBar.sizeToFit()
-        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
+        let doneButton = UIBarButtonItem(title: NSLocalizedString("done", comment: "Done"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
         toolBar.setItems([spaceButton, doneButton], animated: false)
         toolBar.isUserInteractionEnabled = true
@@ -83,7 +83,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
     ///The save button.
     let saveButton : UIButton = {
         let btn = UIButton()
-        btn.setTitle("Save", for: .normal)
+        btn.setTitle(NSLocalizedString("saveTitle", comment: "save"), for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.addTarget(self, action: #selector(handleSave), for: .touchUpInside)
         btn.backgroundColor = UIColor.niceBlue
@@ -94,8 +94,26 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
     ///The current users settings.
     var settings : Settings? {
         didSet {
-            myColor.text = settings?.myColor!
-            theirColor.text = settings?.theirColor!
+            if settings?.myColor! == "Green"{
+                myColor.text = NSLocalizedString("green", comment: "Green Colour")
+            }
+            else if settings?.myColor! == "Pink"{
+                myColor.text = NSLocalizedString("pink", comment: "Pink Colour")
+            }
+            else if settings?.myColor! == "Purple"{
+                myColor.text = NSLocalizedString("purple", comment: "Purple Colour")
+            }
+
+            if settings?.theirColor! == "Green"{
+                theirColor.text = NSLocalizedString("green", comment: "Green Colour")
+            }
+            else if settings?.theirColor! == "Pink"{
+                theirColor.text = NSLocalizedString("pink", comment: "Pink Colour")
+            }
+            else if settings?.theirColor! == "Purple"{
+                theirColor.text = NSLocalizedString("purple", comment: "Purple Colour")
+            }
+            
         }
     }
     
@@ -120,13 +138,13 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         myColor.inputAccessoryView = tb
         theirColor.inputAccessoryView = tb
         
-        self.navigationItem.title = "Update Colour's"
+        self.navigationItem.title = NSLocalizedString("updateColours", comment: "Update colours title")
         
         setupVariables()
         super.viewDidLoad()
     
         self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        let newBackButton = UIBarButtonItem(title: NSLocalizedString("backText", comment: "Back"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
         self.navigationItem.leftBarButtonItem = newBackButton
         
     }
@@ -229,14 +247,14 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
     ///Called when the save button is pressed.
     @objc func handleSave() {
         saveSettings()
-        let values = ["Greeting" : settings?.greeting!, "TheirColor" : theirColor.text!, "YourColor" : myColor.text!] as [String: AnyObject]
+        let values = ["Greeting" : settings?.greeting!, "TheirColor" : settings?.theirColor!, "YourColor" : settings?.myColor!] as [String: AnyObject]
         if let id = Auth.auth().currentUser?.uid{
             print(values)
             let ref = Database.database().reference().child("user-settings").child(id)
             ref.updateChildValues(values)
             self.setColors()
             settingsView.currentUser.settings = self.settings
-            self.showAlert(title: "Updated", message: "Your colours have successfully been updated.")
+            self.showAlert(title: NSLocalizedString("validColoursTitle", comment: "Alert title"), message: NSLocalizedString("validColoursBody", comment: "Alert body"))
         }
         
     }
@@ -250,10 +268,9 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         case "Green":
             myColorBox.backgroundColor = UIColor.green
             myBoxTF.textColor = UIColor.black
-
         case "Pink" :
-            myColorBox.backgroundColor = UIColor.blue
-            myBoxTF.textColor = UIColor.white
+            myColorBox.backgroundColor = UIColor(r: 255, g: 105, b: 180)
+            myBoxTF.textColor = UIColor.black
         case "Purple" :
             myColorBox.backgroundColor = UIColor.purple
             myBoxTF.textColor = UIColor.white
@@ -266,12 +283,12 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         case "Green":
             theirColorBox.backgroundColor = UIColor.green
             theirBoxTF.textColor = UIColor.black
-        case "Pink" :
-            theirColorBox.backgroundColor = UIColor.blue
-            theirBoxTF.textColor = UIColor.white
         case "Purple" :
             theirColorBox.backgroundColor = UIColor.purple
             theirBoxTF.textColor = UIColor.white
+        case "Pink" :
+            theirColorBox.backgroundColor = UIColor(r: 255, g: 105, b: 180)
+            theirBoxTF.textColor = UIColor.black
         default:
             theirColorBox.backgroundColor = UIColor.orange
             theirBoxTF.textColor = UIColor.black
@@ -279,8 +296,24 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
         
     }
     func saveSettings(){
-        settings!.myColor = myColor.text!
-        settings!.theirColor = theirColor.text!
+        if myColor.text! == NSLocalizedString("green", comment: "Green colour"){
+            settings!.myColor = "Green"
+        }
+        else if myColor.text! == NSLocalizedString("purple", comment: "Green colour"){
+            settings!.myColor = "Purple"
+        }
+        else if myColor.text! == NSLocalizedString("pink", comment: "Green colour"){
+            settings!.myColor = "Pink"
+        }
+        if theirColor.text! == NSLocalizedString("green", comment: "Green colour"){
+            settings!.theirColor = "Green"
+        }
+        else if theirColor.text! == NSLocalizedString("purple", comment: "Green colour"){
+            settings!.theirColor = "Purple"
+        }
+        else if theirColor.text! == NSLocalizedString("pink", comment: "Green colour"){
+            settings!.theirColor = "Pink"
+        }
     }
     
     //MARK: - Alert
@@ -305,13 +338,7 @@ class ColourPickerController: UIViewController, UIPickerViewDelegate, UIPickerVi
     
     ///Back button for NavigationBarItem
     @objc func back(sender: UIBarButtonItem) {
-        // Perform your custom actions
-        // ...
-        // Go back to the previous ViewController
-        print("Yass bitch")
         self.navigationController?.popViewController(animated: true)
-        
     }
     
 }
-

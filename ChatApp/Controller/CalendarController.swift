@@ -46,7 +46,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     ///Text field for the user to give a title to the event.
     let titleField : UITextField = {
         let title = UITextField()
-        title.placeholder = "Enter Title"
+        title.placeholder = NSLocalizedString("enterTitle", comment: "Title")
         title.translatesAutoresizingMaskIntoConstraints = false
         title.backgroundColor = UIColor.white
         title.layer.borderColor = UIColor.black.cgColor
@@ -56,7 +56,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     ///Text field for the user to give a description for the event.
     let descriptionField : UITextField = {
         let title = UITextField()
-        title.placeholder = "Enter Description (Optional)"
+        title.placeholder = NSLocalizedString("enterDescription", comment: "Description")
         title.translatesAutoresizingMaskIntoConstraints = false
         title.backgroundColor = UIColor.white
         title.layer.borderColor = UIColor.black.cgColor
@@ -76,7 +76,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     ///Start label.
     let labelStart :UITextView = {
         let label = UITextView()
-        label.text = "Start Date"
+        label.text = NSLocalizedString("startDate", comment: "Start date")
         label.isEditable = false
         label.textColor = UIColor.white
         label.backgroundColor = UIColor(r: 233, g: 175,b: 50)
@@ -88,7 +88,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     ///Finish label.
     let labelFinish :UITextView = {
         let label = UITextView()
-        label.text = "End Date"
+        label.text = NSLocalizedString("endDate", comment: "End date")
         label.isEditable = false
         label.textColor = UIColor.white
         label.isUserInteractionEnabled = false
@@ -106,7 +106,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         toolBar.tintColor = UIColor.purple
         toolBar.sizeToFit()
         
-        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
+        let doneButton = UIBarButtonItem(title: NSLocalizedString("done", comment: "done"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
         
         
@@ -119,7 +119,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     let dateFieldS : UITextField = {
         let field = UITextField()
         field.allowsEditingTextAttributes = false
-        field.placeholder = "Please select a start date..."
+        field.placeholder = NSLocalizedString("startDatePlaceholder", comment: "Start date placeholder")
         field.layer.borderColor = UIColor.black.cgColor
         field.layer.borderWidth = 1
         field.backgroundColor = UIColor.white
@@ -130,7 +130,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     let dateFieldF : UITextField = {
         let field = UITextField()
         field.allowsEditingTextAttributes = false
-        field.placeholder = "Please select an end date..."
+        field.placeholder = NSLocalizedString("endDatePlaceholder", comment: "end date placeholder")
         field.layer.borderColor = UIColor.black.cgColor
         field.backgroundColor = UIColor.white
         field.layer.borderWidth = 1
@@ -143,7 +143,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     let locationField : UITextField = {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.placeholder = "Enter Location (Optional)"
+        field.placeholder = NSLocalizedString("locationPlaceholder", comment: "Location")
         field.backgroundColor = UIColor.white
         field.layer.borderColor = UIColor.black.cgColor
         field.layer.borderWidth = 1
@@ -153,12 +153,11 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     ///The submit event button.
     let submitButton : UIButton = {
         let button = UIButton()
-        button.setTitle("Submit", for: .normal)
+        button.setTitle(NSLocalizedString("submit", comment: "Submit"), for: .normal)
         button.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.purple
         button.setTitleColor(UIColor.white, for: .normal)
-        
         return button
     }()
     
@@ -171,7 +170,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     var user: User? {
         didSet{
             
-            navigationItem.title = "Event with " + ((user?.name)!.components(separatedBy: " "))[0]
+            navigationItem.title = NSLocalizedString("eventWith", comment: "Event with") + " " + ((user?.name)!.components(separatedBy: " "))[0]
         }
     }
     
@@ -207,7 +206,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         setupFields()
         
         self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
+        let newBackButton = UIBarButtonItem(title: NSLocalizedString("backText", comment: "Back"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(back(sender:)))
         self.navigationItem.leftBarButtonItem = newBackButton
     }
     
@@ -309,7 +308,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
      */
     func validate() -> Bool {
         if (titleField.text?.count)! < 3 {
-            showAlert(title: "Invalid Title", message: "Please enter a valid title. (Minimum of 3 characters).")
+            showAlert(title: NSLocalizedString("invalidTitleTitle", comment: "Title"), message: NSLocalizedString("invalidTitleBody", comment: "body"))
             return false
         }
 //        if ((descriptionField.text?.count)! < 5) {
@@ -317,15 +316,15 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
 //            return false
 //        }
         if (dateFieldS.text?.isEmpty)! {
-            showAlert(title: "Invalid Start Date.", message: "Please enter a valid Start Date.")
+            showAlert(title: NSLocalizedString("invalidSDTitle", comment: "Title"), message: NSLocalizedString("invalidSDBody", comment: "Body"))
             return false
         }
         if (dateFieldF.text?.isEmpty)! {
-            showAlert(title: "Invalid End Date.", message: "Please enter a valid End Date.")
+            showAlert(title: NSLocalizedString("invalidEDTitle", comment: "Title"), message: NSLocalizedString("invalidEDBody", comment: "Body"))
             return false
         }
         if((sDate?.timeIntervalSince1970 as NSNumber?)?.int32Value > (fDate?.timeIntervalSince1970 as NSNumber?)?.int32Value){
-            showAlert(title: "Invalid Dates.", message: "Your Start date is after your end date. Please enter valid dates and try again.")
+            showAlert(title: NSLocalizedString("invalidDatesTitle", comment: "Title"), message: NSLocalizedString("invalidDatesBody", comment: "Body"))
             return false
             
         }
@@ -347,7 +346,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
-            if title == "Event has been submitted"
+            if title == NSLocalizedString("eventSubmitted", comment: "submitted")
             {
                 self.navigationController?.popViewController(animated: true)
             }
@@ -385,22 +384,15 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         
         var array = [NSString]()
         
-        if locationField.text?.count > 0 {
-            findLocation()
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                array.append(self.closest.placemark.coordinate.latitude.description as NSString)
-                array.append(self.closest.placemark.coordinate.longitude.description as NSString)
-                array.append(self.closest.placemark.title! as NSString)
-                
-                event.location = array
-            }
-        }
-        else {
-            array.append("0.00" as NSString)
-            array.append("0.00" as NSString)
-            array.append("nil" as NSString)
+        findLocation()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+            array.append(self.closest.placemark.coordinate.latitude.description as NSString)
+            array.append(self.closest.placemark.coordinate.longitude.description as NSString)
+            array.append(self.closest.placemark.title! as NSString)
+            
             event.location = array
         }
+
         let myRef = Database.database().reference().child("events").child(event.id!)
         let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : event.accepted!, "Location": event.location] as [String : Any]
         
@@ -412,7 +404,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 
                 return
             }
-            self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+            self.showAlert(title: NSLocalizedString("eventSubmitted", comment: "submitted"), message: (NSLocalizedString("eventSubmittedBody", comment: "body") + (self.user?.name!)! + NSLocalizedString("toConfirm", comment: "To confirm")))
             
             let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
             
@@ -443,7 +435,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             locationManager.startUpdatingLocation()
         }
         else {
-            print("permissions are needed")
             return
         }
         

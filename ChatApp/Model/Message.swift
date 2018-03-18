@@ -161,8 +161,8 @@ class Message: NSObject {
             else {
                 print(char.charToString())
                 dec += char.charToString()
-                print(dec)
-                print("ADMOAIFDN AOEINFAEIJ NFAEIJ ")
+//                print(dec)
+//                print("ADMOAIFDN AOEINFAEIJ NFAEIJ ")
                 //                continue
             }
             

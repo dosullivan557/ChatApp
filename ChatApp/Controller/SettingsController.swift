@@ -12,7 +12,7 @@ import Firebase
 class SettingsController: UITableViewController {
     // MARK: - Constants
     ///Array for the settings.
-    let settings = ["Greeting Message", "Colours", "Status"]
+    let settings = [NSLocalizedString("greetingTitle", comment: "Greeting title"),NSLocalizedString("coloursTitle", comment: "Colours Title"), NSLocalizedString("statusTitle", comment: "Status Title")]
     ///The reuse cell identifier for the table view.
     let cellId = "cellId"
     var profileView = MyProfileController()
@@ -28,7 +28,7 @@ class SettingsController: UITableViewController {
         super.viewDidLoad()
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         let titleView = UITextView()
-        titleView.text = "Settings"
+        titleView.text = NSLocalizedString("settingsTitle", comment: "Settings title")
         titleView.isEditable = false
         titleView.isUserInteractionEnabled = false
         titleView.backgroundColor? = UIColor.clear
@@ -62,7 +62,27 @@ class SettingsController: UITableViewController {
             cell.detailTextLabel?.text = currentUser.settings?.greeting!
         }
         else if indexPath.row == 1 {
-            let details = (currentUser.settings?.myColor!)! + " and " + (currentUser.settings?.theirColor!)!
+            var myCol = ""
+            var theirCol = ""
+            if currentUser.settings?.myColor! == "Green" {
+                myCol = NSLocalizedString("green", comment: "Green")
+            }
+            else if currentUser.settings?.myColor! == "Pink" {
+                myCol = NSLocalizedString("pink", comment: "Pink")
+            }
+            else if currentUser.settings?.myColor! == "Purple" {
+                myCol = NSLocalizedString("purple", comment: "Purple")
+            }
+            if currentUser.settings?.theirColor! == "Green" {
+                theirCol = NSLocalizedString("green", comment: "Green")
+            }
+            else if currentUser.settings?.theirColor! == "Pink" {
+                theirCol = NSLocalizedString("pink", comment: "Pink")
+            }
+            else if currentUser.settings?.theirColor! == "Purple" {
+                theirCol = NSLocalizedString("purple", comment: "Purple")
+            }
+            let details = myCol + " " + NSLocalizedString("and", comment: "and") + " " + theirCol
             cell.detailTextLabel?.text = details
         }
         else if indexPath.row == 2 {
