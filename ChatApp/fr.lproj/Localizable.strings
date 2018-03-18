@@ -51,7 +51,7 @@
 "invalidGreetingBody" ="Veuillez insérer un message d'accueil valide.";
 "validGreetingTitle" = "Actualisé";
 "validGreetingBody" ="Votre message d'accueil a été mis à jour avec succès.";
-"validColorsTitle" = "Actualisé";
+"validColoursTitle" = "Actualisé";
 "validColoursBody" = "Vos couleurs ont été mises à jour avec succès.";
 "invalidStatusTitle" = "Statut invalide";
 "invalidStatusBody" = "Veuillez insérer un statut valide.";

@@ -51,7 +51,7 @@
 "invalidGreetingBody" = "Please insert a valid greeting.";
 "validGreetingTitle" = "Updated";
 "validGreetingBody" = "Your Greeting has been updated successfully.";
-"validColorsTitle" = "Updated";
+"validColoursTitle" = "Updated";
 "validColoursBody" = "Your Colours have successfully been updated.";
 "invalidStatusTitle" = "Invalid Status";
 "invalidStatusBody" = "Please insert a valid status.";
