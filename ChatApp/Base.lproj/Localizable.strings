@@ -90,7 +90,7 @@
 "invalidEmailTitle" = "Invalid Email";
 "invalidEmailBody" = " Please Enter a valid Email.";
 "invalidPassTitle" = "Invalid Password";
-"invalidPassBody" = " Please Enter a valid Password.";
+"invalidPassBody" = " Please Enter a valid Password. It must be 8 characters long, and contain at least 1 uppercase character, 1 lowercase character, 1 number and 1 special character.";
 "invalidNameTitle" = "Invalid Password";
 "invalidNameBody" = " Please Enter a valid Password.";
 "emailResetTitle" = "Email has been sent";
