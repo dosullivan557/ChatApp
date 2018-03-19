@@ -421,7 +421,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
      */
     func isValidPassword(testStr: String) -> Bool{
         
-        let passwordRegEx = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[d$@$!%*?&#])[A-Za-z\\dd$@$!%*?&#]{8,}"
+        let passwordRegEx = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[d$@$!%*?&#])[A-Za-z\\dd$@$!%*?&#]{7,}"
         let passTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
         
         return passTest.evaluate(with:testStr)
