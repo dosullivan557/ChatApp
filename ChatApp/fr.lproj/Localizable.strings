@@ -127,3 +127,5 @@
 "wrongPasswordTitle" ="Mauvais mot de passe";
 "wrongPasswordBody" ="Veuillez vérifier le mot de passe et réessayer!";
 "oops" = "Oops!";
+"invalidLocationTitle" = "Location invalide";
+"invalidLocationBody" = "L'emplacement indiqué n'est pas valide Veuillez entrer un emplacement valide.";

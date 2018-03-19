@@ -127,3 +127,5 @@
 "wrongPasswordTitle" = "Wrong Password";
 "wrongPasswordBody" = "Please Check the password and try again!";
 "oops" = "Oops!";
+"invalidLocationTitle" = "Invalid location";
+"invalidLocationBody" = "The location provided is not valid. Please enter a valid location.";
