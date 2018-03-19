@@ -340,8 +340,10 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     }
     
     //MARK: - Validation
+    
     /**
-     Is called to verify the whether the password is valid before sending it to Firebase.
+     Is called to verify the whether the password is valid before sending it to Firebase - Minimum 8 characters at least 1  Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character:
+     
      - Parameters:
          - testStr: The string to test.
      - Returns: A boolean value to say whether the password is valid.
@@ -350,10 +352,8 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         
         let passwordRegEx = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[d$@$!%*?&#])[A-Za-z\\dd$@$!%*?&#]{8,}"
         let passTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
-        print("Huh")
-        print(passTest.evaluate(with: testStr).description)
+        
         return passTest.evaluate(with:testStr)
-
     }
     
     /**
@@ -365,7 +365,6 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     func isValidEmail(testStr:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-
 
         return emailTest.evaluate(with: testStr)
     }
