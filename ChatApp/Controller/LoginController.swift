@@ -125,6 +125,15 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         tf.delegate = self
         return tf
     }()
+    
+    ///Valid Name indicator
+    let nameImage : UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "declinedIcon")
+        image.translatesAutoresizingMaskIntoConstraints = false
+//        image.backgroundColor = UIColor.black
+        return image
+    }()
    
     ///Email TextField.
     lazy var emailTextField : UITextField = {
@@ -137,6 +146,15 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         return tf
     }()
    
+    ///Valid email indicator
+    let emailImage : UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "declinedIcon")
+        image.translatesAutoresizingMaskIntoConstraints = false
+//        image.backgroundColor = UIColor.black
+        return image
+    }()
+    
     ///Password TextField.
     lazy var passwordTextField : UITextField = {
         let tf = UITextField()
@@ -147,6 +165,14 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         return tf
     }()
     
+    ///Valid Password indicator
+    let passImage : UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "declinedIcon")
+        image.translatesAutoresizingMaskIntoConstraints = false
+//        image.backgroundColor = UIColor.black
+        return image
+    }()
   
     ///Upload profileImage.
     lazy var profileImageUpload: UIImageView = {
@@ -172,7 +198,6 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     ///Height anchor for password textfield.
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
-
     
     // MARK: - View initialisation
 
@@ -252,6 +277,10 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailSeperatorView)
         inputsContainerView.addSubview(passwordTextField)
+        inputsContainerView.addSubview(nameImage)
+        inputsContainerView.addSubview(emailImage)
+        inputsContainerView.addSubview(passImage)
+
         
         //x,y, width, height constraints
         nameTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
