@@ -283,9 +283,12 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
 
         
         //x,y, width, height constraints
-        nameTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
+        nameTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 10).isActive = true
         nameTextField.topAnchor.constraint(equalTo:inputsContainerView.topAnchor).isActive = true
-        nameTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+//        nameTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+        nameTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 10).isActive = true
+        nameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -40).isActive = true
+
         nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         nameTextFieldHeightAnchor?.isActive = true
         
@@ -296,9 +299,12 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         nameSeperatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         //x,y, width, height constraints
-        emailTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
+        emailTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 10).isActive = true
         emailTextField.topAnchor.constraint(equalTo:nameTextField.bottomAnchor).isActive = true
-        emailTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+//        emailTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+        emailTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -40).isActive = true
+
+        
         emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         emailTextFieldHeightAnchor?.isActive = true
         
@@ -309,9 +315,13 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         emailSeperatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         //x,y, width, height constraints
-        passwordTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 12).isActive = true
+        passwordTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 10).isActive = true
         passwordTextField.topAnchor.constraint(equalTo:emailTextField.bottomAnchor).isActive = true
-        passwordTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+//        passwordTextField.widthAnchor.constraint(equalTo:inputsContainerView.widthAnchor).isActive = true
+        passwordTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 15).isActive = true
+        passwordTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -40).isActive = true
+        
+        
         passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         passwordTextFieldHeightAnchor?.isActive = true
     }
