@@ -615,6 +615,11 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         passImageHeightAnchor?.isActive = false
         passImageHeightAnchor = passImage.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 1/2: 1/3, constant: loginRegisterSegmentedControl.selectedSegmentIndex==0 ? -20: -10)
         passImageHeightAnchor?.isActive = true
+        
+        nameImage.image = UIImage(named: "declinedIcon")
+        emailImage.image = UIImage(named: "declinedIcon")
+        passImage.image = UIImage(named: "declinedIcon")
+
         nameTextField.text = ""
         emailTextField.text = ""
         passwordTextField.text = ""
