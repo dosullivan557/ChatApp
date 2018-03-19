@@ -311,10 +311,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             showAlert(title: NSLocalizedString("invalidTitleTitle", comment: "Title"), message: NSLocalizedString("invalidTitleBody", comment: "body"))
             return false
         }
-//        if ((descriptionField.text?.count)! < 5) {
-//            showAlert(title: "Invalid description", message: "Please enter a valid description. (Minimum of 5 characters).")
-//            return false
-//        }
         if (dateFieldS.text?.isEmpty)! {
             showAlert(title: NSLocalizedString("invalidSDTitle", comment: "Title"), message: NSLocalizedString("invalidSDBody", comment: "Body"))
             return false
@@ -327,6 +323,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             showAlert(title: NSLocalizedString("invalidDatesTitle", comment: "Title"), message: NSLocalizedString("invalidDatesBody", comment: "Body"))
             return false
             
+        }
+        if locationField.text!.count == 0 {
+            showAlert(title: NSLocalizedString("invalidLocationTitle", comment: "title"), message: NSLocalizedString("invalidLocationBody", comment: "body"))
+            return false
         }
         
         return true
@@ -391,6 +391,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             array.append(self.closest.placemark.title! as NSString)
             
             event.location = array
+        }
+        if closest.placemark.coordinate.latitude.description == "" || closest.placemark.coordinate.latitude.description == nil {
+            showAlert(title: NSLocalizedString("invalidLocationTitle", comment: "Title"), message: NSLocalizedString("invalidLocationBody", comment: "Body"))
+            return
         }
 
         let myRef = Database.database().reference().child("events").child(event.id!)
@@ -485,14 +489,12 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 
                 newSearch.start { response, error in
                     guard let response = response else {
-                        print("ERROR!")
                         return
                     }
                     let currentCoordinates = currentLocation?.coordinate
                     self.closest = response.mapItems[0]
                     //            print("Start value :\(self.closest)")
                     for i in 1...(response.mapItems.count - 1){
-                        print("Checking another")
                         let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
                         let destLat = Double(response.mapItems[i].placemark.coordinate.latitude)
                         let currentLong = Double((currentCoordinates?.longitude)!)
