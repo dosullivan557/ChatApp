@@ -347,8 +347,13 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
      - Returns: A boolean value to say whether the password is valid.
      */
     func isValidPassword(testStr: String) -> Bool{
-        let length = testStr.count
-        return length >= 7
+        
+        let passwordRegEx = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[d$@$!%*?&#])[A-Za-z\\dd$@$!%*?&#]{8,}"
+        let passTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
+        print("Huh")
+        print(passTest.evaluate(with: testStr).description)
+        return passTest.evaluate(with:testStr)
+
     }
     
     /**
@@ -360,6 +365,8 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     func isValidEmail(testStr:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+
+
         return emailTest.evaluate(with: testStr)
     }
     
@@ -384,31 +391,46 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     func handleRegister(){
         guard let email = emailTextField.text else {
             showAlert(title: NSLocalizedString("invalidEmailTitle", comment: "Title"), message: NSLocalizedString("invalidEmailBody", comment: "Body"))
+
             removeActivityIndicator()
             return
         }
+        print("Pass email")
+
         guard let password = passwordTextField.text else{
             showAlert(title: NSLocalizedString("invalidPassTitle", comment: "Title"), message: NSLocalizedString("invalidPassBody", comment: "Body"))
+            print(passwordTextField.text!)
+            print(":(")
             removeActivityIndicator()
             return
         }
+        print("Pass password")
         guard let name = nameTextField.text else {
             showAlert(title: NSLocalizedString("invalidNameTitle", comment: "Title"), message: NSLocalizedString("invalidNameBody", comment: "Body"))
             removeActivityIndicator()
             return
         }
-        
+        print("Pass name")
+        if name.count < 3 {
+            showAlert(title: NSLocalizedString("invalidNameTitle", comment: "Title"), message: NSLocalizedString("invalidNameBody", comment: "Body"))
+            removeActivityIndicator()
+            return
+        }
+        print("Pass Name")
         if (!isValidEmail(testStr: email)){
             showAlert(title: NSLocalizedString("invalidEmailTitle", comment: "Title"), message: NSLocalizedString("invalidEmailBody", comment: "Body"))
             removeActivityIndicator()
             return
         }
+        print("Pass email")
+
         if(!isValidPassword(testStr: password)){
             showAlert(title: NSLocalizedString("invalidPassTitle", comment: "Title"), message: NSLocalizedString("invalidPassBody", comment: "Body"))
             removeActivityIndicator()
             return
         }
-        
+        print("Pass Password")
+
         if self.profileImageUpload.image == UIImage(named: "defaultPic") {
             showImageUploadAlert()
             removeActivityIndicator()
