@@ -491,7 +491,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
             return
         }
         print("Pass name")
-        if name.count < 3 {
+        if !isValidName(testStr: name) {
             showAlert(title: NSLocalizedString("invalidNameTitle", comment: "Title"), message: NSLocalizedString("invalidNameBody", comment: "Body"))
             removeActivityIndicator()
             return
@@ -565,6 +565,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         present(picker, animated: true, completion: nil)
         
     }
+
     
     ///Clears the a profile image that has been added, and replaces it with the defaultPic.
     @objc func handleClearImage(){
