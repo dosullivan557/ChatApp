@@ -90,7 +90,7 @@
 "invalidEmailTitle" ="Email invalide";
 "invalidEmailBody" ="Veuillez entrer un email valide.";
 "invalidPassTitle" ="Mot de passe incorrect";
-"invalidPassBody" =" Entrer un mot de passe valide s'il vous plait.";
+"invalidPassBody" =" Entrer un mot de passe valide s'il vous plait. Il doit comporter 8 caractères et contenir au moins 1 caractère majuscule, 1 caractère minuscule, 1 chiffre et 1 caractère spécial.";
 "invalidNameTitle" ="Mot de passe incorrect";
 "invalidNameBody" =" Entrer un mot de passe valide s'il vous plait.";
 "emailResetTitle" ="L'email a été envoyé";
