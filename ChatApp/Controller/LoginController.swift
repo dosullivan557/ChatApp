@@ -298,6 +298,14 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         nameSeperatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         nameSeperatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
+//        nameImage.topAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: 5).isActive = true
+        nameImage.centerYAnchor.constraint(equalTo: nameTextField.centerYAnchor).isActive = true
+        nameImage.leftAnchor.constraint(equalTo: nameTextField.rightAnchor, constant: 5).isActive = true
+        nameImage.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        nameImageHeightAnchor = nameImage.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3, constant: -10)
+        nameImageHeightAnchor?.isActive = true
+        
         //x,y, width, height constraints
         emailTextField.leftAnchor.constraint(equalTo:inputsContainerView.leftAnchor, constant: 10).isActive = true
         emailTextField.topAnchor.constraint(equalTo:nameTextField.bottomAnchor).isActive = true
@@ -307,6 +315,15 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         
         emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         emailTextFieldHeightAnchor?.isActive = true
+        
+        emailImage.centerYAnchor.constraint(equalTo: emailTextField.centerYAnchor).isActive = true
+
+        emailImage.leftAnchor.constraint(equalTo: emailTextField.rightAnchor, constant: 5).isActive = true
+        emailImage.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        emailImageHeightAnchor = emailImage.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3, constant: -10)
+        emailImageHeightAnchor?.isActive = true
+        
         
         //x,y, width, height constraints
         emailSeperatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
@@ -324,6 +341,16 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         
         passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
         passwordTextFieldHeightAnchor?.isActive = true
+        
+        passImage.centerYAnchor.constraint(equalTo: passwordTextField.centerYAnchor).isActive = true
+
+//        passImage.topAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: 5).isActive = true
+        passImage.leftAnchor.constraint(equalTo: passwordTextField.rightAnchor, constant: 5).isActive = true
+        passImage.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        passImageHeightAnchor = passImage.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3, constant: -10)
+        passImageHeightAnchor?.isActive = true
+        
     }
     ///Setup the login and register button constraints.
     func setupLoginRegisterButton() {
