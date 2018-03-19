@@ -410,6 +410,35 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         return true
     }
     
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if passwordTextField.isEditing {
+            if isValidPassword(testStr: passwordTextField.text!) {
+                passImage.image = UIImage(named:"acceptedIcon")
+            }
+            else {
+                passImage.image = UIImage(named: "declinedIcon")
+            }
+        }
+        else if emailTextField.isEditing {
+            if isValidEmail(testStr: emailTextField.text!) {
+                emailImage.image = UIImage(named:"acceptedIcon")
+            }
+            else {
+                emailImage.image = UIImage(named: "declinedIcon")
+            }
+        }
+        else if nameTextField.isEditing {
+            if isValidName(testStr: nameTextField.text!) {
+                nameImage.image = UIImage(named:"acceptedIcon")
+            }
+            else {
+                nameImage.image = UIImage(named: "declinedIcon")
+            }
+        }
+        return true
+    }
+    
     //MARK: - Validation
     
     /**
