@@ -392,7 +392,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             
             event.location = array
         }
-        if closest.placemark.coordinate.latitude.description == "" || closest.placemark.coordinate.latitude.description == nil {
+        if closest.placemark.coordinate.latitude.description == "" {
             showAlert(title: NSLocalizedString("invalidLocationTitle", comment: "Title"), message: NSLocalizedString("invalidLocationBody", comment: "Body"))
             return
         }
