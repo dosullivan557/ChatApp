@@ -199,6 +199,10 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     ///Height anchor for password textfield.
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     
+    var nameImageHeightAnchor: NSLayoutConstraint?
+    var emailImageHeightAnchor: NSLayoutConstraint?
+    var passImageHeightAnchor: NSLayoutConstraint?
+
     // MARK: - View initialisation
 
     override func viewDidLoad() {
@@ -212,6 +216,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         view.addSubview(profileImageUpload)
         view.addSubview(clearProfilePictureImage)
         view.addSubview(resetButton)
+        
         pictureContainer.addSubview(clearProfilePictureImage)
         pictureContainer.addSubview(profileImageUpload)
         view.addSubview(pictureContainer)
@@ -592,10 +597,24 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         //hide upload image and clear image data
         pictureContainerHeightAnchor?.isActive = false
         pictureContainerHeightAnchor = pictureContainer.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 1)
-        
-        
         pictureContainerHeightAnchor?.isActive = true
         
+        //name image
+        nameImageHeightAnchor?.isActive = false
+        nameImageHeightAnchor = nameImage.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 0: 1/3, constant: -10)
+        nameImageHeightAnchor?.isActive = true
+        
+        
+        //email image
+        emailImageHeightAnchor?.isActive = false
+        emailImageHeightAnchor = emailImage.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 1/2: 1/3, constant: loginRegisterSegmentedControl.selectedSegmentIndex==0 ? -20: -10)
+        emailImageHeightAnchor?.isActive = true
+        
+        
+        //password image
+        passImageHeightAnchor?.isActive = false
+        passImageHeightAnchor = passImage.heightAnchor.constraint(equalTo:inputsContainerView.heightAnchor, multiplier:loginRegisterSegmentedControl.selectedSegmentIndex==0 ? 1/2: 1/3, constant: loginRegisterSegmentedControl.selectedSegmentIndex==0 ? -20: -10)
+        passImageHeightAnchor?.isActive = true
         nameTextField.text = ""
         emailTextField.text = ""
         passwordTextField.text = ""
