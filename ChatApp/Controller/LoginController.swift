@@ -408,6 +408,16 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         return emailTest.evaluate(with: testStr)
     }
     
+    /**
+     Is called to verify the whether the name is valid locally.
+     - Parameters:
+         - testStr: The string to test.
+     - Returns: A boolean value to say whether the name is valid.
+     */
+    func isValidName(testStr:String) -> Bool {
+        return testStr.count >= 3
+    }
+    
     //MARK: - Activity Indicator
     
     
