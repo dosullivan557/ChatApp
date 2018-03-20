@@ -155,6 +155,9 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         field.placeholder = NSLocalizedString("locationPlaceholder", comment: "Location")
+        field.layer.borderColor = UIColor.black.cgColor
+        field.backgroundColor = UIColor.white
+        field.layer.borderWidth = 1
         return field
     }()
     
