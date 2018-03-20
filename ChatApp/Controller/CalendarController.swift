@@ -392,13 +392,13 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             
             myRef.updateChildValues(values) { (error, ref) in
                 if error != nil {
-                    self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
+                    self.showAlert(title: NSLocalizedString("Error", comment: "Error"), message: NSLocalizedString("techIssues", comment: "Error body"))
                     self.postError(error: error!)
                     self.removeActivityIndicator()
                     
                     return
                 }
-                self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
+                self.showAlert(title: NSLocalizedString("eventSubmitted", comment: "Title"), message: (NSLocalizedString("eventSubmittedBody", comment: "body 1") + (self.user?.name!)!) + NSLocalizedString("toConfirm", comment: "body 2"))
                 
                 let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
                 
