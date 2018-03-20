@@ -76,7 +76,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     ///Start label.
     let labelStart :UITextView = {
         let label = UITextView()
-        label.text = NSLocalizedString("startDate", comment: "Start date")
+        label.text = NSLocalizedString("startDate", comment: "start date")
         label.isEditable = false
         label.textColor = UIColor.white
         label.backgroundColor = UIColor(r: 233, g: 175,b: 50)
@@ -106,7 +106,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         toolBar.tintColor = UIColor.purple
         toolBar.sizeToFit()
         
-        let doneButton = UIBarButtonItem(title: NSLocalizedString("done", comment: "done"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
+        let doneButton = UIBarButtonItem(title:  NSLocalizedString("done", comment: "done"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePicker))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
         
         
@@ -130,23 +130,11 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     let dateFieldF : UITextField = {
         let field = UITextField()
         field.allowsEditingTextAttributes = false
-        field.placeholder = NSLocalizedString("endDatePlaceholder", comment: "end date placeholder")
+        field.placeholder = NSLocalizedString("endDatePlaceholder", comment: "End date placeholder")
         field.layer.borderColor = UIColor.black.cgColor
         field.backgroundColor = UIColor.white
         field.layer.borderWidth = 1
         field.translatesAutoresizingMaskIntoConstraints = false
-        return field
-    }()
-    
-    
-    ///Textfield for the user to type in a location.
-    let locationField : UITextField = {
-        let field = UITextField()
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.placeholder = NSLocalizedString("locationPlaceholder", comment: "Location")
-        field.backgroundColor = UIColor.white
-        field.layer.borderColor = UIColor.black.cgColor
-        field.layer.borderWidth = 1
         return field
     }()
     
@@ -158,8 +146,18 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.purple
         button.setTitleColor(UIColor.white, for: .normal)
+        
         return button
     }()
+    
+    ///Textfield for the user to type in a location.
+    let locationField : UITextField = {
+        let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.placeholder = NSLocalizedString("locationPlaceholder", comment: "Location")
+        return field
+    }()
+    
     
     ///The activity indicator.
     let activityInd = ActivityController()
@@ -182,7 +180,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     var closest = MKMapItem()
     
     // MARK: - View initialisation
-
+    
     override func viewDidLoad() {
         view.backgroundColor = UIColor(r: 233, g: 175,b: 50)
         //        navigationController?.navigationBar.barTintColor = UIColor(r: 233, g: 175,b: 50)
@@ -227,13 +225,13 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         descriptionField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         descriptionField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         descriptionField.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-      
+        
         dateFieldS.topAnchor.constraint(equalTo: descriptionField.bottomAnchor, constant: spacing).isActive = true
         dateFieldS.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldS.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         dateFieldS.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         dateFieldS.heightAnchor.constraint(equalToConstant: defaultHeight).isActive = true
-      
+        
         dateFieldF.topAnchor.constraint(equalTo: dateFieldS.bottomAnchor, constant: spacing).isActive = true
         dateFieldF.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dateFieldF.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
@@ -302,6 +300,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     //MARK: - Validation
     
+    
     /**
      Validates the information provided in the fields.
      - Returns: The boolean value to symbolise whether the values are valid or not.
@@ -311,6 +310,10 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             showAlert(title: NSLocalizedString("invalidTitleTitle", comment: "Title"), message: NSLocalizedString("invalidTitleBody", comment: "body"))
             return false
         }
+        //        if ((descriptionField.text?.count)! < 5) {
+        //            showAlert(title: "Invalid description", message: "Please enter a valid description. (Minimum of 5 characters).")
+        //            return false
+        //        }
         if (dateFieldS.text?.isEmpty)! {
             showAlert(title: NSLocalizedString("invalidSDTitle", comment: "Title"), message: NSLocalizedString("invalidSDBody", comment: "Body"))
             return false
@@ -324,10 +327,6 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             return false
             
         }
-        if locationField.text!.count == 0 {
-            showAlert(title: NSLocalizedString("invalidLocationTitle", comment: "title"), message: NSLocalizedString("invalidLocationBody", comment: "body"))
-            return false
-        }
         
         return true
     }
@@ -338,8 +337,8 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
     /**
      Shows alerts for the given message and title. Calls [createAlertButton]() to add in the relevant buttons onto the alert.
      - Parameters:
-         - title: The title to set for the alert box.
-         - message: The message to set for the alert box.
+     - title: The title to set for the alert box.
+     - message: The message to set for the alert box.
      */
     
     func showAlert(title: String, message: String) {
@@ -353,9 +352,9 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }))
         self.present(alert, animated: true, completion: nil)
     }
-
+    
     //MARK: - Interaction
-
+    
     ///Called when the submit button is pressed. Adds all the information into an object, and uploads it to the database.
     @objc func handleSubmit(){
         startActivityIndicator()
@@ -369,60 +368,49 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
         }
         let event = Event()
         event.title = titleField.text
-        if descriptionField.text?.count == 0 {
-            event.desc = ""
-        }
-        else {
-            event.desc = descriptionField.text
-        }
+        event.desc = descriptionField.text
         event.startTime = sDate?.timeIntervalSince1970 as NSNumber?
         event.finishTime = fDate?.timeIntervalSince1970 as NSNumber?
         event.host = uid
         event.invitee = user?.id
         event.id = NSUUID().uuidString
-        event.accepted = 0
-        
-        var array = [NSString]()
         
         findLocation()
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+            var array = [NSString]()
             array.append(self.closest.placemark.coordinate.latitude.description as NSString)
             array.append(self.closest.placemark.coordinate.longitude.description as NSString)
             array.append(self.closest.placemark.title! as NSString)
             
             event.location = array
-        }
-        if closest.placemark.coordinate.latitude.description == "" {
-            showAlert(title: NSLocalizedString("invalidLocationTitle", comment: "Title"), message: NSLocalizedString("invalidLocationBody", comment: "Body"))
-            return
-        }
-
-        let myRef = Database.database().reference().child("events").child(event.id!)
-        let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : event.accepted!, "Location": event.location] as [String : Any]
-        
-        myRef.updateChildValues(values) { (error, ref) in
-            if error != nil {
-                self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
-                self.postError(error: error!)
-                self.removeActivityIndicator()
+            
+            let myRef = Database.database().reference().child("events").child(event.id!)
+            let values = ["Id" : event.id!, "Title": event.title!, "Description": event.desc!, "StartTime": event.startTime!, "FinishTime": event.finishTime!, "Host": event.host!, "Invitee": event.invitee!, "Accepted" : "", "Location": event.location] as [String : Any]
+            
+            myRef.updateChildValues(values) { (error, ref) in
+                if error != nil {
+                    self.showAlert(title: "Error", message: "There has been an error, We have informed the developer to have a look at this.")
+                    self.postError(error: error!)
+                    self.removeActivityIndicator()
+                    
+                    return
+                }
+                self.showAlert(title: "Event has been submitted", message: "This event has been sent to \(String(describing: (self.user?.name)!)) to confirm.")
                 
-                return
+                let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
+                
+                let messageId = myRef.key
+                userEventRef.updateChildValues([messageId: 1])
+                
+                let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
+                recipientUserEventRef.updateChildValues([messageId: 1])
+                self.removeActivityIndicator()
             }
-            self.showAlert(title: NSLocalizedString("eventSubmitted", comment: "submitted"), message: (NSLocalizedString("eventSubmittedBody", comment: "body") + (self.user?.name!)! + NSLocalizedString("toConfirm", comment: "To confirm")))
-            
-            let userEventRef = Database.database().reference().child("user-events").child(uid).child((self.user?.id)!)
-            
-            let messageId = myRef.key
-            userEventRef.updateChildValues([messageId: 1])
-            
-            let recipientUserEventRef = Database.database().reference().child("user-events").child((self.user?.id)!).child(uid)
-            recipientUserEventRef.updateChildValues([messageId: 1])
-            self.removeActivityIndicator()
         }
     }
     
-  
-   
+    
+    
     //MARK: - Location
     
     /**
@@ -439,6 +427,7 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
             locationManager.startUpdatingLocation()
         }
         else {
+            print("permissions are needed")
             return
         }
         
@@ -489,12 +478,14 @@ class CalendarController: UIViewController, UIPickerViewDataSource, UIPickerView
                 
                 newSearch.start { response, error in
                     guard let response = response else {
+                        print("ERROR!")
                         return
                     }
                     let currentCoordinates = currentLocation?.coordinate
                     self.closest = response.mapItems[0]
                     //            print("Start value :\(self.closest)")
                     for i in 1...(response.mapItems.count - 1){
+                        print("Checking another")
                         let destLong = Double(response.mapItems[i].placemark.coordinate.longitude)
                         let destLat = Double(response.mapItems[i].placemark.coordinate.latitude)
                         let currentLong = Double((currentCoordinates?.longitude)!)
