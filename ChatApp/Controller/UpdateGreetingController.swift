@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class UpdateGreeting: UIViewController {
+class UpdateGreetingController: UIViewController {
     // MARK: - Constants
     
     ///Greeting text field.
