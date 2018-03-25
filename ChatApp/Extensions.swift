@@ -152,18 +152,16 @@ extension UIViewController: UITextFieldDelegate{
 
 }
 
-
+///Posting error protocol. Protocols are used to make a class abide by certain things, and make the class implement the methods that are defined there.
 protocol postError {
     func postError(error: Error)
 }
-
-
 
 extension EventsController: postError {
     /**
      Uploads any errors to the database for examination.
      - Parameters:
-     - error: The error code which is called.
+         - error: The error code which is called.
      */
     func postError(error: Error){
         let ref = Database.database().reference().child("Error").child("EventsController").child(NSUUID().uuidString)
