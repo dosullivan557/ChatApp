@@ -10,25 +10,51 @@ import UIKit
 
 class HelpController: UIViewController, UIWebViewDelegate {
     // MARK: - Constants
-    // MARK: - Variables
+    let uiview : UIWebView = {
+        let view = UIWebView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
+    
+    let activityInd = ActivityController()
+
+    
+    // MARK: - Variables
+    var tuple : Tuple? {
+        didSet {
+            activityInd.showActivityIndicatory(uiView: view)
+            self.navigationItem.title = tuple?.getStringOne()
+            getVideo(videoCode: (tuple?.getStringTwo())!)
+        }
+    }
     //MARK: - View initialisation
     override func viewDidLoad() {
-        self.navigationController?.isNavigationBarHidden = false
-        
+        view.addSubview(uiview)
         super.viewDidLoad()
         setupFields()
+//        UIWebViewDelegate. = self
+        uiview.delegate = self
         view.backgroundColor = UIColor.white
-        //        let webV:UIWebView = UIWebView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-        //        let url = URL(fileURLWithPath: "https://www.youtube.com/embed/9bZkp7q19f0")
-        //        webV.loadRequest(url)
-        //        webV.delegate = self as UIWebViewDelegate
-        //        self.view.addSubview(webV)
+    }
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        print("finished")
+        activityInd.finishAnimating(uiView: view)
     }
     
     //MARK: - Setup
     ///Setup fields.
     func setupFields(){
+
+        uiview.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        uiview.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        uiview.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        uiview.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    }
+    
+    func getVideo(videoCode: String) {
+        let url = URL(string: "https://www.youtube.com/embed/\(videoCode)")
+        uiview.loadRequest(URLRequest(url: url!))
         
     }
     
