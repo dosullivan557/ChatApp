@@ -17,6 +17,8 @@
 		DE2D67CD200BE8610084078A /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67CC200BE8610084078A /* Event.swift */; };
 		DE2D67CF200BF8740084078A /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67CE200BF8740084078A /* EventsController.swift */; };
 		DE2D67D1200BFD830084078A /* EventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2D67D0200BFD830084078A /* EventCell.swift */; };
+		DE302DDA206D42F300520B7F /* Tuple.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE302DD9206D42F300520B7F /* Tuple.swift */; };
+		DE302DDC206D43EA00520B7F /* HelpTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE302DDB206D43EA00520B7F /* HelpTableController.swift */; };
 		DE47D1911FF96A9C000B6C08 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47D1901FF96A9C000B6C08 /* Extensions.swift */; };
 		DE4BDD5F1FF5244E00E67C45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4BDD5E1FF5244E00E67C45 /* AppDelegate.swift */; };
 		DE4BDD611FF5244E00E67C45 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4BDD601FF5244E00E67C45 /* MessagesController.swift */; };
@@ -40,7 +42,6 @@
 		DECD338D2018A1E300772123 /* GroupChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD338C2018A1E300772123 /* GroupChatLogController.swift */; };
 		DED6D1B0205351BC00B3A313 /* StatusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED6D1AF205351BC00B3A313 /* StatusController.swift */; };
 		DED6D1B22055A04100B3A313 /* ActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED6D1B12055A04100B3A313 /* ActivityController.swift */; };
-		DED6D1B420595B7300B3A313 /* TableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED6D1B320595B7300B3A313 /* TableSection.swift */; };
 		DEDD53B01FFE6B7000B10E62 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */; };
 		DEDD53B41FFFC87900B10E62 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B31FFFC87900B10E62 /* Message.swift */; };
 		DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B61FFFD27C00B10E62 /* UserCell.swift */; };
@@ -86,6 +87,8 @@
 		DE2D67CC200BE8610084078A /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		DE2D67CE200BF8740084078A /* EventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsController.swift; sourceTree = "<group>"; };
 		DE2D67D0200BFD830084078A /* EventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCell.swift; sourceTree = "<group>"; };
+		DE302DD9206D42F300520B7F /* Tuple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tuple.swift; sourceTree = "<group>"; };
+		DE302DDB206D43EA00520B7F /* HelpTableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpTableController.swift; sourceTree = "<group>"; };
 		DE47D1901FF96A9C000B6C08 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DE4BDD5B1FF5244E00E67C45 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE4BDD5E1FF5244E00E67C45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,7 +121,6 @@
 		DECD338C2018A1E300772123 /* GroupChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatLogController.swift; sourceTree = "<group>"; };
 		DED6D1AF205351BC00B3A313 /* StatusController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusController.swift; sourceTree = "<group>"; };
 		DED6D1B12055A04100B3A313 /* ActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityController.swift; sourceTree = "<group>"; };
-		DED6D1B320595B7300B3A313 /* TableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSection.swift; sourceTree = "<group>"; };
 		DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		DEDD53B31FFFC87900B10E62 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		DEDD53B61FFFD27C00B10E62 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 				DEF4618E200FD79600FD4327 /* PasswordResetController.swift */,
 				DECD33842016AC0400772123 /* ReportController.swift */,
 				DECD3386201777F400772123 /* HelpController.swift */,
+				DE302DDB206D43EA00520B7F /* HelpTableController.swift */,
 				DECD338820177F1A00772123 /* NewGroupMessageController.swift */,
 				DECD338C2018A1E300772123 /* GroupChatLogController.swift */,
 				DE8393832039BB0C001A378E /* SettingsController.swift */,
@@ -283,7 +286,6 @@
 				DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */,
 				DE2D67C62006E35F0084078A /* MyTabBar.swift */,
 				DE2D67D0200BFD830084078A /* EventCell.swift */,
-				DED6D1B320595B7300B3A313 /* TableSection.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -295,6 +297,7 @@
 				DEDD53B31FFFC87900B10E62 /* Message.swift */,
 				DE2D67CC200BE8610084078A /* Event.swift */,
 				DE839385203B1C9C001A378E /* Settings.swift */,
+				DE302DD9206D42F300520B7F /* Tuple.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -612,6 +615,7 @@
 				DED6D1B0205351BC00B3A313 /* StatusController.swift in Sources */,
 				DE2D67C72006E35F0084078A /* MyTabBar.swift in Sources */,
 				DE2D67CD200BE8610084078A /* Event.swift in Sources */,
+				DE302DDC206D43EA00520B7F /* HelpTableController.swift in Sources */,
 				DE2D67D1200BFD830084078A /* EventCell.swift in Sources */,
 				DE7E7ACC203CD7D70000312B /* ColourPickerController.swift in Sources */,
 				DE4BDD611FF5244E00E67C45 /* MessagesController.swift in Sources */,
@@ -624,9 +628,9 @@
 				DE8393842039BB0C001A378E /* SettingsController.swift in Sources */,
 				DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */,
 				DEF4618F200FD79600FD4327 /* PasswordResetController.swift in Sources */,
+				DE302DDA206D42F300520B7F /* Tuple.swift in Sources */,
 				DEFA87AB1FF7EF230025FAA6 /* User.swift in Sources */,
 				DECD338D2018A1E300772123 /* GroupChatLogController.swift in Sources */,
-				DED6D1B420595B7300B3A313 /* TableSection.swift in Sources */,
 				DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */,
 				DE839388203B3CA0001A378E /* UpdateGreetingController.swift in Sources */,
 				DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */,
