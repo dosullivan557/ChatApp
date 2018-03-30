@@ -833,10 +833,10 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     /**
      All possible errors for logging in or registering that could be thrown by firebase are passed into here and shows an alert box which notifies the user of the error. An example of how to use it correctly is shown below.
      
-     if error != nil{
-     self.firebaseAuth(error: error!)
-     return
-     }
+         if error != nil{
+             self.firebaseAuth(error: error!)
+             return
+         }
      
      - Parameters:
          - error: The error code which has been returned.
