@@ -277,7 +277,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     }
     ///Opens the help controller.
     @objc func handleHelp() {
-        let helpController = HelpController()
+        let helpController = HelpTableController()
         helpController.hidesBottomBarWhenPushed = true
         show(helpController, sender: self)
     }
