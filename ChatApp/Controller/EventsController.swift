@@ -51,6 +51,7 @@ class EventsController: UITableViewController {
     ///The current user.
     var currentUser = User() {
         didSet {
+            print("setting events")
             setupNavBarWithUser(currentUser)
             observeUserEvents()
             handleReload()
@@ -365,6 +366,8 @@ class EventsController: UITableViewController {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
+        print("print id: \(uid)")
+        print("Observing")
         
         let ref = Database.database().reference().child("user-events").child(uid)
         ref.observe(.childAdded, with: { (DataSnapshot) in
@@ -383,14 +386,11 @@ class EventsController: UITableViewController {
                         event.invitee = dictionary["Invitee"] as? String
                         event.startTime = dictionary["StartTime"] as? NSNumber
                         event.finishTime = dictionary["FinishTime"] as? NSNumber
-                        
+                        event.accepted = dictionary["Accepted"] as? NSNumber
                         event.location = (dictionary["Location"] as? [NSString?])!
-                        if let acceptedS = dictionary["Accepted"] as? String {
-                            if event.invitee == self.currentUser.id {
-                                self.events.append(event)
-                            }
-                        }
-                        
+                        if event.invitee == self.currentUser.id {
+                            self.events.append(event)
+                        }   
                         //cancelled timer, so only 1 timer gets called, and therefore the only reloads the table once
                         self.timer?.invalidate()
                         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
