@@ -32,6 +32,51 @@ class HelpTableController: UITableViewController {
         navigationItem.titleView = titleView
     }
   
+    func setupList() {
+        let sendMessageTuple = Tuple()
+        sendMessageTuple.setStringOne(s: "Send Message")
+        sendMessageTuple.setStringTwo(s: "e4nsaeAqIHU")
+        list.append(sendMessageTuple)
+        
+        let planEventTuple = Tuple()
+        planEventTuple.setStringOne(s: "Plan Event")
+        planEventTuple.setStringTwo(s: "UpqdPjGRBlI")
+        list.append(planEventTuple)
+        
+        let acceptEventTuple = Tuple()
+        acceptEventTuple.setStringOne(s: "Accept Event")
+        acceptEventTuple.setStringTwo(s: "pw-xJ4RIYkY")
+        list.append(acceptEventTuple)
+        
+        let declineEventTuple = Tuple()
+        declineEventTuple.setStringOne(s: "Decline Event")
+        declineEventTuple.setStringTwo(s: "ZBY1kK3Btc0")
+        list.append(declineEventTuple)
+        
+        let changeUserSettingTuple = Tuple()
+        changeUserSettingTuple.setStringOne(s: "Change User Settings")
+        changeUserSettingTuple.setStringTwo(s: "OPHwGhXadnE")
+        list.append(changeUserSettingTuple)
+        
+        let changeProfilePictureTuple = Tuple()
+        changeProfilePictureTuple.setStringOne(s: "Change Profile Picture")
+        changeProfilePictureTuple.setStringTwo(s: "ivYrhtMADM4")
+        list.append(changeProfilePictureTuple)
+        
+        handleReload()
+    }
+    
+    // MARK: - TableView
+    
+   
+    ///Reloads the table view using the main thread.
+    @objc func handleReload() {
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
+        })
+    }
+    
+    //Gives the number of rows in the table view.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
     }
