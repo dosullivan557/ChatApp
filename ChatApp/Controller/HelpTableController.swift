@@ -94,6 +94,10 @@ class HelpTableController: UITableViewController {
     }
     //Called when a tablecell is selected.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let helpController = HelpController()
+        helpController.tuple = list[indexPath.row]
+        self.show(helpController, sender: self)
+//        print(list[indexPath.row].getStringTwo())
     }
     
     
