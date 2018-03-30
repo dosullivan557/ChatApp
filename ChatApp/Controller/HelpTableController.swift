@@ -10,6 +10,28 @@ import UIKit
 import Firebase
 
 class HelpTableController: UITableViewController {
+    // MARK: - Constants
+    let cellId = "cellId"
+
+    // MARK: - Variables
+    var list = [Tuple]()
+
+    ///The current user of the system.
+    
+    
+    //MARK: - View initalisation
+    override func viewDidLoad() {
+        setupList()
+        super.viewDidLoad()
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        let titleView = UITextView()
+        titleView.text = "Help"
+        titleView.isEditable = false
+        titleView.isUserInteractionEnabled = false
+        titleView.backgroundColor? = UIColor.clear
+        navigationItem.titleView = titleView
+    }
+  
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
     }
