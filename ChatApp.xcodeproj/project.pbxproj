@@ -35,6 +35,7 @@
 		DE839386203B1C9D001A378E /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE839385203B1C9C001A378E /* Settings.swift */; };
 		DE839388203B3CA0001A378E /* UpdateGreetingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE839387203B3CA0001A378E /* UpdateGreetingController.swift */; };
 		DE91B51120010C5500B97AF2 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */; };
+		DEBC58E2206FE74A0078D453 /* QuadStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBC58E1206FE74A0078D453 /* QuadStructure.swift */; };
 		DECD33852016AC0400772123 /* ReportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD33842016AC0400772123 /* ReportController.swift */; };
 		DECD3387201777F400772123 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD3386201777F400772123 /* HelpController.swift */; };
 		DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD338820177F1A00772123 /* NewGroupMessageController.swift */; };
@@ -114,6 +115,7 @@
 		DE839385203B1C9C001A378E /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		DE839387203B3CA0001A378E /* UpdateGreetingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateGreetingController.swift; sourceTree = "<group>"; };
 		DE91B51020010C5500B97AF2 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
+		DEBC58E1206FE74A0078D453 /* QuadStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuadStructure.swift; sourceTree = "<group>"; };
 		DECD33842016AC0400772123 /* ReportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportController.swift; sourceTree = "<group>"; };
 		DECD3386201777F400772123 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
 		DECD338820177F1A00772123 /* NewGroupMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupMessageController.swift; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 		DE4BDD5D1FF5244E00E67C45 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				DEBC58E0206FE71B0078D453 /* Data Structures */,
 				DE6357E2205EA3DA007F7F04 /* Localizable.strings */,
 				DE13E3C0202610CB0021D057 /* Data */,
 				DEDD53B51FFFD25B00B10E62 /* View */,
@@ -279,6 +282,15 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		DEBC58E0206FE71B0078D453 /* Data Structures */ = {
+			isa = PBXGroup;
+			children = (
+				DE302DD9206D42F300520B7F /* Tuple.swift */,
+				DEBC58E1206FE74A0078D453 /* QuadStructure.swift */,
+			);
+			path = "Data Structures";
+			sourceTree = "<group>";
+		};
 		DEDD53B51FFFD25B00B10E62 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -297,7 +309,6 @@
 				DEDD53B31FFFC87900B10E62 /* Message.swift */,
 				DE2D67CC200BE8610084078A /* Event.swift */,
 				DE839385203B1C9C001A378E /* Settings.swift */,
-				DE302DD9206D42F300520B7F /* Tuple.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -634,6 +645,7 @@
 				DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */,
 				DE839388203B3CA0001A378E /* UpdateGreetingController.swift in Sources */,
 				DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */,
+				DEBC58E2206FE74A0078D453 /* QuadStructure.swift in Sources */,
 				DECD338B2017FA6300772123 /* MyEventsController.swift in Sources */,
 				DE4BDD5F1FF5244E00E67C45 /* AppDelegate.swift in Sources */,
 				DED6D1B22055A04100B3A313 /* ActivityController.swift in Sources */,
