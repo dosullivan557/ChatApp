@@ -14,7 +14,7 @@ class HelpTableController: UITableViewController {
     let cellId = "cellId"
 
     // MARK: - Variables
-    var list = [Tuple]()
+    var list = [Tuple<String, String>]()
 
     ///The current user of the system.
     
@@ -33,34 +33,22 @@ class HelpTableController: UITableViewController {
     }
   
     func setupList() {
-        let sendMessageTuple = Tuple()
-        sendMessageTuple.setStringOne(s: "Send Message")
-        sendMessageTuple.setStringTwo(s: "e4nsaeAqIHU")
+        let sendMessageTuple = Tuple<String, String>(s1: "Send Message", s2: "e4nsaeAqIHU")
         list.append(sendMessageTuple)
         
-        let planEventTuple = Tuple()
-        planEventTuple.setStringOne(s: "Plan Event")
-        planEventTuple.setStringTwo(s: "UpqdPjGRBlI")
+        let planEventTuple = Tuple<String, String>(s1: "Plan Event", s2: "UpqdPjGRBlI")
         list.append(planEventTuple)
         
-        let acceptEventTuple = Tuple()
-        acceptEventTuple.setStringOne(s: "Accept Event")
-        acceptEventTuple.setStringTwo(s: "pw-xJ4RIYkY")
+        let acceptEventTuple = Tuple<String, String>(s1: "Accept Event", s2: "pw-xJ4RIYkY")
         list.append(acceptEventTuple)
         
-        let declineEventTuple = Tuple()
-        declineEventTuple.setStringOne(s: "Decline Event")
-        declineEventTuple.setStringTwo(s: "ZBY1kK3Btc0")
+        let declineEventTuple = Tuple<String, String>(s1: "Decline Event", s2: "ZBY1kK3Btc0")
         list.append(declineEventTuple)
         
-        let changeUserSettingTuple = Tuple()
-        changeUserSettingTuple.setStringOne(s: "Change User Settings")
-        changeUserSettingTuple.setStringTwo(s: "OPHwGhXadnE")
+        let changeUserSettingTuple = Tuple<String, String>(s1: "Change User Settings", s2: "OPHwGhXadnE")
         list.append(changeUserSettingTuple)
         
-        let changeProfilePictureTuple = Tuple()
-        changeProfilePictureTuple.setStringOne(s: "Change Profile Picture")
-        changeProfilePictureTuple.setStringTwo(s: "ivYrhtMADM4")
+        let changeProfilePictureTuple = Tuple<String, String>(s1: "Change Profile Picture", s2: "ivYrhtMADM4")
         list.append(changeProfilePictureTuple)
         
         handleReload()
@@ -83,7 +71,7 @@ class HelpTableController: UITableViewController {
     //Specifies each element in the table view.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        cell.detailTextLabel?.text = list[indexPath.row].getStringOne()
+        cell.detailTextLabel?.text = list[indexPath.row].getObjectOne()
         
         return cell
     }
