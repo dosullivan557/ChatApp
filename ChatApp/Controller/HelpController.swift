@@ -21,11 +21,11 @@ class HelpController: UIViewController, UIWebViewDelegate {
 
     
     // MARK: - Variables
-    var tuple : Tuple? {
+    var tuple : Tuple<String, String>? {
         didSet {
             activityInd.showActivityIndicatory(uiView: view)
-            self.navigationItem.title = tuple?.getStringOne()
-            getVideo(videoCode: (tuple?.getStringTwo())!)
+            self.navigationItem.title = tuple?.getObjectOne()
+            getVideo(videoCode: (tuple?.getObjectTwo())!)
         }
     }
     //MARK: - View initialisation
