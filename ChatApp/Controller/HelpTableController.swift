@@ -33,22 +33,24 @@ class HelpTableController: UITableViewController {
     }
   
     func setupList() {
-        let sendMessageQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: "Send Message", s2: "e4nsaeAqIHU"), s2: Tuple<String, String>(s1: "This is how a user is able to send a message to another user.", s2: "1. Click on the create message button in the top right corner of the messages tab.\n2. Select the user who you would like to send a message to.\n3. Click on the textfield in the bottom of that particular chatlog.\n4. Type your message to the user.\n5. Pres the send button in the bottom right hand corner of the screen."))
+        let sendMessageQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: NSLocalizedString("howToSendMessage", comment: "How to send a message"), s2: "e4nsaeAqIHU"), s2: Tuple<String, String>(s1: NSLocalizedString("howToSendMessageDesc", comment: "How to send message description "), s2: NSLocalizedString("howToSendMessageList", comment: "How to send a message list.")))
         list.append(sendMessageQuad)
         
-        let planEventQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: "Plan Event", s2: "UpqdPjGRBlI"), s2: Tuple<String, String>(s1: "This is how a user can create an event.", s2: "1. Open up the chatlog for the user you would like to create an event with.\n2. Click on the plus in the top right corner. \n3. Fill in the information about the event inside of that view.\n4. Click on submit.\n5. Wait for the user to accept the event, and it will be added into your calendar."))
+        let planEventQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: NSLocalizedString("howToPlanEvent", comment: "How to plan event"), s2: "UpqdPjGRBlI"), s2: Tuple<String, String>(s1: NSLocalizedString("howToPlanEventDesc", comment: "How to plan an event description."), s2: NSLocalizedString("howToPlanEventList", comment: "How to plan event list.")))
         list.append(planEventQuad)
         
-        let acceptEventQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: "Accept Event", s2: "pw-xJ4RIYkY"), s2: Tuple<String, String>(s1: "This is how a user can accept an event.", s2: "1. Open up the events tab.\n2. Swipe left on the event you would like to accept.\n3. Click on accept."))
+        let acceptEventQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: NSLocalizedString("howToAcceptEvent", comment: "How to accept an event"), s2: "pw-xJ4RIYkY"), s2: Tuple<String, String>(s1: NSLocalizedString("howToAcceptEventDesc", comment: "How to plan an event description."), s2: NSLocalizedString("howToAcceptEventList", comment: "How to accept an event list.")))
         list.append(acceptEventQuad)
         
-        let declineEventQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: "Decline Event", s2: "ZBY1kK3Btc0"), s2: Tuple<String, String>(s1: "This is how a user can decline an event", s2: "1. Open up the events tab.\n2. Swipe left on the event you would like to decline.\n3. Click on decline."))
+        
+        let declineEventQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: NSLocalizedString("howToDeclineEvent", comment: "How to decline an event"), s2: "pw-xJ4RIYkY"), s2: Tuple<String, String>(s1: NSLocalizedString("howToDeclineEventDesc", comment: "How to decline an event description."), s2: NSLocalizedString("howToDeclineEventList", comment: "How to decline an event list.")))
         list.append(declineEventQuad)
         
-        let changeUserSettingsQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: "Change User Settings", s2: "OPHwGhXadnE"), s2: Tuple<String, String>(s1: "This is how a user can change their user settings, such as their greeting, status or chatlog colours.", s2: "1. Click on the My Profile tab\n2. Click on the gear button in the top right hand corner.\n3. Select the relevant setting to change.\n4. Change the value to the new value. Take note that if you are either changing the greeting or status, there is a maximum of 40 characters allowed, and the number of remaining characters is on the right of the text fields.\n5. Click on the save button."))
+        let changeUserSettingsQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: NSLocalizedString("howToChangeUserSettings", comment: "How to change user settings"), s2: "OPHwGhXadnE"), s2: Tuple<String, String>(s1: NSLocalizedString("howToChangeUserSettingsDesc", comment: "How to change user settings description."), s2: NSLocalizedString("howToChangeUserSettingsList", comment: "How to change user settings list.")))
+           
         list.append(changeUserSettingsQuad)
         
-        let changeProfilePictureQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: "Change Profile Picture", s2: "ivYrhtMADM4"), s2: Tuple<String, String>(s1: "This is how the user changes their profile picture.", s2: "1. Click on the My Profile tab.\n2. Click on the change profile button which is situated on top of the profile picture.\n3. This will launch a image picker. Select the image you would like to use.\n4. Crop the picture to your desired size.\n5. Click done, which is situated in the top right corner."))
+        let changeProfilePictureQuad = QuadStructure<String, String, String, String>(s1: Tuple<String, String>(s1: NSLocalizedString("howToChangeProfilePicture", comment: "How to change profile picture."), s2: "ivYrhtMADM4"), s2: Tuple<String, String>(s1: NSLocalizedString("howToChangeProfilePictureDesc", comment: "How to change profile image description."), s2: NSLocalizedString("howToChangeProfilePictureList", comment: "How to change user settings list")))
         list.append(changeProfilePictureQuad)
         
         handleReload()
