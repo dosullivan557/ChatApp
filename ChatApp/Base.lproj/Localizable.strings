@@ -131,7 +131,7 @@
 "invalidLocationBody" = "The location provided is not valid. Please enter a valid location.";
 "howToSendMessage" = "How to send a message";
 "howToSendMessageDesc" = "This is how a user is able to send a message to another user.";
-"howToSendMessageList" = "1. Click on the create message button in the top right corner of the messages tab.\n2. Select the user who you would like to send a message to.\n3. Click on the textfield in the bottom of that particular chatlog.\n4. Type your message to the user.\n5. Pres the send button in the bottom right hand corner of the screen.";
+"howToSendMessageList" = "1. Click on the create message button in the top right corner of the messages tab.\n2. Select the user who you would like to send a message to.\n3. Click on the textfield in the bottom of that particular chatlog.\n4. Type your message to the user.\n5. Press the send button in the bottom right hand corner of the screen.";
 "howToPlanEvent" = "How to plan an event";
 "howToPlanEventDesc" = "This is how a user can create an event.";
 "howToPlanEventList" = "1. Open up the chatlog for the user you would like to create an event with.\n2. Click on the plus in the top right corner. \n3. Fill in the information about the event inside of that view.\n4. Click on submit.\n5. Wait for the user to accept the event, and it will be added into your calendar.";
