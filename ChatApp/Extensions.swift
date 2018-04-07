@@ -197,4 +197,9 @@ extension CalendarController: postError {
     }
 }
 
+extension Bool {
+    mutating func negate() {
+        self = !self
+    }
+}
 
