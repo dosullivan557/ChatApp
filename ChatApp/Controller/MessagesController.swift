@@ -51,7 +51,8 @@ class MessagesController: UITableViewController {
     var messagesDictionary = [String: Message]()
     ///A user value for the current user.
     var user = User()
-    
+    ///Blocked user id's
+    var blockedId = [String?]()
     // MARK: - View initialisation
     
     override func viewDidAppear(_ animated: Bool) {
@@ -67,6 +68,7 @@ class MessagesController: UITableViewController {
     }
     
     override func viewDidLoad() {
+        observeBlockedUsers()
         super.viewDidLoad()
         self.hidesBottomBarWhenPushed = false
         
@@ -292,6 +294,18 @@ class MessagesController: UITableViewController {
     
     //MARK: - Firebase
     
+    func observeBlockedUsers() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let ref = Database.database().reference().child("user-blocked").child(uid)
+        ref.observe(.childAdded) { (DataSnapshot) in
+            self.blockedId.append(DataSnapshot.key)
+            print("blocked id's: \(self.blockedId)")
+        }
+    }
+    
+    
     ///Checks the database for the messages for the current user. All this gets added into a dictionary of the user's Id, and then sorts the values into time order.
     func observeUserMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -313,6 +327,10 @@ class MessagesController: UITableViewController {
                         message.receiveId = dictionary["RecieveId"] as? String
                         message.sendId = dictionary["SendId"] as? String
                         message.decrypt(key: DataSnapshot.key)
+                        if self.blockedId.contains(message.receiveId!) || self.blockedId.contains(message.sendId!){
+                            print("user blocked")
+                            return
+                        }
                         if let chatId = message.chatWithId() {
                             self.messagesDictionary[chatId] = message
                             
