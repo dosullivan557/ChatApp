@@ -22,7 +22,8 @@ class NewMessageController: UITableViewController {
     var timer: Timer?
     ///An instance of messageController which called this instance of NewMessageController so that I can push back to that view, and open the chat from there.
     var messagesController = MessagesController()
-    
+    ///Blocked users
+    var blockedIds = [String?]()
     
     // MARK: - View initialisation
 
@@ -102,8 +103,11 @@ class NewMessageController: UITableViewController {
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 user.id = DataSnapshot.key
                 user.status = dictionary["status"] as? String
+                if self.blockedIds.contains(user.id!){
+                    return
+                }
                 if user.id != Auth.auth().currentUser?.uid {
-                
+                    
                     self.users.append(user)
                     
                     self.users.sort(by: { (u1, u2) -> Bool in
