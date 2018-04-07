@@ -21,10 +21,12 @@ class BlockedContactsController: UITableViewController {
     
     ///Blocked Users
     var blockedUsers = [User?]()
+    ///Timer
+    var timer: Timer?
     
     //MARK: - View initalisation
     override func viewDidLoad() {
-        
+        loadBlockedForUser()
         super.viewDidLoad()
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         let titleView = UITextView()
@@ -57,6 +59,7 @@ class BlockedContactsController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
+        cell.profileImageView.image = UIImage(named: "defaultPic")
         cell.textLabel!.text = blockedUsers[indexPath.row]?.name!
         cell.profileImageView.loadImageUsingCache(urlString: blockedUsers[indexPath.row]?.profileImageUrl!)
         return cell
@@ -67,7 +70,27 @@ class BlockedContactsController: UITableViewController {
     }
     
     func loadBlockedForUser() {
-        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let ref = Database.database().reference().child("user-blocked").child(uid)
+        ref.observe(.childAdded) { (DataSnapshot) in
+//            self.blockedUsers.append(DataSnapshot.key)
+//            print("blocked id's: \(self.blockedId)")
+            let userRef = Database.database().reference().child("users").child(DataSnapshot.key)
+            userRef.observe(.value, with: { (DataSnapshot2) in
+                if let dictionary = DataSnapshot2.value as? [String: AnyObject] {
+                    let user = User()
+                    user.name = dictionary["name"] as? String
+                    user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                    user.email = dictionary["email"] as? String
+                    user.status = dictionary["status"] as? String
+                    self.blockedUsers.append(user)
+                    self.timer?.invalidate()
+                    self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+                }
+            })
+        }
     }
 
     
