@@ -16,7 +16,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     let currentUserSettings = Settings()
     ///Cell reuse identifier for collection view.
     let cellId = "cellId"
-    
+
     // MARK: - Variables
     
     ///The list of messages for this chat.
@@ -27,7 +27,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     var sanitiseWords = [String]()
     ///Text is added here for smart message features, such as the "Say Hi" button.
     var messageSend = String()
-
+    ///MessagesController
+    var messagesController = MessagesController()
     ///The colour that the user has chosen to use as the chat bubble colour for the currentUser.
     var myColor = UIColor()
     ///The text colour goes with the colour that the user has chosen for the currentUsers bubble colour.
@@ -372,6 +373,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     @objc func showUserProfile(){
         let profileController = ProfileController()
         profileController.user = chatWithUser
+        profileController.messagesController = self.messagesController
         self.show(profileController, sender: self)
     }
     

@@ -263,6 +263,7 @@ class MessagesController: UITableViewController {
     func showChatControllerForUser(_ user: [User]) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.users = user
+        chatLogController.messagesController = self
         chatLogController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(chatLogController, animated: true)
     }
@@ -304,6 +305,7 @@ class MessagesController: UITableViewController {
             self.blockedId.append(DataSnapshot.key)
             print("blocked id's: \(self.blockedId)")
         }
+        
     }
     
     
@@ -352,7 +354,13 @@ class MessagesController: UITableViewController {
         }, withCancel: nil)
     }
     
-
+    func handleReloadForBlock() {
+        messages.removeAll()
+        messagesDictionary.removeAll()
+        observeBlockedUsers()
+        observeUserMessages()
+        handleReload()
+    }
     
   
     /**

@@ -47,7 +47,7 @@ class ProfileController : UIViewController {
         statusLabel.textColor = UIColor.black
         return statusLabel
     }()
-    
+
     ///Report button.
     let reportButton : UIButton = {
         let button = UIButton()
@@ -71,6 +71,8 @@ class ProfileController : UIViewController {
     
     ///The user for who this instance of profile controller is for.
     var user : User?
+    ///MessagesController
+    var messagesController = MessagesController()
     
     ///
     var blocked = false
@@ -152,6 +154,7 @@ class ProfileController : UIViewController {
             blockButton.setTitle((NSLocalizedString("blockTitle", comment: "Unblock Title") + " " + (user?.getFirstName())!), for: .normal)
             ref.child((user?.id!)!).removeValue()
         }
+        messagesController.handleReloadForBlock()
     }
 
 }
