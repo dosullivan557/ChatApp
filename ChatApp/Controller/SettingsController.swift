@@ -12,7 +12,7 @@ import Firebase
 class SettingsController: UITableViewController {
     // MARK: - Constants
     ///Array for the settings.
-    let settings = [NSLocalizedString("greetingTitle", comment: "Greeting title"),NSLocalizedString("coloursTitle", comment: "Colours Title"), NSLocalizedString("statusTitle", comment: "Status Title")]
+    let settings = [NSLocalizedString("greetingTitle", comment: "Greeting title"),NSLocalizedString("coloursTitle", comment: "Colours Title"), NSLocalizedString("statusTitle", comment: "Status Title"), NSLocalizedString("blockedTitle", comment: "Blocked users")]
     ///The reuse cell identifier for the table view.
     let cellId = "cellId"
     var profileView = MyProfileController()
@@ -89,6 +89,9 @@ class SettingsController: UITableViewController {
             cell.detailTextLabel?.text = currentUser.status!
             profileView.statusLabel.text = currentUser.status
         }
+        else if indexPath.row == 3 {
+            cell.detailTextLabel?.text = NSLocalizedString("unblockUsersDesc", comment: "Unblock users")
+        }
         return cell
     }
     ///Defines the height of each table cell.
@@ -105,7 +108,6 @@ class SettingsController: UITableViewController {
             show(GV, sender: self)
         }
         else if indexPath.row == 1{
-            //            print("2")
             let CP = ColourPickerController()
             CP.settings = currentUser.settings
             CP.settingsView = self
@@ -116,6 +118,11 @@ class SettingsController: UITableViewController {
             SController.settingsView = self
             SController.user = currentUser
             show(SController, sender: self)
+        }
+        else if indexPath.row == 3 {
+            let BUC = BlockedContactsController()
+            BUC.currentUser = self.currentUser
+            show(BUC, sender: self)
         }
     }
     

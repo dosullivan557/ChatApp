@@ -148,3 +148,5 @@
 "howToChangeProfilePictureDesc" = "This is how the user changes their profile picture.";
 "howToChangeProfilePictureList" = "1. Click on the My Profile tab.\n2. Click on the change profile button which is situated on top of the profile picture.\n3. This will launch a image picker. Select the image you would like to use.\n4. Crop the picture to your desired size.\n5. Click done, which is situated in the top right corner.";
 
+"blockedTitle" = "Blocked Users";
+"unblockUsersDesc" = "Unblock users you have blocked";

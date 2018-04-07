@@ -46,6 +46,7 @@
 		DEDD53B01FFE6B7000B10E62 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */; };
 		DEDD53B41FFFC87900B10E62 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B31FFFC87900B10E62 /* Message.swift */; };
 		DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDD53B61FFFD27C00B10E62 /* UserCell.swift */; };
+		DEE563C9207975E8005D658D /* BlockedContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE563C8207975E8005D658D /* BlockedContactsController.swift */; };
 		DEF0D4B81FF58F250062AF22 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF0D4B71FF58F250062AF22 /* NewMessageController.swift */; };
 		DEF0FE18201635B7009DD4CC /* MyProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF0FE17201635B7009DD4CC /* MyProfileController.swift */; };
 		DEF4618F200FD79600FD4327 /* PasswordResetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4618E200FD79600FD4327 /* PasswordResetController.swift */; };
@@ -126,6 +127,7 @@
 		DEDD53AF1FFE6B7000B10E62 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		DEDD53B31FFFC87900B10E62 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		DEDD53B61FFFD27C00B10E62 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		DEE563C8207975E8005D658D /* BlockedContactsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedContactsController.swift; sourceTree = "<group>"; };
 		DEF0D4B71FF58F250062AF22 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		DEF0FE17201635B7009DD4CC /* MyProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileController.swift; sourceTree = "<group>"; };
 		DEF4618E200FD79600FD4327 /* PasswordResetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetController.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 				DE7E7ACB203CD7D70000312B /* ColourPickerController.swift */,
 				DED6D1AF205351BC00B3A313 /* StatusController.swift */,
 				DED6D1B12055A04100B3A313 /* ActivityController.swift */,
+				DEE563C8207975E8005D658D /* BlockedContactsController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -644,6 +647,7 @@
 				DECD338D2018A1E300772123 /* GroupChatLogController.swift in Sources */,
 				DECD338920177F1A00772123 /* NewGroupMessageController.swift in Sources */,
 				DE839388203B3CA0001A378E /* UpdateGreetingController.swift in Sources */,
+				DEE563C9207975E8005D658D /* BlockedContactsController.swift in Sources */,
 				DEDD53B71FFFD27C00B10E62 /* UserCell.swift in Sources */,
 				DEBC58E2206FE74A0078D453 /* QuadStructure.swift in Sources */,
 				DECD338B2017FA6300772123 /* MyEventsController.swift in Sources */,
