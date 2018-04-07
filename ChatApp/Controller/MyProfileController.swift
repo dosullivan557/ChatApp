@@ -116,6 +116,8 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
     
     // MARK: - Variables
 
+    ///MessagesController
+    var messagesController = MessagesController()
     ///The current user of the system.
     var user : User? {
         didSet {
@@ -288,6 +290,7 @@ class MyProfileController : UIViewController, UIImagePickerControllerDelegate, U
         settingsController.profileView = self
         settingsController.currentUser = self.user!
         settingsController.hidesBottomBarWhenPushed = true
+        settingsController.messagesController = self.messagesController
         show(settingsController, sender: self)
     }
     

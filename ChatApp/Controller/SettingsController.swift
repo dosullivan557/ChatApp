@@ -20,7 +20,8 @@ class SettingsController: UITableViewController {
     
     ///The current user of the system.
     var currentUser = User()
-    
+    ///MessagesController
+    var messagesController = MessagesController()
     
     //MARK: - View initalisation
     override func viewDidLoad() {
@@ -122,6 +123,7 @@ class SettingsController: UITableViewController {
         else if indexPath.row == 3 {
             let BUC = BlockedContactsController()
             BUC.currentUser = self.currentUser
+            BUC.messagesController = self.messagesController
             show(BUC, sender: self)
         }
     }

@@ -33,7 +33,7 @@ class MyTabBar: UITabBarController {
         createElements(view: messagesController, title: NSLocalizedString("messagesTab", comment: "Messages Tab Title"), imageName: "Messages")
         createElements(view: eventController, title: NSLocalizedString("eventTab", comment: "Event Tab Title"), imageName: "CalendarIcon")
         createElements(view: myProfileController, title: NSLocalizedString("myProfileTab", comment: "My Profile Tab Title"), imageName: "profile")
-        
+        myProfileController.messagesController = messagesController
         viewControllers = tabList
     }
     

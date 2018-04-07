@@ -297,6 +297,8 @@ class MessagesController: UITableViewController {
     //MARK: - Firebase
     
     func observeBlockedUsers() {
+        blockedId.removeAll()
+
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
@@ -355,11 +357,18 @@ class MessagesController: UITableViewController {
     }
     
     func handleReloadForBlock() {
+        print("started Reload")
         messages.removeAll()
         messagesDictionary.removeAll()
-        observeBlockedUsers()
-        observeUserMessages()
-        handleReload()
+        blockedId.removeAll()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // change 2 to desired number of seconds
+            self.observeBlockedUsers()
+            print("reloading")
+            self.observeUserMessages()
+            self.handleReload()
+            
+        }
+       
     }
     
   

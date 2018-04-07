@@ -18,7 +18,8 @@ class BlockedContactsController: UITableViewController {
     
     ///The current user of the system.
     var currentUser = User()
-    
+    ///MessagesController
+    var messagesController = MessagesController()
     ///Blocked Users
     var blockedUsers = [User?]()
     ///Timer
@@ -111,7 +112,12 @@ class BlockedContactsController: UITableViewController {
 //        print(blockedUsers[indexPath.row]?.toString())
         ref.child((blockedUsers[indexPath.row]?.id)!).removeValue()
         blockedUsers.remove(at: indexPath.row)
-        self.handleReload()
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleMessagesReload), userInfo: nil, repeats: false)
+    }
+    
+    @objc func handleMessagesReload() {
+        messagesController.handleReloadForBlock()
+      self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
     }
 
     
