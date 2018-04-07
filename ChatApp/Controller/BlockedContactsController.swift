@@ -81,6 +81,7 @@ class BlockedContactsController: UITableViewController {
             userRef.observe(.value, with: { (DataSnapshot2) in
                 if let dictionary = DataSnapshot2.value as? [String: AnyObject] {
                     let user = User()
+                    user.id = DataSnapshot2.key
                     user.name = dictionary["name"] as? String
                     user.profileImageUrl = dictionary["profileImageUrl"] as? String
                     user.email = dictionary["email"] as? String
@@ -91,6 +92,26 @@ class BlockedContactsController: UITableViewController {
                 }
             })
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
+        let unblock = UITableViewRowAction(style: .normal, title: NSLocalizedString("unblockTitle", comment: "Unblock")) { action, index in
+            self.unblock(indexPath: index)
+        }
+        unblock.backgroundColor = UIColor.red
+        
+        return [unblock]
+    }
+    
+    func unblock(indexPath: IndexPath) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let ref = Database.database().reference().child("user-blocked").child(uid)
+//        print(blockedUsers[indexPath.row]?.toString())
+        ref.child((blockedUsers[indexPath.row]?.id)!).removeValue()
+        blockedUsers.remove(at: indexPath.row)
+        self.handleReload()
     }
 
     

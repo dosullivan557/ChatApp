@@ -150,5 +150,5 @@
 
 "blockTitle" = "Block";
 "unblockTitle" = "Unblock";
-"blockedTitle" = "Blocked Users";
+"blockedTitle" = "Block Users";
 "unblockUsersDesc" = "Unblock users you have blocked";
