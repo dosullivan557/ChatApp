@@ -30,4 +30,8 @@ class User: NSObject {
     func toString() -> String {
         return ("name:\(name!), email:\(email!), profileImageUrl:\(profileImageUrl!), id:\(id!), settings: \(settings!)")
     }
+    
+    func getFirstName() -> String {
+        return (name?.components(separatedBy: " ")[0])!
+    }
 }
