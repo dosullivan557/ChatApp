@@ -58,18 +58,32 @@ class ProfileController : UIViewController {
         return button
     }()
     
+    ///Block button.
+    let blockButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(UIColor.red, for: .normal)
+        button.addTarget(self, action: #selector(handleBlock), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Variables
     
     ///The user for who this instance of profile controller is for.
     var user : User?
     
+    ///
+    var blocked = false
     //MARK: - View initialisation
     override func viewDidLoad() {
         view.backgroundColor = UIColor.white
+        blockButton.setTitle((NSLocalizedString("blockTitle", comment: "block button title") + " " + (user?.getFirstName())!), for: .normal)
+
         view.addSubview(profileImage)
         view.addSubview(nameLabel)
         view.addSubview(statusLabel)
         view.addSubview(reportButton)
+        view.addSubview(blockButton)
         setupWithUser(user: user!)
         setupFields()
     }
@@ -92,7 +106,12 @@ class ProfileController : UIViewController {
         statusLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         statusLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        reportButton.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 20).isActive = true
+        blockButton.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 20).isActive = true
+        blockButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
+        blockButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        blockButton.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
+        
+        reportButton.topAnchor.constraint(equalTo: blockButton.bottomAnchor, constant: 20).isActive = true
         reportButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -30).isActive = true
         reportButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         reportButton.centerXAnchor.constraint(equalTo:view.centerXAnchor).isActive = true
@@ -118,5 +137,21 @@ class ProfileController : UIViewController {
         show(reportController, sender: self)
     }
     
+    @objc func handleBlock() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let ref = Database.database().reference().child("user-blocked").child(uid)
+        if !blocked {
+            ref.updateChildValues([(user?.id!)!: 1])
+            blockButton.setTitle((NSLocalizedString("unblockTitle", comment: "Unblock Title") + " " + (user?.getFirstName())!), for: .normal)
+            blocked.negate()
+        }
+        else {
+            blocked.negate()
+            blockButton.setTitle((NSLocalizedString("blockTitle", comment: "Unblock Title") + " " + (user?.getFirstName())!), for: .normal)
+            ref.child((user?.id!)!).removeValue()
+        }
+    }
 
 }

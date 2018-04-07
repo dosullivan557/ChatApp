@@ -786,7 +786,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         print(currentUserSettings.greeting!)
 
         self.inputTextField.text = currentUserSettings.greeting!
-        print(messages[0].message!)
         messages.removeAll()
         self.handleSend()
         reloadCollectionView()
