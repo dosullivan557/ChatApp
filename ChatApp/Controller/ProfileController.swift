@@ -73,7 +73,8 @@ class ProfileController : UIViewController {
     var user : User?
     ///MessagesController
     var messagesController = MessagesController()
-    
+    ///Chat log controller
+    var chatLog = ChatLogController()
     ///
     var blocked = false
     //MARK: - View initialisation
@@ -148,11 +149,14 @@ class ProfileController : UIViewController {
             ref.updateChildValues([(user?.id!)!: 1])
             blockButton.setTitle((NSLocalizedString("unblockTitle", comment: "Unblock Title") + " " + (user?.getFirstName())!), for: .normal)
             blocked.negate()
+            chatLog.userGetsBlocked(bool: true)
         }
         else {
             blocked.negate()
             blockButton.setTitle((NSLocalizedString("blockTitle", comment: "Unblock Title") + " " + (user?.getFirstName())!), for: .normal)
             ref.child((user?.id!)!).removeValue()
+            chatLog.userGetsBlocked(bool: false)
+
         }
         messagesController.handleReloadForBlock()
     }

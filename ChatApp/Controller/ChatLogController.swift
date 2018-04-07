@@ -374,6 +374,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         let profileController = ProfileController()
         profileController.user = chatWithUser
         profileController.messagesController = self.messagesController
+        profileController.chatLog = self
         self.show(profileController, sender: self)
     }
     
@@ -794,4 +795,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
     }
     
+    func userGetsBlocked(bool: Bool) {
+        if bool {
+            inputTextField.isEnabled = false
+            inputTextField.placeholder = NSLocalizedString("blockedUserPlaceholder", comment: "Blocked placeholder")
+        }
+        else {
+            inputTextField.isEnabled = true
+            inputTextField.placeholder = NSLocalizedString("messagePlaceholder", comment: "Message Placeholder")
+        }
+    }
 }

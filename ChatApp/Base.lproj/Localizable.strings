@@ -152,3 +152,4 @@
 "unblockTitle" = "Unblock";
 "blockedTitle" = "Block Users";
 "unblockUsersDesc" = "Unblock users you have blocked";
+"blockedUserPlaceholder" = "You can't send a message here.";
