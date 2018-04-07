@@ -57,7 +57,7 @@
 "invalidStatusBody" = "Please insert a valid status.";
 "validStatusTitle" = "Updated";
 "validStatusBody" = "Your Status has been updated successfully.";
-"reportTitle" = "Thank You";
+"reportSuccessTitle" = "Thank You";
 "reportBody" = "Thank you for reporting this user. We will look into this!";
 "declineAlertTitle" = "You have declined this event";
 "declineAlertBody" = "You have declined the event with this user, would you like to send your appologies?";

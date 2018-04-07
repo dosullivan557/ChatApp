@@ -57,7 +57,7 @@
 "invalidStatusBody" = "Veuillez insérer un statut valide.";
 "validStatusTitle" ="Actualisé";
 "validStatusBody" ="Votre statut a été mis à jour avec succès.";
-"reportTitle" ="Je vous remercie";
+"reportSuccessTitle" ="Merci";
 "reportBody" ="Merci d'avoir signalé cet utilisateur, nous allons nous y intéresser!";
 "declineAlertTitle" ="Vous avez refusé cet événement";
 "declineAlertBody" ="Vous avez décliné l'événement avec cet utilisateur, souhaitez-vous envoyer vos candidatures?";

@@ -123,7 +123,7 @@ class ReportController: UIViewController {
     
     /// Called when a report has been submitted successfully.
     func sucessfulReport(){
-        let alert = UIAlertController(title: NSLocalizedString("reportTitle", comment: "Title"), message: NSLocalizedString("reportBody", comment: "Report body"), preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: NSLocalizedString("reportSuccessTitle", comment: "Title"), message: NSLocalizedString("reportBody", comment: "Report body"), preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (x) in
             alert.dismiss(animated: true, completion: nil)
