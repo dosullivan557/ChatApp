@@ -108,9 +108,10 @@ class BlockedContactsController: UITableViewController {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-        let ref = Database.database().reference().child("user-blocked").child(uid)
-//        print(blockedUsers[indexPath.row]?.toString())
-        ref.child((blockedUsers[indexPath.row]?.id)!).removeValue()
+        let ref1 = Database.database().reference().child("user-blocked").child(uid)
+        let ref2 = Database.database().reference().child("blocked-user").child((blockedUsers[indexPath.row]?.id)!)
+        ref1.child((blockedUsers[indexPath.row]?.id)!).removeValue()
+        ref2.child(uid).removeValue()
         blockedUsers.remove(at: indexPath.row)
         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleMessagesReload), userInfo: nil, repeats: false)
     }

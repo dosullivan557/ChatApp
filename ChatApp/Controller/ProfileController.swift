@@ -144,9 +144,11 @@ class ProfileController : UIViewController {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-        let ref = Database.database().reference().child("user-blocked").child(uid)
+        let ref1 = Database.database().reference().child("user-blocked").child(uid)
+        let ref2 = Database.database().reference().child("blocked-user").child((user?.id)!)
         if !blocked {
-            ref.updateChildValues([(user?.id!)!: 1])
+            ref1.updateChildValues([(user?.id!)!: 1])
+            ref2.updateChildValues([uid: 1])
             blockButton.setTitle((NSLocalizedString("unblockTitle", comment: "Unblock Title") + " " + (user?.getFirstName())!), for: .normal)
             blocked.negate()
             chatLog.userGetsBlocked(bool: true)
@@ -154,7 +156,8 @@ class ProfileController : UIViewController {
         else {
             blocked.negate()
             blockButton.setTitle((NSLocalizedString("blockTitle", comment: "Unblock Title") + " " + (user?.getFirstName())!), for: .normal)
-            ref.child((user?.id!)!).removeValue()
+            ref1.child((user?.id!)!).removeValue()
+            ref2.child(uid).removeValue()
             chatLog.userGetsBlocked(bool: false)
 
         }
