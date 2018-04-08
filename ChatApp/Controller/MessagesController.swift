@@ -53,6 +53,10 @@ class MessagesController: UITableViewController {
     var user = User()
     ///Blocked user id's
     var blockedId = [String?]()
+    ///var Users who have blocked me
+    var blockedMeId = [String?]()
+    
+    
     // MARK: - View initialisation
     
     override func viewDidAppear(_ animated: Bool) {
@@ -289,6 +293,7 @@ class MessagesController: UITableViewController {
         let newMessageController = NewMessageController()
         newMessageController.messagesController = self
         newMessageController.blockedIds = self.blockedId
+        newMessageController.blockedMeIds = self.blockedMeId
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
@@ -297,6 +302,7 @@ class MessagesController: UITableViewController {
     //MARK: - Firebase
     
     func observeBlockedUsers() {
+        observeBlockedMeUsers()
         blockedId.removeAll()
 
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -305,9 +311,18 @@ class MessagesController: UITableViewController {
         let ref = Database.database().reference().child("user-blocked").child(uid)
         ref.observe(.childAdded) { (DataSnapshot) in
             self.blockedId.append(DataSnapshot.key)
-            print("blocked id's: \(self.blockedId)")
         }
         
+    }
+    func observeBlockedMeUsers() {
+        blockedMeId.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let ref = Database.database().reference().child("blocked-user").child(uid)
+        ref.observe(.childAdded) { (DataSnapshot) in
+            self.blockedMeId.append(DataSnapshot.key)
+        }
     }
     
     
@@ -332,8 +347,8 @@ class MessagesController: UITableViewController {
                         message.receiveId = dictionary["RecieveId"] as? String
                         message.sendId = dictionary["SendId"] as? String
                         message.decrypt(key: DataSnapshot.key)
-                        if self.blockedId.contains(message.receiveId!) || self.blockedId.contains(message.sendId!){
-                            print("user blocked")
+                        if self.blockedId.contains(message.receiveId!) || self.blockedId.contains(message.sendId!) || self.blockedMeId.contains(message.receiveId!) || self.blockedMeId.contains(message.sendId!){
+                            print("user blocked OR Been blocked")
                             return
                         }
                         if let chatId = message.chatWithId() {

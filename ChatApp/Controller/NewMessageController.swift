@@ -24,7 +24,9 @@ class NewMessageController: UITableViewController {
     var messagesController = MessagesController()
     ///Blocked users
     var blockedIds = [String?]()
-    
+    ///Blocked me id's
+    var blockedMeIds = [String?]()
+
     // MARK: - View initialisation
 
     
@@ -103,7 +105,7 @@ class NewMessageController: UITableViewController {
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
                 user.id = DataSnapshot.key
                 user.status = dictionary["status"] as? String
-                if self.blockedIds.contains(user.id!){
+                if self.blockedIds.contains(user.id!) || self.blockedMeIds.contains(user.id!){
                     return
                 }
                 if user.id != Auth.auth().currentUser?.uid {
