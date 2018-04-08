@@ -147,3 +147,8 @@
 "howToChangeProfilePicture" = "Modifier la photo de profil";
 "howToChangeProfilePictureDesc" = "C'est ainsi que l'utilisateur change sa photo de profil.";
 "howToChangeProfilePictureList" = "1. Cliquez sur l'onglet Mon profil. \n 2 Cliquez sur le bouton Modifier le profil situé en haut de l'image de profil. \n3 Ceci lancera un sélecteur d'image Sélectionnez l'image que vous souhaitez utiliser. \n4 Recadrez l'image à la taille désirée. \n5. Cliquez sur terminé, situé dans le coin supérieur droit. ";
+"blockTitle" = "Bloquer";
+"unblockTitle" = "Débloquer";
+"blockedTitle" = "Bloquer les utilisateurs";
+"unblockUsersDesc" = "Débloquer les utilisateurs que vous avez bloqués";
+"blockedUserPlaceholder" = "Vous ne pouvez pas envoyer de message ici.";
