@@ -73,13 +73,14 @@ class EventsController: UITableViewController {
                 observeUserEvents()
             }
         }
-
+       
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(EventCell.self, forCellReuseIdentifier: cellEId)
         setupNavBarWithUser(currentUser)
+
     }
     
     //MARK: - Setup
@@ -256,8 +257,7 @@ class EventsController: UITableViewController {
     }
     
     //MARK: - Smart feature
-    
-    
+   
     /**
      Checks whether there is a conflicting event in the users calendar.
      - Parameters:
@@ -272,8 +272,8 @@ class EventsController: UITableViewController {
         
         for calendar in calendars {
             
-            let oneMonthAgo = NSDate(timeIntervalSinceNow: -30*24*3600)
-            let oneMonthAfter = NSDate(timeIntervalSinceNow: +30*24*3600)
+            let oneMonthAgo = NSDate(timeIntervalSince1970: (((newEvent.startTime! as! Decimal) - (NSNumber(integerLiteral: 86400) as! Decimal) as? NSNumber) as! TimeInterval))
+            let oneMonthAfter = NSDate(timeIntervalSince1970: (((newEvent.finishTime! as! Decimal) + (NSNumber(integerLiteral: 86400) as! Decimal) as? NSNumber) as! TimeInterval))
             
             let predicate = eventStore.predicateForEvents(withStart: oneMonthAgo as Date, end: oneMonthAfter as Date, calendars: [calendar])
             
