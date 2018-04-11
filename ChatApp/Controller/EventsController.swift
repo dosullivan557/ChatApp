@@ -290,12 +290,26 @@ class EventsController: UITableViewController {
             
         }
         print("\(newEvent.startTime!) \t \(newEvent.finishTime!) \n")
-
+        let a = newEvent.startTime! as! Int
+        let b = newEvent.finishTime! as! Int
+        
         for event in loadedEvents {
-            print("\(event.startTime!) \t \(event.finishTime!) \n")
-            if ((newEvent.startTime?.doubleValue > event.startTime?.doubleValue) && (newEvent.finishTime?.doubleValue < event.finishTime?.doubleValue)) {
+            let c = event.startTime! as! Int
+            let d = event.finishTime! as! Int
+            if a<c && b>c {
                 showAlert(title: NSLocalizedString("eventConflictingtitle", comment: "title"), message: NSLocalizedString("eventConflictingBody", comment: "body"))
-
+                return false
+            }
+            else if a>c && b<d {
+                showAlert(title: NSLocalizedString("eventConflictingtitle", comment: "title"), message: NSLocalizedString("eventConflictingBody", comment: "body"))
+                return false
+            }
+            else if a<d && b>d {
+                showAlert(title: NSLocalizedString("eventConflictingtitle", comment: "title"), message: NSLocalizedString("eventConflictingBody", comment: "body"))
+                return false
+            }
+            else if a==c || b==d {
+                showAlert(title: NSLocalizedString("eventConflictingtitle", comment: "title"), message: NSLocalizedString("eventConflictingBody", comment: "body"))
                 return false
             }
         }
