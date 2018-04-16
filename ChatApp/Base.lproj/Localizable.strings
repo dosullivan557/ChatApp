@@ -61,7 +61,7 @@
 "reportBody" = "Thank you for reporting this user. We will look into this!";
 "declineAlertTitle" = "You have declined this event";
 "declineAlertBody" = "You have declined the event with this user, would you like to send your appologies?";
-"acceptAlertTitle" = "Event Accepted";
+"acceptedAlertTitle" = "Event Accepted";
 "acceptedAlertBody" = "Event has been confirmed, and is now in your calendar. We will remind you an hour before the event, as well as at the planned meeting time!";
 "deleteProfileTitle" = "Deleting your account";
 "deleteProfileBody" = "You are about to delete your account, are you sure you would like to do this? \n\nOnce it is done, it cannot be undone.";

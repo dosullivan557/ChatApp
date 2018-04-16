@@ -61,7 +61,7 @@
 "reportBody" ="Merci d'avoir signalé cet utilisateur, nous allons nous y intéresser!";
 "declineAlertTitle" ="Vous avez refusé cet événement";
 "declineAlertBody" ="Vous avez décliné l'événement avec cet utilisateur, souhaitez-vous envoyer vos candidatures?";
-"acceptAlertTitle" ="Événement accepté";
+"acceptedAlertTitle" ="Événement accepté";
 "acceptedAlertBody" ="L'événement a été confirmé, et il est maintenant dans votre calendrier, nous vous le rappellerons une heure avant l'événement, ainsi qu'à l'heure prévue de la réunion!";
 "deleteProfileTitle" ="Supprimer votre compte";
 "deleteProfileBody" ="Vous êtes sur le point de supprimer votre compte, êtes-vous sûr de vouloir le faire? \n \n Une fois cette opération terminée, elle ne peut plus être annulée.";
