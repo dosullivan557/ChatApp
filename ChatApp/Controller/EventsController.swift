@@ -187,8 +187,8 @@ class EventsController: UITableViewController {
                     event.notes = currentEvent.desc
                     event.calendar = eventStore.defaultCalendarForNewEvents
                     event.location = currentEvent.location[2] as String?
-                    //                event.addAlarm(EKAlarm(relativeOffset: ((currentEvent.startTime!)) as! TimeInterval))
-                    //                event.addAlarm(EKAlarm(relativeOffset: (currentEvent.startTime as! TimeInterval) - (3600 as TimeInterval)))
+                    event.addAlarm(EKAlarm(absoluteDate: event.startDate!))
+                    event.addAlarm(EKAlarm(absoluteDate: event.startDate!.hourBefore))
                     
                     do {
                         try eventStore.save(event, span: .thisEvent)
