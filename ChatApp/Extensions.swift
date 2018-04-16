@@ -117,6 +117,12 @@ extension Date {
     var yesterday: Date {
         return Calendar.current.date(byAdding: .day, value: -1, to: noon)!
     }
+    
+    var hourBefore: Date {
+        print("Hour before: \(self.addingTimeInterval(-3600))")
+//        return Calendar.date(from: self.addingTimeInterval(-3600))!
+        return self.addingTimeInterval(-3600)
+    }
     var tomorrow: Date {
         return Calendar.current.date(byAdding: .day, value: 1, to: noon)!
     }
