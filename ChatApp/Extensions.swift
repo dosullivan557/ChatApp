@@ -22,8 +22,9 @@ extension UIColor {
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat){
         self.init(red:r/255, green: g/255, blue: b/255, alpha:a)
     }
-    static let niceOrange: UIColor = UIColor(r: 255, g: 184, b: 77, a: 1)
-    static let niceBlue: UIColor = UIColor(r: 0, g: 136, b: 204, a: 0.5)
+    
+    static let niceOrange: UIColor = UIColor(r: 255, g: 127, b: 80, a: 1)
+    static let niceOtherOrange: UIColor = UIColor(r: 255, g: 99, b: 71, a: 1)
 }
 
 

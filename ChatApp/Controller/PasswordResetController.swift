@@ -42,7 +42,7 @@ class PasswordResetController: UIViewController {
         let button = UIButton()
         button.setTitle(NSLocalizedString("resetPassword", comment: "Reset password title button"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.niceBlue
+        button.backgroundColor = UIColor.niceOtherOrange
         button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
         return button
     }()

@@ -566,7 +566,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             cell.bubbleViewRA?.isActive = false
             cell.bubbleViewCA?.isActive = true
             cell.textView.textColor = UIColor.black
-            cell.bubbleView.backgroundColor = UIColor.niceBlue
+            cell.bubbleView.backgroundColor = UIColor.niceOtherOrange
             cell.profileImage.isHidden = true
             cell.isUserInteractionEnabled = true
             //cell.addGestureRecognizer(autoEvent)

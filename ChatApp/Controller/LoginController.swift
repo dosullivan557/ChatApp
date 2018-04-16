@@ -62,7 +62,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white], for: UIControlState.selected)
         sc.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
         sc.translatesAutoresizingMaskIntoConstraints = false
-        sc.tintColor = UIColor.niceBlue
+        sc.tintColor = UIColor.niceOtherOrange
         sc.selectedSegmentIndex = 1
         sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
         return sc
@@ -73,7 +73,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         let button = UIButton()
         button.setTitle(NSLocalizedString("clearImage", comment: "Clear image"), for: .normal)
         button.addTarget(self, action: #selector(handleClearImage), for: .touchUpInside)
-        button.setTitleColor(UIColor.niceBlue, for: .normal)
+        button.setTitleColor(UIColor.niceOtherOrange, for: .normal)
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -103,7 +103,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     ///Register Button.
     lazy var loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.niceBlue
+        button.backgroundColor = UIColor.niceOtherOrange
         button.setTitle(NSLocalizedString("register", comment: "register"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor(r: 239, g: 239, b: 239), for: .normal)

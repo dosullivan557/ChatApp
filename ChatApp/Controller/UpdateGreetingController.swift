@@ -28,7 +28,7 @@ class UpdateGreetingController: UIViewController {
         btn.setTitle(NSLocalizedString("saveTitle", comment: "Save"), for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.addTarget(self, action: #selector(handleSave), for: .touchUpInside)
-        btn.backgroundColor = UIColor.niceBlue
+        btn.backgroundColor = UIColor.niceOtherOrange
         return btn
     }()
     
