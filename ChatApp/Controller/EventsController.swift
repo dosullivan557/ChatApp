@@ -169,6 +169,25 @@ class EventsController: UITableViewController {
         self.handleReload()
     }
     
+    func addEventExample() {
+        let event = Event()
+        event.id = "idValue"
+        event.title = "title"
+        event.accepted = 0
+        event.desc = "Desc"
+        event.startTime = Date().tomorrow.tomorrow.timeIntervalSince1970 as NSNumber
+        event.finishTime = Date().tomorrow.tomorrow.timeIntervalSince1970 as NSNumber
+        var locs = [NSString?]()
+        locs.append("666666")
+        locs.append("666666")
+        locs.append("huhuh")
+        event.location = locs
+        event.host = "me"
+        event.invitee = "You"
+        events.append(event)
+        handleReload()
+    }
+    
     /**
      This is called when the accept event button is pressed. It gets access to the calendar, and then adds it in. Once it has been accepted, it removes it from the table view.
      - Parameters:
