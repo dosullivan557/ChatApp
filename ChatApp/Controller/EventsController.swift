@@ -270,10 +270,11 @@ class EventsController: UITableViewController {
         let eventStore = EKEventStore()
         let calendars = eventStore.calendars(for: .event)
         
+        let oneMonthAgo = Date(timeIntervalSince1970: (Double(newEvent.finishTime!.intValue - 86400)))
+        let oneMonthAfter = Date(timeIntervalSince1970: (Double(newEvent.finishTime!.intValue + 86400)))
         for calendar in calendars {
             
-            let oneMonthAgo = NSDate(timeIntervalSince1970: (((newEvent.startTime! as! Decimal) - (NSNumber(integerLiteral: 86400) as! Decimal) as? NSNumber) as! TimeInterval))
-            let oneMonthAfter = NSDate(timeIntervalSince1970: (((newEvent.finishTime! as! Decimal) + (NSNumber(integerLiteral: 86400) as! Decimal) as? NSNumber) as! TimeInterval))
+     
             
             let predicate = eventStore.predicateForEvents(withStart: oneMonthAgo as Date, end: oneMonthAfter as Date, calendars: [calendar])
             
