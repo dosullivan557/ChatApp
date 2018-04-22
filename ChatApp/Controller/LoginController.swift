@@ -87,10 +87,9 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         let button = UIButton()
         button.setTitle(NSLocalizedString("forgottenPassword", comment: "Forgotten password"), for: .normal)
         button.addTarget(self, action: #selector(handlePasswordReset), for: .touchUpInside)
-        button.setTitleColor(UIColor.black, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.alpha = 0
-        button.setTitleColor(UIColor.red, for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
         
         return button
     }()
