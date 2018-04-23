@@ -733,6 +733,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
      - Returns: Returns a true or false value to decide whether the message is about an event or not.
      */
     func messageIsAboutEvent(message: Message) -> Bool {
+        if message.message!.last! == " " {
+            message.message! = String(describing: message.message!.dropLast()) 
+        }
         let words = message.message!.components(separatedBy: " ")
         var numberOfEventWords = Int()
         var counter = 0
